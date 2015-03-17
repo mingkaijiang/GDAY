@@ -490,7 +490,9 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
            sap_cross_sec_area, lr_max, stress, mis_match, orig_af, orig_ar,
            reduction, target_branch, coarse_root_target, left_over,
            total_alloc, leaf2sap;
-
+    double frac, cproot, root_frac, orig_root_c, new_root_c;
+    double old_miss_match, f_max_alloc, max_leaf_and_root_alloc;
+        
     if (c->alloc_model == FIXED){
         f->alleaf = (p->c_alloc_fmax + nitfac *
                      (p->c_alloc_fmax - p->c_alloc_fmin));
@@ -515,10 +517,7 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
         /* Calculate adjustment on lr_max, based on current "stress"
            calculated from running mean of N and water stress */
         stress = lr_max * s->prev_sma;
-        
-        float frac, cproot, root_frac, orig_root_c, new_root_c;
-        float old_miss_match, f_max_alloc;
-        float max_leaf_and_root_alloc = 0.8;
+        max_leaf_and_root_alloc = 0.8;
         
         orig_root_c = s->root;
         old_miss_match = 9999.9;
@@ -545,7 +544,7 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
 
     } else if (c->alloc_model == ALLOMETRIC) {
         
-          /* Calculate tree height: allometric reln using the power function
+        /* Calculate tree height: allometric reln using the power function
            (Causton, 1985) */
         s->canht = p->heighto * pow(s->stem, p->htpower);
 
@@ -563,10 +562,9 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
             leaf2sap = s->lai / sap_cross_sec_area;
 
         /* Allocation to leaves dependant on height. Modification of pipe
-           theory, leaf-to-sapwood ratio is not constant above a certain
-           height, due to hydraulic constraints (Magnani et al 2000; Deckmyn
-           et al. 2006). */
-
+            theory, leaf-to-sapwood ratio is not constant above a certain
+            height, due to hydraulic constraints (Magnani et al 2000; Deckmyn
+            et al. 2006). */
         if (s->canht < p->height0) {
             leaf2sa_target = p->leafsap0;
         } else if (float_eq(s->canht, p->height1)) {
@@ -587,10 +585,7 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
         /* Calculate adjustment on lr_max, based on current "stress"
            calculated from running mean of N and water stress */
         stress = lr_max * s->prev_sma;
-        
-        float frac, cproot, root_frac, orig_root_c, new_root_c;
-        float old_miss_match, f_max_alloc;
-        float max_leaf_and_root_alloc = 0.7;
+        max_leaf_and_root_alloc = 0.7;
         
         orig_root_c = s->root;
         old_miss_match = 9999.9;
