@@ -419,8 +419,6 @@ void initialise_state(state *s) {
     s->crootn = 0.0;
     s->cstore = 0.01;
     s->inorgn = 0.0274523714275;
-    s->max_lai = -999.9;
-    s->max_shoot = -999.9;
     s->metabsoil = 0.135656771805;
     s->metabsoiln = 0.00542627087221;
     s->metabsurf = 0.0336324759951;
