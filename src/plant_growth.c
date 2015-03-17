@@ -490,7 +490,7 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
            sap_cross_sec_area, lr_max, stress, mis_match, orig_af, orig_ar,
            reduction, target_branch, coarse_root_target, left_over,
            total_alloc, leaf2sap;
-    double frac, cproot, root_frac, orig_root_c, new_root_c;
+    double frac, cproot, root_frac, orig_root_c, new_root_c, c_to_alloc_root;
     double old_miss_match, f_max_alloc, max_leaf_and_root_alloc;
         
     if (c->alloc_model == FIXED){
@@ -592,10 +592,20 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
         for (frac = 0.05; frac < max_leaf_and_root_alloc; frac += 0.01) {
             
             root_frac = frac;
-            cproot = f->npp * root_frac;
+            
+            if (c->deciduous_model) {
+                /*c_to_alloc_root = root_frac * s->cstore; */
+                cproot = s->c_to_alloc_root * 1.0 / c->num_days;
+            } else {
+                cproot = f->npp * root_frac;
+            }
             new_root_c = orig_root_c + (cproot - f->deadroots);
             
-            mis_match = fabs(s->shoot - (new_root_c * stress));
+            if (c->deciduous_model) {
+                mis_match = fabs(s->max_shoot - (new_root_c * stress));
+            } else {
+                mis_match = fabs(s->shoot - (new_root_c * stress));
+            }
             if (mis_match < old_miss_match) {
                 f->alroot = frac;
                 old_miss_match = mis_match;
@@ -693,7 +703,6 @@ void carbon_allocation(control *c, fluxes *f, params *p, state *s,
         f->cpstem = f->wrate * days_left;
         f->cproot = s->c_to_alloc_root * 1.0 / c->num_days;
         f->cpcroot = f->crate * days_left;
-
 
 
     } else {
