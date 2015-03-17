@@ -185,6 +185,8 @@ typedef struct {
     double totalc;
     double soilc;
     double soiln;
+    double max_lai;
+    double max_shoot;
 } state;
 
 typedef struct {

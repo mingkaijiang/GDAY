@@ -51,6 +51,14 @@ void calc_day_growth(control *c, fluxes *f, met *m, params *p, state *s,
            applies for deciduous grasses, need to do the growth stress
            calc for grasses here too. */
         if (s->leaf_out_days[doy] > 0.0) {
+            
+            /* Need to save max lai for pipe model because at the end of the
+               year LAI=0.0 */
+            if (s->lai > s->max_lai)
+                s->max_lai = s->lai;
+
+            if (s->shoot > s->max_shoot)
+                s->max_shoot = s->shoot;
 
 
             calc_carbon_allocation_fracs(c, f, p, s, nitfac);
