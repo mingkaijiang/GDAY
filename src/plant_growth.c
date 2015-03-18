@@ -60,17 +60,6 @@ void calc_day_growth(control *c, fluxes *f, met *m, params *p, state *s,
             if (s->shoot > s->max_shoot)
                 s->max_shoot = s->shoot;
 
-
-            calc_carbon_allocation_fracs(c, f, p, s, nitfac);
-
-            /* store the days allocation fraction, we average these at the
-               end of the year (for the growing season) */
-            s->avg_alleaf += f->alleaf;
-            s->avg_albranch += f->albranch;
-            s->avg_alstem += f->alstem;
-            s->avg_alroot += f->alroot;
-            s->avg_alcroot += f->alcroot;
-
         }
     } else {
         /* daily allocation...*/
@@ -492,7 +481,8 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
            total_alloc, leaf2sap;
     double frac, cproot, root_frac, orig_root_c, new_root_c, c_to_alloc_root;
     double old_miss_match, f_max_alloc, max_leaf_and_root_alloc;
-        
+    double shoot, root, c_to_alloc_shoot, cpleaf, lrate, leaf_frac;
+    
     if (c->alloc_model == FIXED){
         f->alleaf = (p->c_alloc_fmax + nitfac *
                      (p->c_alloc_fmax - p->c_alloc_fmin));
@@ -555,8 +545,11 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
         arg1 = s->sapwood * TONNES_AS_KG * M2_AS_HA;
         arg2 = s->canht * p->density * p->cfracts;
         sap_cross_sec_area = arg1 / arg2;
-
-        leaf2sap = s->lai / sap_cross_sec_area;
+        
+        if (c->deciduous_model) 
+            leaf2sap = s->max_lai / sap_cross_sec_area;
+        else 
+            leaf2sap = s->lai / sap_cross_sec_area;
 
         /* Allocation to leaves dependant on height. Modification of pipe
             theory, leaf-to-sapwood ratio is not constant above a certain
@@ -587,26 +580,63 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
         orig_root_c = s->root;
         old_miss_match = 9999.9;
         for (frac = 0.05; frac < max_leaf_and_root_alloc; frac += 0.01) {
-            
             root_frac = frac;
             
             if (c->deciduous_model) {
-                /*c_to_alloc_root = root_frac * s->cstore; */
-                cproot = s->c_to_alloc_root * 1.0 / c->num_days;
-            } else {
-                cproot = f->npp * root_frac;
-            }
-            new_root_c = orig_root_c + (cproot - f->deadroots);
-            mis_match = fabs(s->shoot - (new_root_c * stress));
-            
-            if (mis_match < old_miss_match) {
-                f->alroot = frac;
-                old_miss_match = mis_match;
+                int doy;
+                float deadleaves, max_shoot;
+                c_to_alloc_root = root_frac * s->cstore; 
+                root = s->root;
+                for (doy = 0; doy < c->num_days; doy++) {
+                    cproot = c_to_alloc_root * 1.0 / c->num_days;
+                    root += cproot - (p->rdecay * root);
+                }
                 
-                f_max_alloc = MAX(0.05, (max_leaf_and_root_alloc - frac));
-                f->alleaf = alloc_goal_seek(leaf2sap, leaf2sa_target, 
+                f_max_alloc = MAX(0.05, (max_leaf_and_root_alloc - root_frac));
+                leaf_frac = alloc_goal_seek(leaf2sap, leaf2sa_target, 
                                             f_max_alloc, p->targ_sens);
+                
+                c_to_alloc_shoot = leaf_frac * s->cstore; 
+                lrate = (2.0 * c_to_alloc_shoot / 
+                        (double)(p->growing_seas_len * p->growing_seas_len));
+                
+                
+                shoot = s->shoot;
+                max_shoot = 0.0;
+                for (doy = 0; doy < c->num_days; doy++) {
+                    cpleaf = lrate * s->growing_days[doy];
+                    deadleaves = lrate * s->remaining_days[doy];
+                    shoot += cpleaf - deadleaves;
+                    if (shoot > max_shoot)
+                        max_shoot = shoot;
+                }
+                mis_match = fabs(max_shoot - (root * stress));
+                
+                
+                if (mis_match < old_miss_match) {
+                    f->alroot = root_frac;
+                    f->alleaf = leaf_frac;
+                    old_miss_match = mis_match;
+                }
+                    
+            } else {
+            
+                cproot = f->npp * root_frac;
+                new_root_c = orig_root_c + (cproot - f->deadroots);
+                mis_match = fabs(s->shoot - (new_root_c * stress));
+                
+                if (mis_match < old_miss_match) {
+                    f->alroot = root_frac;
+                    old_miss_match = mis_match;
+                
+                    f_max_alloc = MAX(0.05, (max_leaf_and_root_alloc - root_frac));
+                    f->alleaf = alloc_goal_seek(leaf2sap, leaf2sa_target, 
+                                            f_max_alloc, p->targ_sens);
+                
+                }
             }
+            
+            
         }
         
         

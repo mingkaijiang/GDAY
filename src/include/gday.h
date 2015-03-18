@@ -187,6 +187,7 @@ typedef struct {
     double soiln;
     double max_lai;
     double max_shoot;
+    int half_grow_season;
 } state;
 
 typedef struct {

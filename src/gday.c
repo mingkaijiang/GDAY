@@ -168,23 +168,7 @@ void run_sim(control *c, fluxes *f, met *m, params *p, state *s){
             s->max_shoot = 0.01;
         }
         
-        /* Are we reading in last years average growing season? */
-        if (float_eq(s->avg_alleaf, 0.0) &&
-            float_eq(s->avg_alstem, 0.0) &&
-            float_eq(s->avg_albranch, 0.0) &&
-            float_eq(s->avg_alleaf, 0.0) &&
-            float_eq(s->avg_alroot, 0.0) &&
-            float_eq(s->avg_alcroot, 0.0)) {
-            nitfac = 0.0;
-            calc_carbon_allocation_fracs(c, f, p, s, nitfac);
-        } else {
-            f->alleaf = s->avg_alleaf;
-            f->alstem = s->avg_alstem;
-            f->albranch = s->avg_albranch;
-            f->alroot = s->avg_alroot;
-            f->alcroot = s->avg_alcroot;
-        }
-        allocate_stored_c_and_n(f, p, s);
+        
     }
 
     /* Setup output file */
@@ -272,7 +256,17 @@ void run_sim(control *c, fluxes *f, met *m, params *p, state *s){
                 }
             }
 
+            nitfac = 0.0;
+            calc_carbon_allocation_fracs(c, f, p, s, nitfac);
+            
+                
+            allocate_stored_c_and_n(f, p, s);
+            
+            /* need to redo the phenology to work out rates of alloc, can just
+            call that func if this ever works */
+            phenology(c, f, m, p, s, day_length, project_day);
             zero_stuff(c, s);
+            
         }
         /* =================== **
         **   D A Y   L O O P   **
@@ -347,7 +341,6 @@ void run_sim(control *c, fluxes *f, met *m, params *p, state *s){
 
             /* check the daily water balance */
             /*check_water_balance(project_day); */
-
             project_day++;
             /* ======================= **
             **   E N D   O F   D A Y   **
@@ -357,7 +350,11 @@ void run_sim(control *c, fluxes *f, met *m, params *p, state *s){
 
         /* Allocate stored C&N for the following year */
         if (c->deciduous_model) {
-            calculate_average_alloc_fractions(f, s, p->growing_seas_len);
+            /*calculate_average_alloc_fractions(f, s, p->growing_seas_len);*/
+            nitfac = 0.0;
+            calc_carbon_allocation_fracs(c, f, p, s, nitfac);
+            printf("%f %f %f\n", f->alleaf , f->alroot , f->alstem+f->albranch );
+
             allocate_stored_c_and_n(f, p, s);
         }
     }
@@ -638,14 +635,9 @@ void zero_stuff(control *c, state *s) {
     s->cstore = 0.0;
     s->nstore = 0.0;
     s->anpp = 0.0;
-
-    if (c->deciduous_model) {
-        s->avg_alleaf = 0.0;
-        s->avg_alroot = 0.0;
-        s->avg_alcroot = 0.0;
-        s->avg_albranch  = 0.0;
-        s->avg_alstem = 0.0;
-    }
+    s->max_lai = 0.0;
+    s->max_shoot = 0.0;
+    
     return;
 }
 

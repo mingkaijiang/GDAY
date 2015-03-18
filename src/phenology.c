@@ -53,6 +53,7 @@ void phenology(control *c, fluxes *f, met *m, params *p, state *s,
 
     calculate_days_left_in_growing_season(c, s, leaf_on, leaf_off, len_groloss);
     calculate_growing_season_fluxes(f, s, len_groloss);
+    s->half_grow_season = (int)leaf_on+(len_groloss/2);
 
     return;
 }
@@ -397,6 +398,6 @@ void calculate_growing_season_fluxes(fluxes *f, state *s, int len_groloss) {
     f->wnimrate = 2.0 * s->n_to_alloc_stemimm / denominator;
     f->wnmobrate = 2.0 * s->n_to_alloc_stemmob / denominator;
     f->cnrate = 2.0 * s->n_to_alloc_croot / denominator;
-
+    
     return;
 }
