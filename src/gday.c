@@ -353,8 +353,7 @@ void run_sim(control *c, fluxes *f, met *m, params *p, state *s){
             /*calculate_average_alloc_fractions(f, s, p->growing_seas_len);*/
             nitfac = 0.0;
             calc_carbon_allocation_fracs(c, f, p, s, nitfac);
-            printf("%f %f %f\n", f->alleaf , f->alroot , f->alstem+f->albranch );
-
+            
             allocate_stored_c_and_n(f, p, s);
         }
     }
