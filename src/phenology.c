@@ -115,7 +115,7 @@ void phenology(control *c, fluxes *f, met *m, params *p, state *s,
     else
         len_groloss = p->store_transfer_len;
 
-    calculate_days_left_in_growing_season(c, s, leaf_on, leaf_off, len_groloss);
+    calculate_days_left_in_growing_season(c, p, s, leaf_on, leaf_off, len_groloss);
     calculate_growing_season_fluxes(f, s, len_groloss);
     
     /*printf("%d %d\n", leaf_on, leaf_off); */
@@ -147,6 +147,9 @@ void calculate_leafon_off(control *c, met *m, params *p, double *daylen,
         nov_doy = 305;
     
     ppt_sum = 0.0;
+    
+   
+    
     for (d = 1; d < c->num_days+1; d++) {
         Tmean = m->tair[project_day];
         Tday = m->tday[project_day];
@@ -197,10 +200,20 @@ void calculate_leafon_off(control *c, met *m, params *p, double *daylen,
             Tsoil_next_3days = 999.9;
             Tair_next_3days = 999.9;
         }
-
-        /* Sum the daily mean air temperature above 5degC starting on Jan 1 */
-        accum_gdd += calc_gdd(Tmean);
-
+        
+        if (p->latitude < 0.0 && d >= 182) {
+            /* 
+                Sum the daily mean air temperature above 5degC starting half
+                way through the year
+            */
+            accum_gdd += calc_gdd(Tmean);
+        } else if (p->latitude >= 0.0) {
+            /* 
+                Sum the daily mean air temperature above 5degC starting on 
+                Jan 1 
+            */
+            accum_gdd += calc_gdd(Tmean);
+        }
         /*
         ** Calculate leaf on
         */
@@ -238,34 +251,42 @@ void calculate_leafon_off(control *c, met *m, params *p, double *daylen,
                 /*if (d >= 243) {
                     printf("%d %f %f\n", d, Tmean, grass_temp_threshold);
                 }*/
-                if (d >= 243 && Tday <= grass_temp_threshold) {
-                    *leaf_off_found = TRUE;
-                    *leaf_off = d;
-                }
                 
+                if (p->latitude >= 0.0) {
                 
-                /* 
-                    Leaf drop constraint is based on White et al. 1997 
-                
-                     - test for hot && dry conditions.  
-                
-                if (ppt_sum_prev < 11.4 &&
-                    ppt_sum_next < 9.7 &&
-                    Tmax > tmax_ann && 
-                    d > 243) {
+                    if (d >= 243 && Tday <= grass_temp_threshold) {
+                        *leaf_off_found = TRUE;
+                        *leaf_off = d;
+                    }
                     
-                    *leaf_off_found = TRUE;
-                    *leaf_off = d;
+                    /* 
+                        Leaf drop constraint is based on White et al. 1997 
                 
-                    - test for cold offset condition 
-                } else if (d > 243 && Tmin_boxcar <= Tmin_avg) {
+                         - test for hot && dry conditions.  
+                
+                    if (ppt_sum_prev < 11.4 &&
+                        ppt_sum_next < 9.7 &&
+                        Tmax > tmax_ann && 
+                        d > 243) {
                     
-                    *leaf_off_found = TRUE;
-                    *leaf_off = d; 
+                        *leaf_off_found = TRUE;
+                        *leaf_off = d;
+                
+                        - test for cold offset condition 
+                    } else if (d > 243 && Tmin_boxcar <= Tmin_avg) {
+                    
+                        *leaf_off_found = TRUE;
+                        *leaf_off = d; 
                      
-                }
-                */
-                
+                    }
+                    */
+                    
+                } else if (p->latitude < 0.0) {
+                    if (d >= 121 && Tday <= grass_temp_threshold) {
+                        *leaf_off_found = TRUE;
+                        *leaf_off = d;
+                    }
+                }         
             }
         } else {
             if (*leaf_off_found == FALSE && accum_gdd >= gdd_thresh) {
@@ -274,12 +295,28 @@ void calculate_leafon_off(control *c, met *m, params *p, double *daylen,
                     Had issue with KSCO simulations where the photoperiod was
                     less than the threshold very soon after leaf out.
                 */
-                if (d > 182) {
-                    drop_leaves = leaf_drop(daylen[d-1], Tsoil, Tsoil_next_3days);
-                    if (drop_leaves) {
-                        *leaf_off_found = TRUE;
-                        *leaf_off = d;
+                
+                if (p->latitude >= 0.0) {
+                
+                    if (d > 182) {
+                        drop_leaves = leaf_drop(daylen[d-1], Tsoil, 
+                                                Tsoil_next_3days);
+                        if (drop_leaves) {
+                            *leaf_off_found = TRUE;
+                            *leaf_off = d;
+                        }
                     }
+                } else if (p->latitude < 0.0) {
+                    
+                    if (d > 1) {
+                        drop_leaves = leaf_drop(daylen[d-1], Tsoil, 
+                                                Tsoil_next_3days);
+                        if (drop_leaves) {
+                            *leaf_off_found = TRUE;
+                            *leaf_off = d;
+                        }
+                    }
+                
                 }
             }
         }
@@ -428,7 +465,7 @@ void calc_ini_grass_pheno_stuff(control *c, met *m, int project_day,
     return;
 }
 
-void calculate_days_left_in_growing_season(control *c, state *s,
+void calculate_days_left_in_growing_season(control *c, params *p, state *s,
                                             int leaf_on, int leaf_off,
                                             int len_groloss) {
     /* Calculate 2 arrays to signify the days left of growing period
@@ -439,28 +476,73 @@ void calculate_days_left_in_growing_season(control *c, state *s,
     time steps -> trapezoidal type solution
     */
     int doy;
+    
+    if (p->latitude >= 0.0) {
+        for (doy = 1; doy < c->num_days+1; doy++) {
 
-    for (doy = 1; doy < c->num_days+1; doy++) {
-
-        if (doy > leaf_off - len_groloss && doy <= leaf_off) {
-            s->remaining_days[doy-1] = (doy - 0.5) - leaf_off + len_groloss;
-        } else {
-            s->remaining_days[doy-1] = 0.0;
+            if (doy > leaf_off - len_groloss && doy <= leaf_off) {
+                s->remaining_days[doy-1] = (doy - 0.5) - leaf_off + len_groloss;
+            } else {
+                s->remaining_days[doy-1] = 0.0;
+            }
+            
+            if (doy > leaf_on && doy <= len_groloss+leaf_on) {
+                s->growing_days[doy-1] = len_groloss + leaf_on - (doy - 0.5);
+            } else {
+                s->growing_days[doy-1] = 0.0;
+            }
+            
+            if (doy > leaf_on && doy < leaf_off) {
+                s->leaf_out_days[doy-1] = 1.0;
+            } else {
+                s->leaf_out_days[doy-1] = 0.0;
+            }
         }
+    } else if (p->latitude < 0.0) {
+        
+        p->growing_seas_len = 365 - leaf_on + leaf_off;
+        if (p->store_transfer_len < -900)
+            len_groloss = (int)floor((float)p->growing_seas_len / 2.0);
+        else
+            len_groloss = p->store_transfer_len;
+        
+        
+        int left_over = len_groloss - (365 - leaf_on) + 1;
+        
+        for (doy = 1; doy < c->num_days+1; doy++) {
+        
+            if (doy > leaf_on) {
+                s->growing_days[doy-1] = len_groloss + leaf_on - (doy - 0.5);
+            } else if (doy < left_over ) {
+                s->growing_days[doy-1] = len_groloss + leaf_on - (doy+365 - 0.5);
+            } else {
+                s->growing_days[doy-1] = 0.0;
+            }
+            
+            
+            if ( doy < leaf_off && doy > left_over) {
+                s->remaining_days[doy-1] = (doy - 0.5) - leaf_off + len_groloss;
+            } else {
+                s->remaining_days[doy-1] = 0.0;
+            }
+            
+            
+            if (doy > leaf_on) {
+                s->leaf_out_days[doy-1] = 1.0;
+            } else if (doy < leaf_off) {
+                s->leaf_out_days[doy-1] = 1.0;  
+            } else {
+                s->leaf_out_days[doy-1] = 0.0;
+            }
+            
+            
+            printf("%d %f %f\n", doy, s->growing_days[doy-1], s->remaining_days[doy-1]);
 
-        if (doy > leaf_on && doy <= len_groloss+leaf_on) {
-            s->growing_days[doy-1] = len_groloss + leaf_on - (doy - 0.5);
-        } else {
-            s->growing_days[doy-1] = 0.0;
+        
         }
-
-        if (doy > leaf_on && doy < leaf_off) {
-            s->leaf_out_days[doy-1] = 1.0;
-        } else {
-            s->leaf_out_days[doy-1] = 0.0;
-        }
+        
     }
-
+    exit(1);
     return;
 }
 
