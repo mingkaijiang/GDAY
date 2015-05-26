@@ -280,7 +280,13 @@ void run_sim(control *c, fluxes *f, met *m, params *p, state *s){
         for (doy = 0; doy < c->num_days; doy++) {
             
             if (doy+1 == 182 && p->latitude < 0.0) {
-                zero_stuff(c, s);
+                /* Allocate stored C&N for the following year */
+                if (c->deciduous_model) {
+                    calculate_average_alloc_fractions(f, s, p->growing_seas_len);
+                    allocate_stored_c_and_n(f, p, s);
+                    
+                    zero_stuff(c, s);
+                }
             }
             
             
@@ -357,12 +363,14 @@ void run_sim(control *c, fluxes *f, met *m, params *p, state *s){
             **   E N D   O F   D A Y   **
             ** ======================= */
         }
+        
+        if (p->latitude >= 0.0) {
 
-
-        /* Allocate stored C&N for the following year */
-        if (c->deciduous_model) {
-            calculate_average_alloc_fractions(f, s, p->growing_seas_len);
-            allocate_stored_c_and_n(f, p, s);
+            /* Allocate stored C&N for the following year */
+            if (c->deciduous_model) {
+                calculate_average_alloc_fractions(f, s, p->growing_seas_len);
+                allocate_stored_c_and_n(f, p, s);
+            }
         }
     }
     /* ========================= **
