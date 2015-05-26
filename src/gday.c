@@ -268,14 +268,22 @@ void run_sim(control *c, fluxes *f, met *m, params *p, state *s){
                     sma(SMA_ADD, hw, s->prev_sma);
                 }
             }
-            zero_stuff(c, s);
+            
+            if (p->latitude >= 0.0) {
+                zero_stuff(c, s);
+            }
         }
         /* =================== **
         **   D A Y   L O O P   **
         ** =================== */
 
         for (doy = 0; doy < c->num_days; doy++) {
-
+            
+            if (doy+1 == 182 && p->latitude < 0.0) {
+                zero_stuff(c, s);
+            }
+            
+            
             calculate_litterfall(c, f, p, s, doy, &fdecay, &rdecay);
 
             if (c->disturbance && p->disturbance_doy == doy+1) {

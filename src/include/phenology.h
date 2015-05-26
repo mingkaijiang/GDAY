@@ -14,7 +14,7 @@ double  leaf_drop(double, double, double);
 void    calc_ini_grass_pheno_stuff(control *, met *, int, double *, double *,
                                    double *, double *);
 void    calculate_growing_season_fluxes(fluxes *f, state *, int);
-void    calculate_days_left_in_growing_season(control *, state *, int, int, int);
+void    calculate_days_left_in_growing_season(control *, params *, state *, int, int, int);
 
 
 #endif /* PHEN_H */
