@@ -536,13 +536,13 @@ void calculate_days_left_in_growing_season(control *c, params *p, state *s,
             }
             
             
-            printf("%d %f %f\n", doy, s->growing_days[doy-1], s->remaining_days[doy-1]);
+            /*printf("%d %f %f\n", doy, s->growing_days[doy-1], s->remaining_days[doy-1]);*/
 
         
         }
         
     }
-    exit(1);
+    
     return;
 }
 
