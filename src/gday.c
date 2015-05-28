@@ -357,7 +357,9 @@ void run_sim(control *c, fluxes *f, met *m, params *p, state *s){
 
             /* check the daily water balance */
             /*check_water_balance(project_day); */
-
+            
+            /*printf("%f\n", s->lai);*/
+            
             project_day++;
             /* ======================= **
             **   E N D   O F   D A Y   **
@@ -376,7 +378,7 @@ void run_sim(control *c, fluxes *f, met *m, params *p, state *s){
     /* ========================= **
     **   E N D   O F   Y E A R   **
     ** ========================= */
-
+    
     correct_rate_constants(p, TRUE);
 
     if (c->print_options == END && c->spin_up == FALSE) {
