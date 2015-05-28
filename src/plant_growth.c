@@ -531,7 +531,9 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
 
         f->alcroot = p->c_alloc_cmax * f->alstem;
         f->alstem -= f->alcroot;
-
+        
+        
+        
     } else if (c->alloc_model == GRASSES) {
 
         /* First figure out root allocation given available water & nutrients
