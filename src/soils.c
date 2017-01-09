@@ -1215,7 +1215,7 @@ void precision_control_soil_n(fluxes *f, state *s) {
     return;
 }
 
-void soil_soprtion_parameters(char *soil_order, params *p) {
+void soil_sorption_parameters(char *soil_order, params *p) {
     //
     // Parameterize Smax and Ks parameters based on soil order;
     // Ref. Yang et al., 2016, GRL, Table S2
@@ -1739,7 +1739,7 @@ void calculate_p_min_fluxes(fluxes *f, params *p, state *s) {
     }
 
     /* Use soil order to obtain smax and ks values */
-    soil_soprtion_parameters(p->soil_order, p);
+    soil_sorption_parameters(p->soil_order, p);
 
     /* Calculate lab P dynamics */
     numer = p->smax * p->ks;
