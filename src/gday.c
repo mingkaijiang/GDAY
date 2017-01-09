@@ -608,7 +608,7 @@ void spin_up_pools(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
             fabs((prev_plantn) - (s->plantn)) < tol_n &&
             fabs((prev_soiln) - (s->soiln)) < tol_n &&
             fabs((prev_plantp) - (s->plantp)) < tol_p &&
-            fabs((prev_soilp) - (s->inorgavlp)) < tol_p) {
+            fabs((prev_soilp) - (s->soilp)) < tol_p) {
             break;
         } else {
             prev_plantc = s->plantc;
@@ -616,7 +616,7 @@ void spin_up_pools(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
             prev_plantn = s->plantn;
             prev_soiln = s->soiln;
             prev_plantp = s->plantp;
-            prev_soilp = s->inorgavlp;
+            prev_soilp = s->soilp;
 
             /* 1000 years (50 yrs x 20 cycles) */
             for (i = 0; i < 20; i++) {
@@ -625,9 +625,8 @@ void spin_up_pools(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
             if (c->pcycle) {
                 /* Have we reached a steady state? */
                 fprintf(stderr,
-                        "Spinup: Plant C - %f, Soil C - %f, \
-                         Soil N - %f, Soil avl P - %f\n",
-                        s->plantc, s->soilc, s->soiln, s->inorgavlp);
+                        "Spinup: Plant C - %f, Soil C - %f, Soil N - %f, Soil P - %f\n",
+                        s->plantc, s->soilc, s->soiln, s->soilp);
             } else {
               /* Have we reached a steady state? */
               fprintf(stderr,
@@ -990,12 +989,12 @@ void day_end_calculations(control *c, params *p, state *s, int days_in_year,
 
     /* total plant, soil & litter phosphorus */
     s->inorgp = s->inorglabp + s->inorgsorbp + s->inorgssorbp + s->inorgoccp + s->inorgparp;
-    s->soilp = s->inorgavlp + s->activesoilp + s->slowsoilp + s->passivesoilp;
+    s->soilp = s->inorgp + s->activesoilp + s->slowsoilp + s->passivesoilp;
     s->litterpag = s->structsurfp + s->metabsurfp;
     s->litterpbg = s->structsoilp + s->metabsoilp;
     s->litterp = s->litterpag + s->litterpbg;
     s->plantp = s->shootp + s->rootp + s->crootp + s->branchp + s->stemp;
-    s->totalp = s->plantp + s->litterp + s->soilp + s->inorgssorbp + s->inorgoccp + s->inorgparp;
+    s->totalp = s->plantp + s->litterp + s->soilp;// + s->inorgssorbp + s->inorgoccp + s->inorgparp;
 
     /* total plant, soil, litter and system carbon */
     s->soilc = s->activesoil + s->slowsoil + s->passivesoil;
