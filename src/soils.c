@@ -1246,7 +1246,7 @@ void soil_soprtion_parameters(char *soil_order, params *p) {
     } else if (strcmp(soil_order, "oxisol") == 0) {
         p->smax = 9;
     } else {
-        fprintf(stderr, "Could not understand soil order", __LINE__);
+      prog_error("Could not understand soil order", __LINE__);
         exit(EXIT_FAILURE);
     }
 
