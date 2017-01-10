@@ -557,15 +557,11 @@ void mate_C3_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s,
     /* Calculate mate params & account for temperature dependencies */
     N0 = calculate_top_of_canopy_n(p, s, ncontent);   //Unit: g N m-2;
 
-    //fprintf(stderr, "Tk_pm %f\n", m->Tk_pm);
-
     if (c->pcycle == TRUE) {
         P0 = calculate_top_of_canopy_p(p, s, pcontent);   //Unit: g P m-2
     } else {
         P0 = 0.0;
     }
-
-    //fprintf(stderr, "flag 2 C3_photo \n");
 
     gamma_star_am = calculate_co2_compensation_point(p, m->Tk_am, mt);
     gamma_star_pm = calculate_co2_compensation_point(p, m->Tk_pm, mt);
@@ -618,10 +614,10 @@ void mate_C3_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s,
         asat_pm = MIN(aj_pm, ac_pm);
     }
 
-    //fprintf(stderr, "ac_pm %f\n", ac_pm);
-    //fprintf(stderr, "aj_pm %f\n", aj_pm);
-    //fprintf(stderr, "ap_pm %f\n", ap_pm);
-    //fprintf(stderr, "asat_pm %f\n", asat_pm);
+    // fprintf(stderr, "ac_pm %f\n", ac_pm);
+    // fprintf(stderr, "aj_pm %f\n", aj_pm);
+    // fprintf(stderr, "ap_pm %f\n", ap_pm);
+    // fprintf(stderr, "asat_pm %f\n", asat_pm);
 
     /* Covert PAR units (umol PAR MJ-1) */
     conv = MJ_TO_J * J_2_UMOL;
@@ -996,6 +992,11 @@ void calculate_jmax_and_vcmax_with_p(control *c, params *p, state *s, double Tk,
   /*  Function allowing Jmax/Vcmax to be forced linearly to zero at low T */
   adj_for_low_temp(*(&jmax), Tk);
   adj_for_low_temp(*(&vcmax), Tk);
+  
+  // fprintf(stderr, "jmax25n %f\n", jmax25n);
+  // fprintf(stderr, "jmax25p %f\n", jmax25p);
+  // fprintf(stderr, "vcmax25n %f\n", vcmax25n);
+  // fprintf(stderr, "vcmax25p %f\n", vcmax25p);
 
   return;
 

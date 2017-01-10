@@ -1752,11 +1752,6 @@ void calculate_p_min_fluxes(fluxes *f, params *p, state *s) {
     f->p_sorb_in = tot_in * (numer / denom2);
     f->p_sorb_out = tot_out * (numer / denom2);
 
-    //fprintf(stderr, "mass balance p_min 1 %f\n",
-    //        ((f->p_lab_in + f->p_sorb_in) - tot_in)*100000000000000);
-    //fprintf(stderr, "mass balance p_min 2 %f\n",
-    //        ((f->p_lab_out + f->p_sorb_out) - tot_out)*100000000000000);
-
     /* calculating fraction of labile P available for plant uptake */
     p->p_lab_avail = MAX(min_frac_p_available_to_plant,
                      MIN(min_frac_p_available_to_plant + s->inorgn *
@@ -1971,9 +1966,6 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
 
     //fprintf(stderr, "psorb calc %f\n", (9 * s->inorglabp)/(0.0012+s->inorglabp));
 
-    //fprintf(stderr, "inorglabp %f\n", s->inorglabp);
-    //fprintf(stderr, "inorgsorbp %f\n", s->inorgsorbp);
-
     /* Daily increment of soil inorganic available P pool (lab + sorb) */
     s->inorgavlp = s->inorglabp + s->inorgsorbp;
 
@@ -1985,8 +1977,13 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
 
     /* Daily increment of soil inorganic parent P pool */
     s->inorgparp += f->p_atm_dep - f->p_par_to_min;
-
-    //fprintf(stderr, "flag 6 ppools \n");
+    
+    //fprintf(stderr, "inorglabp %f\n", s->inorglabp);
+    //fprintf(stderr, "inorgsorbp %f\n", s->inorgsorbp);
+    //fprintf(stderr, "inorgssorbp %f\n", s->inorgssorbp);
+    //fprintf(stderr, "inorgoccp %f\n", s->inorgoccp);
+    //fprintf(stderr, "inorgparp %f\n", s->inorgparp);
+    
 
     return;
 }
