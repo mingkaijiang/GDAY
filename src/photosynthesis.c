@@ -523,19 +523,21 @@ double quad(double a, double b, double c, bool large, int *error) {
 
 void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
     /* 
-      
     Modifies mate_C3_photosynthesis using a simplier approach 
-      
+    
+    Parameters:
+    -----------
+    I0: total incident radiation in GJ m-2 yr-1
+    
     */
     
-    double lue_avg, conv;
-    double mt = p->measurement_temp + DEG_TO_KELVIN;
-    
+    double lue_avg, conv, I0;
+
     /* Covert PAR units (umol PAR MJ-1) */
     conv = MJ_TO_J * J_2_UMOL;
     m->par *= conv;
     
-    /* function that simplifies lue calculation */
+    /* lue in umol C umol-1 PAR */
     lue_avg = lue_simplified(p, s, m->Ca);
     
     /* absorbed photosynthetically active radiation (umol m-2 s-1) */
@@ -549,18 +551,20 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
     
     if (s->lai > 0.0) {
       /* calculation for npp */
-      f->npp_gCm2 = lue_simplified(p,s,m->Ca) * f->apar * conv / (1.0 - exp(-p->kn * s->lai));
+      f->npp_gCm2 = lue_avg * f->apar * conv / (1.0 - exp(-p->kn * s->lai));
     } else {
       f->npp_gCm2 = 0.0;
     }
     
     f->gpp_gCm2 = f->npp_gCm2 / p->cue;
     
-    // f->npp_gCm2 = lue_simplified(p, s, m->Ca) * I0 * (1 - exp(-p->kn*SLA*af*NPP/sf/cfrac))
+    // f->npp_gCm2 = LUE * I * (1 - exp(-p->kn*SLA*af*NPP/sf/cfrac))
     
     /* g C m-2 to tonnes hectare-1 day-1 */
     f->gpp = f->gpp_gCm2 * G_AS_TONNES / M2_AS_HA;
     f->npp = f->npp_gCm2 * G_AS_TONNES / M2_AS_HA;
+    
+    // fprintf(stderr, "npp simple %f\n", f->npp);
     
     /* save apar in MJ m-2 d-1 */
     f->apar *= UMOL_2_JOL * J_TO_MJ;
@@ -694,6 +698,8 @@ void mate_C3_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s,
     /* g C m-2 to tonnes hectare-1 day-1 */
     f->gpp = f->gpp_gCm2 * G_AS_TONNES / M2_AS_HA;
     f->npp = f->npp_gCm2 * G_AS_TONNES / M2_AS_HA;
+    
+    // fprintf(stderr, "npp mate %f\n", f->npp);
 
     /* save apar in MJ m-2 d-1 */
     f->apar *= UMOL_2_JOL * J_TO_MJ;
@@ -1214,8 +1220,8 @@ double lue_simplified(params *p, state *s, double co2) {
     // fprintf(stderr, "CaResp %f\n", CaResp);
     // fprintf(stderr, "Nresp %f\n", Nresp);
     // fprintf(stderr, "conv %f\n", conv);
-    fprintf(stderr, "shootnc %f\n", s->shootnc);
-    fprintf(stderr, "lue in loop %f\n", lue);
+    // fprintf(stderr, "shootnc %f\n", s->shootnc);
+    // fprintf(stderr, "lue in loop %f\n", lue);
     
     return (lue);
 }
