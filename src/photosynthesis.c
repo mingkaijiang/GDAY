@@ -522,7 +522,6 @@ double quad(double a, double b, double c, bool large, int *error) {
 }
 
 
-
 void mate_C3_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s,
                             double daylen, double ncontent, double pcontent) {
     /*
@@ -551,7 +550,7 @@ void mate_C3_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s,
            gamma_star_pm, Km_am, Km_pm, jmax_am, jmax_pm, vcmax_am, vcmax_pm,
            ci_am, ci_pm, alpha_am, alpha_pm, ac_am, ac_pm, aj_am, aj_pm,
            ap_am, ap_pm,
-           asat_am, asat_pm, lue_am, lue_pm, lue_avg, conv;
+           asat_am, asat_pm, lue_am, lue_pm, lue_avg, lue_avg_simp, conv;
     double mt = p->measurement_temp + DEG_TO_KELVIN;
 
     /* Calculate mate params & account for temperature dependencies */
@@ -563,78 +562,80 @@ void mate_C3_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s,
         P0 = 0.0;
     }
     
-    double co2 = 350;
+    // fprintf(stderr, "m->Ca %f\n", m->Ca);
     
-    lue_avg = lue_simplified(p, s, co2);
+    /* function that simplifies lue calculation */
+    lue_avg_simp = lue_simplified(p, s, m->Ca);
     
     // the following lines are replaced by simplified LUE calculation
-//    gamma_star_am = calculate_co2_compensation_point(p, m->Tk_am, mt);
-//    gamma_star_pm = calculate_co2_compensation_point(p, m->Tk_pm, mt);
-//
-//    Km_am = calculate_michaelis_menten_parameter(p, m->Tk_am, mt);
-//    Km_pm = calculate_michaelis_menten_parameter(p, m->Tk_pm, mt);
-//
-//    if (c->pcycle == TRUE) {
-//        calculate_jmax_and_vcmax_with_p(c, p, s, m->Tk_am, N0, P0, &jmax_am,
-//                                        &vcmax_am, mt);
-//        calculate_jmax_and_vcmax_with_p(c, p, s, m->Tk_pm, N0, P0, &jmax_pm,
-//                                        &vcmax_pm, mt);
-//    } else {
-//        calculate_jmax_and_vcmax(c, p, s, m->Tk_am, N0, &jmax_am,
-//                                 &vcmax_am, mt);
-//        calculate_jmax_and_vcmax(c, p, s, m->Tk_pm, N0, &jmax_pm,
-//                                 &vcmax_pm, mt);
-//    }
-//
-//    ci_am = calculate_ci(c, p, s, m->vpd_am, m->Ca);
-//    ci_pm = calculate_ci(c, p, s, m->vpd_pm, m->Ca);
-//
-//    /* quantum efficiency calculated for C3 plants */
-//    alpha_am = calculate_quantum_efficiency(p, ci_am, gamma_star_am);
-//    alpha_pm = calculate_quantum_efficiency(p, ci_pm, gamma_star_pm);
-//
-//    /* Rubisco carboxylation limited rate of photosynthesis */
-//    ac_am = assim(ci_am, gamma_star_am, vcmax_am, Km_am);
-//    ac_pm = assim(ci_pm, gamma_star_pm, vcmax_pm, Km_pm);
-//
-//    /* Light-limited rate of photosynthesis allowed by RuBP regeneration */
-//    aj_am = assim(ci_am, gamma_star_am, jmax_am/4.0, 2.0*gamma_star_am);
-//    aj_pm = assim(ci_pm, gamma_star_pm, jmax_pm/4.0, 2.0*gamma_star_pm);
-//
-//    if (c->pcycle == TRUE) {
-//        if (c->triose_p == TRUE) {
-//            /* Triose-phosphates limited rate of photosynthesis */
-//            ap_am = assim_p(P0);
-//            ap_pm = assim_p(P0);
-//
-//            /* light-saturated photosynthesis rate at the top of the canopy */
-//            asat_am = MIN(aj_am, MIN(ac_am, ap_am));
-//            asat_pm = MIN(aj_pm, MIN(ac_pm, ap_pm));
-//        } else {
-//            asat_am = MIN(aj_am, ac_am);
-//            asat_pm = MIN(aj_pm, ac_pm);
-//        }
-//    } else {
-//        asat_am = MIN(aj_am, ac_am);
-//        asat_pm = MIN(aj_pm, ac_pm);
-//    }
-//
-//    // fprintf(stderr, "ac_pm %f\n", ac_pm);
-//    // fprintf(stderr, "aj_pm %f\n", aj_pm);
-//    // fprintf(stderr, "ap_pm %f\n", ap_pm);
-//    // fprintf(stderr, "asat_pm %f\n", asat_pm);
-//
-//    /* Covert PAR units (umol PAR MJ-1) */
-//    conv = MJ_TO_J * J_2_UMOL;
-//    m->par *= conv;
-//
-//    /* LUE (umol C umol-1 PAR) ; note conversion in epsilon */
-//    lue_am = epsilon(p, asat_am, m->par, alpha_am, daylen);
-//    lue_pm = epsilon(p, asat_pm, m->par, alpha_pm, daylen);
-//
-//    /* use average to simulate canopy photosynthesis */
-//    lue_avg = (lue_am + lue_pm) / 2.0;
+    gamma_star_am = calculate_co2_compensation_point(p, m->Tk_am, mt);
+    gamma_star_pm = calculate_co2_compensation_point(p, m->Tk_pm, mt);
+
+    Km_am = calculate_michaelis_menten_parameter(p, m->Tk_am, mt);
+    Km_pm = calculate_michaelis_menten_parameter(p, m->Tk_pm, mt);
+
+    if (c->pcycle == TRUE) {
+        calculate_jmax_and_vcmax_with_p(c, p, s, m->Tk_am, N0, P0, &jmax_am,
+                                        &vcmax_am, mt);
+        calculate_jmax_and_vcmax_with_p(c, p, s, m->Tk_pm, N0, P0, &jmax_pm,
+                                        &vcmax_pm, mt);
+    } else {
+        calculate_jmax_and_vcmax(c, p, s, m->Tk_am, N0, &jmax_am,
+                                 &vcmax_am, mt);
+        calculate_jmax_and_vcmax(c, p, s, m->Tk_pm, N0, &jmax_pm,
+                                 &vcmax_pm, mt);
+    }
+
+    ci_am = calculate_ci(c, p, s, m->vpd_am, m->Ca);
+    ci_pm = calculate_ci(c, p, s, m->vpd_pm, m->Ca);
+
+    /* quantum efficiency calculated for C3 plants */
+    alpha_am = calculate_quantum_efficiency(p, ci_am, gamma_star_am);
+    alpha_pm = calculate_quantum_efficiency(p, ci_pm, gamma_star_pm);
+
+    /* Rubisco carboxylation limited rate of photosynthesis */
+    ac_am = assim(ci_am, gamma_star_am, vcmax_am, Km_am);
+    ac_pm = assim(ci_pm, gamma_star_pm, vcmax_pm, Km_pm);
+
+    /* Light-limited rate of photosynthesis allowed by RuBP regeneration */
+    aj_am = assim(ci_am, gamma_star_am, jmax_am/4.0, 2.0*gamma_star_am);
+    aj_pm = assim(ci_pm, gamma_star_pm, jmax_pm/4.0, 2.0*gamma_star_pm);
+
+    if (c->pcycle == TRUE) {
+        if (c->triose_p == TRUE) {
+            /* Triose-phosphates limited rate of photosynthesis */
+            ap_am = assim_p(P0);
+            ap_pm = assim_p(P0);
+
+            /* light-saturated photosynthesis rate at the top of the canopy */
+            asat_am = MIN(aj_am, MIN(ac_am, ap_am));
+            asat_pm = MIN(aj_pm, MIN(ac_pm, ap_pm));
+        } else {
+            asat_am = MIN(aj_am, ac_am);
+            asat_pm = MIN(aj_pm, ac_pm);
+        }
+    } else {
+        asat_am = MIN(aj_am, ac_am);
+        asat_pm = MIN(aj_pm, ac_pm);
+    }
+
+    // fprintf(stderr, "ac_pm %f\n", ac_pm);
+    // fprintf(stderr, "aj_pm %f\n", aj_pm);
+    // fprintf(stderr, "ap_pm %f\n", ap_pm);
+    // fprintf(stderr, "asat_pm %f\n", asat_pm);
+
+    /* Covert PAR units (umol PAR MJ-1) */
+    conv = MJ_TO_J * J_2_UMOL;
+    m->par *= conv;
+
+    /* LUE (umol C umol-1 PAR) ; note conversion in epsilon */
+    lue_am = epsilon(p, asat_am, m->par, alpha_am, daylen);
+    lue_pm = epsilon(p, asat_pm, m->par, alpha_pm, daylen);
+
+    /* use average to simulate canopy photosynthesis */
+    lue_avg = (lue_am + lue_pm) / 2.0;
     
+    fprintf(stderr, "lue_avg old %f\n", lue_avg);
 
     /* absorbed photosynthetically active radiation (umol m-2 s-1) */
     if (float_eq(s->lai, 0.0))
@@ -1158,12 +1159,22 @@ double lue_simplified(params *p, state *s, double co2) {
      *   return(LUE0 * CaResp * Nresp)
      * 
      */
-    double lue, CaResp, Nresp;
+    double lue, CaResp, Nresp, conv;
   
     CaResp = 1.632 * (co2 - 60.9) / (co2 + 121.8);
     Nresp = MIN(s->shootnc / p->nref, 1);
+    
+    /* converting unit for lue0 from kg C GJ-1 to umol C umol -1 PAR */
+    conv = (1000.0 / 12.0) * 0.001;
       
-    lue = p->lue0 * CaResp * Nresp;
+    lue = p->lue0 * conv * CaResp * Nresp;
+    
+    // fprintf(stderr, "co2 %f\n", co2);
+    fprintf(stderr, "CaResp %f\n", CaResp);
+    fprintf(stderr, "Nresp %f\n", Nresp);
+    fprintf(stderr, "conv %f\n", conv);
+    fprintf(stderr, "shootnc %f\n", s->shootnc);
+    fprintf(stderr, "lue in loop %f\n", lue);
     
     return (lue);
 }
