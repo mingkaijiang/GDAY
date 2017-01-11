@@ -191,17 +191,13 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
     -----------
     * Jackson, J. E. and Palmer, J. W. (1981) Annals of Botany, 47, 561-565.
     */
-    double leafn, leafp, fc, ncontent, pcontent;
-
-    //fprintf(stderr, "flag 1 carbon production \n");
-
+    double fc, leafn, leafp, ncontent, pcontent;
+  
     if (s->lai > 0.0) {
         /* average leaf nitrogen content (g N m-2 leaf) */
         leafn = (s->shootnc * p->cfracts / p->sla * KG_AS_G);
         /* average leaf phosphorus content (g P m-2 leaf) */
         leafp = (s->shootpc * p->cfracts / p->sla * KG_AS_G);
-
-        //fprintf(stderr, "shootpc %f\n", s->shootpc);
 
         /* total nitrogen content of the canopy */
         ncontent = leafn * s->lai;
@@ -212,10 +208,6 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
         ncontent = 0.0;
         pcontent = 0.0;
     }
-
-    //fprintf(stderr, "leafp %f\n", leafp);
-    //fprintf(stderr, "ncontent %f\n", ncontent);
-    //fprintf(stderr, "pcontent %f\n", pcontent);
 
     /* When canopy is not closed, canopy light interception is reduced
         - calculate the fractional ground cover */

@@ -44,7 +44,7 @@ void canopy(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
     int    debug = TRUE, stressed = FALSE;
     double doy, year, dummy2=0.0, previous_sw, current_sw, gsv;
     double previous_cs, current_cs;
-
+    
     /* loop through the day */
     zero_carbon_day_fluxes(f);
     zero_water_day_fluxes(f);
@@ -59,20 +59,20 @@ void canopy(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
 
         /* calculates diffuse frac from half-hourly incident radiation */
         unpack_solar_geometry(cw, c);
-
+        
         /* Is the sun up? */
         if (cw->elevation > 0.0 && m->par > 20.0) {
             calculate_absorbed_radiation(cw, p, s, m->par);
             calculate_top_of_canopy_leafn(cw, p, s);
             calculate_top_of_canopy_leafp(cw, p, s);
             calc_leaf_to_canopy_scalar(cw, p);
-
+            
             /* sunlit / shaded loop */
             for (cw->ileaf = 0; cw->ileaf < NUM_LEAVES; cw->ileaf++) {
 
                 /* initialise values of Tleaf, Cs, dleaf at the leaf surface */
                 initialise_leaf_surface(cw, m);
-
+              
                 /* Leaf temperature loop */
                 while (TRUE) {
 
@@ -135,7 +135,7 @@ void canopy(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
             s->midday_lwp = cw->lwp_canopy;
         }
         sum_hourly_carbon_fluxes(cw, f, p);
-
+        
         calculate_water_balance_sub_daily(c, f, m, nr, p, s, dummy,
                                           cw->trans_canopy, cw->omega_canopy,
                                           cw->rnet_canopy);
