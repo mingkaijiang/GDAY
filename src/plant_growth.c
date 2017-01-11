@@ -649,8 +649,10 @@ int cut_back_production(control *c, fluxes *f, params *p, state *s,
     f->gpp = f->npp / p->cue;
     conv = G_AS_TONNES / M2_AS_HA;
     f->gpp_gCm2 = f->gpp / conv;
-    f->gpp_am = f->gpp_gCm2 / 2.0;
-    f->gpp_pm = f->gpp_gCm2 / 2.0;
+    
+    // following two lines commented out for simplified version */
+    // f->gpp_am = f->gpp_gCm2 / 2.0;
+    // f->gpp_pm = f->gpp_gCm2 / 2.0;
 
     /* New respiration flux */
     f->auto_resp =  f->gpp - f->npp;
