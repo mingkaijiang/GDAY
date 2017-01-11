@@ -1165,14 +1165,14 @@ double lue_simplified(params *p, state *s, double co2) {
     Nresp = MIN(s->shootnc / p->nref, 1);
     
     /* converting unit for lue0 from kg C GJ-1 to umol C umol -1 PAR */
-    conv = (1000.0 / 12.0) * 0.001;
+    conv = (KG_AS_G / MOL_C_TO_GRAMS_C * MOL_TO_UMOL) / (J_2_UMOL * GJ_TO_J);
       
     lue = p->lue0 * conv * CaResp * Nresp;
     
     // fprintf(stderr, "co2 %f\n", co2);
-    fprintf(stderr, "CaResp %f\n", CaResp);
-    fprintf(stderr, "Nresp %f\n", Nresp);
-    fprintf(stderr, "conv %f\n", conv);
+    // fprintf(stderr, "CaResp %f\n", CaResp);
+    // fprintf(stderr, "Nresp %f\n", Nresp);
+    // fprintf(stderr, "conv %f\n", conv);
     fprintf(stderr, "shootnc %f\n", s->shootnc);
     fprintf(stderr, "lue in loop %f\n", lue);
     
