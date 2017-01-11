@@ -187,6 +187,8 @@ void initialise_params(params *p) {
     p->ncbnewz = 0.003;
     p->nccnew = 0.003;
     p->nccnewz = 0.003;
+    p->nref = 0.004;              /* leaf N:C for saturation of photosynthesis for lue_simplified */
+    p->lue0 = 1.4;                /* maximum LUE in kg C GJ-1 */
     p->ncmaxfold = 0.04;
     p->ncmaxfyoung = 0.04;
     p->ncmaxr = 0.03;

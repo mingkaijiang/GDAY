@@ -320,6 +320,7 @@ typedef struct {
     double ligroot;                         /* lignin-to-biomass ratio in root litter; Values from White et al. = 0.22  - Value in Smith et al. 2013 = 0.16, note subtly difference in eqn C9. */
     double ligshoot;                        /* lignin-to-biomass ratio in leaf litter; Values from White et al. DBF = 0.18; ENF = 0.24l; GRASS = 0.09; Shrub = 0.15 - Value in smith et al. 2013 = 0.2, note subtly difference in eqn C9. */
     double liteffnc;
+    double lue0;                            /* maximum LUE in kg C GJ-1 */
     double max_intercep_lai;                /* canopy LAI at which interception is maximised. */
     double max_p_biochemical;               /* max rate of biochemical P mineralisation [g P m-2 y-1]; Wang et al., 2007, GB1018*/
     double measurement_temp;                /* temperature Vcmax/Jmax are measured at, typical 25.0 (celsius)  */
@@ -341,6 +342,7 @@ typedef struct {
     double nmin;                            /* (bewdy) minimum leaf n for +ve p/s (g/m2) */
     double nmin0;                           /* mineral N pool corresponding to Actnc0,etc (g/m2) */
     double nmincrit;                        /* Critical mineral N pool at max soil N:C (g/m2) (Parton et al 1993, McMurtrie et al 2001). */
+    double nref;                            /* leaf N:C for saturation of photosynthesis for lue_simplified */
     double ntheta_root;                     /* Fitted parameter based on Landsberg and Waring */
     double ntheta_topsoil;                  /* Fitted parameter based on Landsberg and Waring */
     double nuptakez;                        /* constant N uptake per year (1/yr) */

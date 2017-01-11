@@ -845,6 +845,10 @@ int handler(char *section, char *name, char *value, control *c,
         p->nccnew = atof(value);
     } else if (MATCH("params", "nccnewz")) {
         p->nccnewz = atof(value);
+    } else if (MATCH("params", "nref")) {
+      p->nref = atof(value);
+    } else if (MATCH("params", "lue0")) {
+      p->lue0 = atof(value);
     } else if (MATCH("params", "pcbnew")) {
         p->pcbnew = atof(value);
     } else if (MATCH("params", "pcbnewz")) {

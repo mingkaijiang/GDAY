@@ -563,6 +563,10 @@ void mate_C3_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s,
         P0 = 0.0;
     }
     
+    double co2 = 350;
+    
+    lue_avg = lue_simplified(p, s, co2);
+    
     // the following lines are replaced by simplified LUE calculation
 //    gamma_star_am = calculate_co2_compensation_point(p, m->Tk_am, mt);
 //    gamma_star_pm = calculate_co2_compensation_point(p, m->Tk_pm, mt);
@@ -1143,8 +1147,7 @@ double assim_p(double P0) {
     return(ap);
 }
 
-double lue_simplified(params *p, double ncontent, double co2, 
-                      double Nref, double LUE0) {
+double lue_simplified(params *p, state *s, double co2) {
     /*
      * New LUE function replacing epsilon function for a simplified calculation
      * of LUE
@@ -1158,9 +1161,9 @@ double lue_simplified(params *p, double ncontent, double co2,
     double lue, CaResp, Nresp;
   
     CaResp = 1.632 * (co2 - 60.9) / (co2 + 121.8);
-    Nresp = MIN(ncontent/Nref, 1);
+    Nresp = MIN(s->shootnc / p->nref, 1);
       
-    lue = LUE0 * CaResp * Nresp;
+    lue = p->lue0 * CaResp * Nresp;
     
     return (lue);
 }
