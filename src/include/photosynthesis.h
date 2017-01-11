@@ -22,6 +22,7 @@ double quad(double, double, double, bool, int *);
 /* Daily funcs */
 void   mate_C3_photosynthesis(control *, fluxes *, met *, params *,
                               state *, double, double, double);
+void simple_photosynthesis(control *, fluxes *, met *, params *, state *);
 
 double  calculate_top_of_canopy_n(params *, state *, double);
 double  calculate_top_of_canopy_p(params *, state *, double);
