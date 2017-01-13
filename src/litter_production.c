@@ -30,7 +30,7 @@ void calculate_litterfall(control *c, fluxes *f, params *p, state *s,
     /* litter N:C ratios, roots and shoot */
     ncflit = s->shootnc * (1.0 - p->fretrans);
     ncrlit = s->rootnc * (1.0 - p->rretrans);
-
+    
     /* litter P:C ratios, roots and shoot */
     pcflit = s->shootpc * (1.0 - p->fretransp);
     pcrlit = s->rootpc * (1.0 - p->rretrans);
@@ -41,7 +41,10 @@ void calculate_litterfall(control *c, fluxes *f, params *p, state *s,
     f->deadstems = p->wdecay * s->stem;
     f->deadbranch = p->bdecay * s->branch;
     f->deadsapwood = (p->wdecay + p->sapturnover) * s->sapwood;
-
+    
+    // fprintf(stderr, "f->deadroots %f\n", f->deadroots);
+    // fprintf(stderr, "rdecay %f\n", *rdecay);
+    // fprintf(stderr, "s->root %f\n", s->root);
 
     if (c->deciduous_model)
         f->deadleaves = f->lrate * s->remaining_days[doy];
@@ -91,6 +94,7 @@ void calculate_litterfall(control *c, fluxes *f, params *p, state *s,
     return;
 
 }
+
 
 void daily_grazing_calc(double fdecay, params *p, fluxes *f, state *s) {
     /* daily grass grazing...

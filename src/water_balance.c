@@ -54,8 +54,6 @@ void initialise_soils_day(control *c, fluxes *f, params *p, state *s) {
 
     exit(1); */
 
-
-
     free(fsoil_top);
     free(fsoil_root);
 

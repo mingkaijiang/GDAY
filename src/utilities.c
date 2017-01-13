@@ -56,7 +56,8 @@ void calculate_daylength(state *s, int num_days, double latitude) {
     /* wrapper to put the day length into an array */
     int i;
     for (i = 0; i < num_days; i++) {
-        s->day_length[i] = day_length(i+1, num_days, latitude);
+        // s->day_length[i] = day_length(i+1, num_days, latitude); commented out for annual version;
+        s->day_length[i] = 12.0;
     }
     return;
 }

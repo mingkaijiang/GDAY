@@ -322,7 +322,8 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
      * done here as rate constants elsewhere in the code are assumed to be in
      * units of days not years
      */
-    correct_rate_constants(p, FALSE);
+    // commented out for annual version;
+    // correct_rate_constants(p, FALSE);
     day_end_calculations(c, p, s, -99, TRUE);
 
     if (c->sub_daily) {
@@ -360,7 +361,10 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
     } else {
         s->lai = MAX(0.01, (p->sla * M2_AS_HA / KG_AS_TONNES /
                             p->cfracts * s->shoot));
-
+      
+      // fprintf(stderr, "shoot in lai calc %f\n", s->shoot);
+      // fprintf(stderr, "lai in lai calc %f\n", s->lai);
+      
     }
 
     if (c->disturbance) {
@@ -379,8 +383,6 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
     c->day_idx = 0;
     c->hour_idx = 0;
 
-
-
     for (nyr = 0; nyr < c->num_years; nyr++) {
 
         if (c->sub_daily) {
@@ -388,11 +390,13 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
         } else {
             year = ma->year[c->day_idx];
         }
+        
+        // commented out for annual version;
         /*
         if (is_leap_year(year))
             c->num_days = 366;  
         else
-            c->num_days = 365;  // commented out for annual version;
+            c->num_days = 365;  
         */
         c->num_days = 1;
         
@@ -554,7 +558,8 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
     /* ========================= **
     **   E N D   O F   Y E A R   **
     ** ========================= */
-    correct_rate_constants(p, TRUE);
+    // commented out for annual version;
+    // correct_rate_constants(p, TRUE);
 
     if (c->print_options == END && c->spin_up == FALSE) {
         write_final_state(c, p, s);
@@ -726,7 +731,6 @@ void correct_rate_constants(params *p, int output) {
         p->puptakez *= NDAYS_IN_YR;
         p->nmax *= NDAYS_IN_YR;
         p->pmax *= NDAYS_IN_YR;
-//        p->p_atm_deposition *= NDAYS_IN_YR;
         p->p_rate_par_weather *= NDAYS_IN_YR;
         p->max_p_biochemical *= NDAYS_IN_YR;
         p->rate_sorb_ssorb *= NDAYS_IN_YR;
@@ -756,7 +760,6 @@ void correct_rate_constants(params *p, int output) {
         p->puptakez /= NDAYS_IN_YR;
         p->nmax /= NDAYS_IN_YR;
         p->pmax /= NDAYS_IN_YR;
-//        p->p_atm_deposition /= NDAYS_IN_YR;
         p->p_rate_par_weather /= NDAYS_IN_YR;
         p->max_p_biochemical /= NDAYS_IN_YR;
         p->rate_sorb_ssorb /= NDAYS_IN_YR;

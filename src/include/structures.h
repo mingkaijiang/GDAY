@@ -404,7 +404,6 @@ typedef struct {
     char   rootsoil_type[STRING_LENGTH];
     char   soil_order[STRING_LENGTH];       /* soil order */
     double rretrans;                        /* root n retranslocation fraction */
-    //double sand_frac;                       /* fraction of sand in soil (top + root averaged) */
     double sapturnover;                     /* Sapwood turnover rate: conversion of sapwood to heartwood (1/yr) */
     double sla;                             /* specific leaf area (m2 one-sided/kg DW) */
     double slamax;                          /* (if equal slazero=no effect) specific leaf area new fol at max leaf N/C (m2 one-sided/kg DW) */
@@ -459,12 +458,12 @@ typedef struct {
     /* hydraulics */
     double layer_thickness;                 /* Soil layer thickness (m) */
     int    n_layers;                        /* Number of soil layers */
-    double root_k;    /* mass of roots for reaching 50% maximum depth (g m-2) */
-    double root_radius;  /* (m) */
-    double root_density; /* g biomass m-3*/
-    double max_depth;    /* (m) */
+    double root_k;                          /* mass of roots for reaching 50% maximum depth (g m-2) */
+    double root_radius;                     /* (m) */
+    double root_density;                    /* g biomass m-3*/
+    double max_depth;                       /* (m) */
     double root_resist;
-    double min_lwp;         /* minimum leaf water potential (MPa) */
+    double min_lwp;                         /* minimum leaf water potential (MPa) */
 
     /* not shared via cmd line */
     double *potA;
@@ -474,7 +473,7 @@ typedef struct {
     double *cond3;
     double *porosity;
     double *field_capacity;
-    int     wetting;         /* number of wetting layers */
+    int     wetting;                        /* number of wetting layers */
 
 } params;
 
