@@ -425,7 +425,6 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
             //    c->pdebug = TRUE;
             //}
 
-
             if (! c->sub_daily) {
                 unpack_met_data(c, f, ma, m, dummy, s->day_length[doy]);
             }

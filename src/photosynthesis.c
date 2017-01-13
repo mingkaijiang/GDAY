@@ -551,7 +551,7 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
     
     if (s->lai > 0.0) {
       /* calculation for npp */
-      f->npp_gCm2 = lue_avg * f->apar * conv / (1.0 - exp(-p->kn * s->lai));
+      f->npp_gCm2 = lue_avg * f->apar * conv / (1.0 - exp(-p->kn * s->lai)) * 365.25;
     } else {
       f->npp_gCm2 = 0.0;
     }
