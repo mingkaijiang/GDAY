@@ -75,7 +75,7 @@ void calc_day_growth(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma,
 
         }
     } else {
-        /* daily allocation...*/
+        /* daily allocation * 365.25...*/
         calc_carbon_allocation_fracs(c, f, p, s, npitfac);
     }
 
@@ -889,9 +889,7 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
         fprintf(stderr, "Unknown C allocation model: %d\n", c->alloc_model);
         exit(EXIT_FAILURE);
     }
-
-    /*printf("%f %f %f %f %f\n", f->alleaf, f->albranch + f->alstem, f->alroot,  f->alcroot, s->canht);*/
-
+    
     /* Total allocation should be one, if not print warning */
     total_alloc = f->alroot + f->alleaf + f->albranch + f->alstem + f->alcroot;
     if (total_alloc > 1.0+EPSILON) {
@@ -1266,7 +1264,7 @@ void calculate_cnp_store(control *c, fluxes *f, state *s) {
     s->nstore += f->nuptake + f->retrans;
     s->pstore += f->puptake + f->retransp;
     s->anpp += f->npp;
-
+    
     /*
     double nstore_max, excess, k;
     double leaf_nc_max = 0.04;
@@ -1343,6 +1341,11 @@ void allocate_stored_cnp(fluxes *f, params *p, state *s) {
     s->c_to_alloc_croot = f->alcroot * s->cstore;
     s->c_to_alloc_branch = f->albranch * s->cstore;
     s->c_to_alloc_stem = f->alstem * s->cstore;
+    
+    fprintf(stderr, "flag 1 \n");
+    fprintf(stderr, "npp %f\n", f->npp);
+    fprintf(stderr, "cstore %f\n", s->cstore);
+    
 
     /* =========================================================
         Nitrogen - Fixed ratios N allocation to woody components.

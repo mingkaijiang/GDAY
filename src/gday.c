@@ -2,8 +2,10 @@
 * Generic Decomposition And Yield (GDAY) model.
 *
 * G'DAY simulates carbon, nutrient and water state and fluxes on either a daily
-* sub-daily (30 min) timestep. See below for model
-* description.
+* sub-daily (30 min) timestep. See below for model description.
+* 
+* This version runs at annual timestep by using met forcing data averaged annually
+* and fluxes summed at the end of each year.
 *
 * Paramaeter descriptions are in gday.h
 *
@@ -82,13 +84,18 @@ int main(int argc, char **argv)
     if (nr == NULL) {
         fprintf(stderr, "nrutil structure: Not allocated enough memory!\n");
         exit(EXIT_FAILURE);
-    }
+    } 
 
     // potentially allocating 1 extra spot, but will be fine as we always
     // index by num_days
-    if ((s->day_length = (double *)calloc(366, sizeof(double))) == NULL) {
+    /*if ((s->day_length = (double *)calloc(366, sizeof(double))) == NULL) {
         fprintf(stderr,"Error allocating space for day_length\n");
 		exit(EXIT_FAILURE);
+    } */
+    
+    if ((s->day_length = (double *)calloc(1, sizeof(double))) == NULL) {
+      fprintf(stderr,"Error allocating space for day_length\n");
+      exit(EXIT_FAILURE);
     }
 
     initialise_control(c);
@@ -381,11 +388,14 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
         } else {
             year = ma->year[c->day_idx];
         }
+        /*
         if (is_leap_year(year))
-            c->num_days = 366;
+            c->num_days = 366;  
         else
-            c->num_days = 365;
-
+            c->num_days = 365;  // commented out for annual version;
+        */
+        c->num_days = 1;
+        
         calculate_daylength(s, c->num_days, p->latitude);
 
         if (c->deciduous_model) {
@@ -594,8 +604,8 @@ void spin_up_pools(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
     if (c->disturbance) {
         cntrl_flag = c->disturbance;
         c->disturbance = FALSE;
-        /*  200 years (50 yrs x 4 cycles) */
-        for (i = 0; i < 4; i++) {
+        /*  1700 years (17 yrs x 100 cycles) */
+        for (i = 0; i < 100; i++) {
             run_sim(cw, c, f, ma, m, p, s, nr); /* run GDAY */
         }
         c->disturbance = cntrl_flag;
@@ -618,8 +628,8 @@ void spin_up_pools(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
             prev_plantp = s->plantp;
             prev_soilp = s->soilp;
 
-            /* 1000 years (50 yrs x 20 cycles) */
-            for (i = 0; i < 20; i++) {
+            /* 1700 years (17 yrs x 100 cycles) */
+            for (i = 0; i < 100; i++) {
                 run_sim(cw, c, f, ma, m, p, s, nr); /* run GDAY */
             }
             if (c->pcycle) {
@@ -959,9 +969,6 @@ void day_end_calculations(control *c, params *p, state *s, int days_in_year,
     } else {
         s->shootnc = s->shootn / s->shoot;
         s->shootpc = s->shootp / s->shoot;
-        //fprintf(stderr, "shootp %f\n", s->shootp*100000);
-        //fprintf(stderr, "shootc %f\n", s->shoot);
-        //fprintf(stderr, "shootpc %f\n", s->shootpc);
     }
 
     /* Explicitly set the shoot N:C */
@@ -994,7 +1001,7 @@ void day_end_calculations(control *c, params *p, state *s, int days_in_year,
     s->litterpbg = s->structsoilp + s->metabsoilp;
     s->litterp = s->litterpag + s->litterpbg;
     s->plantp = s->shootp + s->rootp + s->crootp + s->branchp + s->stemp;
-    s->totalp = s->plantp + s->litterp + s->soilp;// + s->inorgssorbp + s->inorgoccp + s->inorgparp;
+    s->totalp = s->plantp + s->litterp + s->soilp;
 
     /* total plant, soil, litter and system carbon */
     s->soilc = s->activesoil + s->slowsoil + s->passivesoil;
