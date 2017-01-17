@@ -525,17 +525,11 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
     /* 
     Modifies mate_C3_photosynthesis using a simplier approach 
     
-    Parameters:
-    -----------
-    I0: total incident radiation in GJ m-2 yr-1
-    
     */
     
     // fprintf(stderr, "npp in simple photo 1 %f\n", f->npp);
     double lue_avg, conv;
     
-    // fprintf(stderr, "par before conv %f\n", m->par);
-
     /* Covert PAR units (umol PAR MJ-1) */
     conv = MJ_TO_J * J_2_UMOL;
     m->par *= conv;
@@ -607,7 +601,7 @@ void mate_C3_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s,
            gamma_star_pm, Km_am, Km_pm, jmax_am, jmax_pm, vcmax_am, vcmax_pm,
            ci_am, ci_pm, alpha_am, alpha_pm, ac_am, ac_pm, aj_am, aj_pm,
            ap_am, ap_pm,
-           asat_am, asat_pm, lue_am, lue_pm, lue_avg, lue_avg_simp, conv;
+           asat_am, asat_pm, lue_am, lue_pm, lue_avg, conv;
     double mt = p->measurement_temp + DEG_TO_KELVIN;
 
     /* Calculate mate params & account for temperature dependencies */
@@ -1213,8 +1207,11 @@ double lue_simplified(params *p, state *s, double co2) {
      *   Nresp = min(df/Nref, 1)                      ##Rate-limiting effect of low N
      *   return(LUE0 * CaResp * Nresp)
      * 
+     * Parameters:
+     * Nref: leaf N:C for saturation of photosynthesis   
+     * LUE0: maximum LUE in kg C GJ-1
      */
-    double lue, CaResp, Nresp, conv;
+    double lue, CaResp, Nresp, conv, nref;
   
     CaResp = 1.632 * (co2 - 60.9) / (co2 + 121.8);
     Nresp = MIN(s->shootnc / p->nref, 1);
@@ -1222,7 +1219,7 @@ double lue_simplified(params *p, state *s, double co2) {
     /* converting unit for lue0 from kg C GJ-1 to umol C umol -1 PAR */
     conv = (KG_AS_G / MOL_C_TO_GRAMS_C * MOL_TO_UMOL) / (J_2_UMOL * GJ_TO_J);
       
-    lue = p->lue0 * conv * CaResp; // * Nresp;
+    lue = p->lue0 * conv * CaResp * Nresp;
     
     // fprintf(stderr, "co2 %f\n", co2);
     // fprintf(stderr, "CaResp %f\n", CaResp);
