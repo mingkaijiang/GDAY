@@ -558,10 +558,12 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
     
     if (s->lai > 0.0) {
       /* calculation for npp */
-      f->npp_gCm2 = lue_avg * f->apar * conv / (1.0 - exp(-p->kn * s->lai)) * 365.25;
+      f->npp_gCm2 = lue_avg * f->apar * conv / (1.0 - exp(-p->kext * s->lai));
     } else {
       f->npp_gCm2 = 0.0;
     }
+    
+    // P0 = pcontent * p->kp / (1.0 - exp(-p->kp * s->lai))
     
     // fprintf(stderr, "npp_gCm2 = %f\n", f->npp_gCm2);
     // fprintf(stderr, "lue_avg = %f\n", lue_avg);
@@ -571,7 +573,6 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
     // fprintf(stderr, "conv = %f\n", conv);
     // fprintf(stderr, "kn = %f\n", p->kn);
     // fprintf(stderr, "lai = %f\n", s->lai);
-
     
     f->gpp_gCm2 = f->npp_gCm2 / p->cue;
     
@@ -682,11 +683,6 @@ void mate_C3_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s,
         asat_pm = MIN(aj_pm, ac_pm);
     }
 
-    // fprintf(stderr, "ac_pm %f\n", ac_pm);
-    // fprintf(stderr, "aj_pm %f\n", aj_pm);
-    // fprintf(stderr, "ap_pm %f\n", ap_pm);
-    // fprintf(stderr, "asat_pm %f\n", asat_pm);
-
     /* Covert PAR units (umol PAR MJ-1) */
     conv = MJ_TO_J * J_2_UMOL;
     m->par *= conv;
@@ -716,6 +712,14 @@ void mate_C3_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s,
     f->gpp = f->gpp_gCm2 * G_AS_TONNES / M2_AS_HA;
     f->npp = f->npp_gCm2 * G_AS_TONNES / M2_AS_HA;
     
+    // fprintf(stderr, "npp_gCm2 = %f\n", f->npp_gCm2);
+    // fprintf(stderr, "lue_avg = %f\n", lue_avg);
+    // fprintf(stderr, "apar = %f\n", f->apar);
+    // fprintf(stderr, "par = %f\n", m->par);
+    // fprintf(stderr, "fipar = %f\n", s->fipar);
+    // fprintf(stderr, "conv = %f\n", conv);
+    // fprintf(stderr, "kn = %f\n", p->kn);
+    // fprintf(stderr, "lai = %f\n", s->lai);
     // fprintf(stderr, "npp mate %f\n", f->npp);
 
     /* save apar in MJ m-2 d-1 */
@@ -1231,14 +1235,17 @@ double lue_simplified(params *p, state *s, double co2) {
     /* converting unit for lue0 from kg C GJ-1 to umol C umol -1 PAR */
     conv = (KG_AS_G / MOL_C_TO_GRAMS_C * MOL_TO_UMOL) / (J_2_UMOL * GJ_TO_J);
       
-    lue = p->lue0 * conv * CaResp * Nresp;
+    lue = p->lue0 * conv * CaResp; // * Nresp;
     
     // fprintf(stderr, "co2 %f\n", co2);
     // fprintf(stderr, "CaResp %f\n", CaResp);
     // fprintf(stderr, "Nresp %f\n", Nresp);
     // fprintf(stderr, "conv %f\n", conv);
     // fprintf(stderr, "shootnc %f\n", s->shootnc);
-    // fprintf(stderr, "lue in loop %f\n", lue);
+    // fprintf(stderr, "shootc %f\n", s->shoot);
+    // fprintf(stderr, "shootn %f\n", s->shootn);
+    // fprintf(stderr, "plantn %f\n", s->plantn);
+    // fprintf(stderr, "soiln %f\n", s->soiln);
     
     return (lue);
 }

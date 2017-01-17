@@ -235,6 +235,8 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
         s->fipar = ((1.0 - exp(-p->kext * s->lai / fc)) * fc);
     else
         s->fipar = 0.0;
+    
+    // fprintf(stderr, "lai for fipar %f\n", s->lai);
 
     if (c->water_stress) {
         /* Calculate the soil moisture availability factors [0,1] in the
@@ -250,8 +252,8 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
         exit(EXIT_FAILURE);
     } else if (c->assim_model == MATE) {
         if (c->ps_pathway == C3) {
-            mate_C3_photosynthesis(c, f, m, p, s, daylen, ncontent, pcontent);   // commented out for annual version;
-            // simple_photosynthesis(c, f, m, p, s);
+            // mate_C3_photosynthesis(c, f, m, p, s, daylen, ncontent, pcontent);   // commented out for annual version;
+            simple_photosynthesis(c, f, m, p, s);
         } else {
             mate_C4_photosynthesis(c, f, m, p, s, daylen, ncontent, pcontent);
         }
@@ -1075,16 +1077,6 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s,
     s->branchp += f->ppbranch - p->bdecay * s->branchp;
 
     s->rootp += f->pproot - rdecay * s->rootp;
-
-    //fprintf(stderr, "nuptake %f\n", f->nuptake*100000);
-    //fprintf(stderr, "puptake %f\n", f->puptake*100000);
-    //fprintf(stderr, "nproot %f\n", f->nproot);
-    //fprintf(stderr, "pproot %f\n", f->pproot);
-    //fprintf(stderr, "rootc %f\n", s->root);
-    //fprintf(stderr, "rootn %f\n", s->rootn);
-    //fprintf(stderr, "rootp %f\n", s->rootp);
-    //fprintf(stderr, "ncrfac calc %f\n", (s->rootn/s->root)/(s->shootn/s->shoot));
-    //fprintf(stderr, "pcrfac calc %f\n", (s->rootp/s->root)/(s->shootp/s->shoot));
 
     s->crootp += f->ppcroot - p->crdecay * s->crootp;
     s->stempimm += f->ppstemimm - p->wdecay * s->stempimm;
