@@ -111,11 +111,11 @@ void calculate_water_balance(control *c, fluxes *f, met *m, params *p,
     /* gC m-2 day-1 -> umol m-2 s-1 */
     conv = GRAMS_C_TO_MOL_C * MOL_TO_UMOL * DAY_2_SEC;
     
-    // the following two lines replaced by the next two lines */ 
+    // the following two lines replaced by the next two lines for annual version*/ 
     // gpp_am = f->gpp_am * conv;
     // gpp_pm = f->gpp_pm * conv;
-    gpp_am = f->gpp * conv;
-    gpp_pm = f->gpp * conv;
+    gpp_am = f->gpp/2.0 * conv;
+    gpp_pm = f->gpp/2.0 * conv;
 
     penman_canopy_wrapper(p, s, m->press, m->vpd_am, m->tair_am, m->wind_am,
                           net_rad_am, m->Ca, gpp_am, &ga_am, &gs_am,

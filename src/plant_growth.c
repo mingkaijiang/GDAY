@@ -236,8 +236,6 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
     else
         s->fipar = 0.0;
     
-    // fprintf(stderr, "lai for fipar %f\n", s->lai);
-
     if (c->water_stress) {
         /* Calculate the soil moisture availability factors [0,1] in the
            topsoil and the entire root zone */

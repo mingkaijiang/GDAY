@@ -532,17 +532,13 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
     */
     
     // fprintf(stderr, "npp in simple photo 1 %f\n", f->npp);
-    double lue_avg, conv, I0;
+    double lue_avg, conv;
     
     // fprintf(stderr, "par before conv %f\n", m->par);
 
     /* Covert PAR units (umol PAR MJ-1) */
     conv = MJ_TO_J * J_2_UMOL;
     m->par *= conv;
-    
-    // fprintf(stderr, "conv1 %f\n", conv);
-    
-    // fprintf(stderr, "par after conv %f\n", m->par);
     
     /* lue in umol C umol-1 PAR */
     lue_avg = lue_simplified(p, s, m->Ca);
@@ -558,31 +554,22 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
     
     if (s->lai > 0.0) {
       /* calculation for npp */
-      f->npp_gCm2 = lue_avg * f->apar * conv / (1.0 - exp(-p->kext * s->lai));
+      f->gpp_gCm2 = lue_avg * f->apar * conv; // / (1.0 - exp(-p->kext * s->lai));
     } else {
-      f->npp_gCm2 = 0.0;
+      f->gpp_gCm2 = 0.0;
     }
     
-    // P0 = pcontent * p->kp / (1.0 - exp(-p->kp * s->lai))
-    
     // fprintf(stderr, "npp_gCm2 = %f\n", f->npp_gCm2);
-    // fprintf(stderr, "lue_avg = %f\n", lue_avg);
     // fprintf(stderr, "apar = %f\n", f->apar);
     // fprintf(stderr, "par = %f\n", m->par);
     // fprintf(stderr, "fipar = %f\n", s->fipar);
-    // fprintf(stderr, "conv = %f\n", conv);
-    // fprintf(stderr, "kn = %f\n", p->kn);
     // fprintf(stderr, "lai = %f\n", s->lai);
     
-    f->gpp_gCm2 = f->npp_gCm2 / p->cue;
-    
-    // f->npp_gCm2 = LUE * I * (1 - exp(-p->kn*SLA*af*NPP/sf/cfrac))
+    f->npp_gCm2 = f->gpp_gCm2 * p->cue;
     
     /* g C m-2 to tonnes hectare-1 day-1 */
     f->gpp = f->gpp_gCm2 * G_AS_TONNES / M2_AS_HA;
     f->npp = f->npp_gCm2 * G_AS_TONNES / M2_AS_HA;
-    
-    // fprintf(stderr, "npp simple photo 2 %f\n", f->npp);
     
     /* save apar in MJ m-2 d-1 */
     f->apar *= UMOL_2_JOL * J_TO_MJ;

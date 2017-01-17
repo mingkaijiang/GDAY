@@ -362,7 +362,9 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
         s->lai = MAX(0.01, (p->sla * M2_AS_HA / KG_AS_TONNES /
                             p->cfracts * s->shoot));
       
-      fprintf(stderr, "shoot in lai calc %f\n", s->shoot);
+      fprintf(stderr, "shoot %f\n", s->shoot);
+      // fprintf(stderr, "lai 1 %f\n", s->lai);
+      
     }
 
     if (c->disturbance) {
