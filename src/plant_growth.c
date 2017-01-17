@@ -46,6 +46,14 @@ void calc_day_growth(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma,
     //foliage in young stand, and leaf P:C as a fraction of Pcmaxyoung
     nitfac = MIN(1.0, s->shootnc / p->ncmaxfyoung);
     pitfac = MIN(1.0, s->shootpc / p->pcmaxfyoung);
+    
+    // fprintf(stderr, "shootnc %f\n", s->shootnc);
+    // fprintf(stderr, "shootpc %f\n", s->shootpc);
+    // fprintf(stderr, "shootc %f\n", s->shoot);
+    // fprintf(stderr, "shootn %f\n", s->shootn);
+    // fprintf(stderr, "shootp %f\n", s->shootp);
+
+    
 
     /* checking for pcycle control parameter */
     if (c->pcycle == TRUE) {
@@ -193,6 +201,8 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
     */
     double fc, leafn, leafp, ncontent, pcontent;
   
+  // fprintf(stderr, "npp in carbon_daily_production 1 %f\n", f->npp);
+  
     if (s->lai > 0.0) {
         /* average leaf nitrogen content (g N m-2 leaf) */
         leafn = (s->shootnc * p->cfracts / p->sla * KG_AS_G);
@@ -240,8 +250,8 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
         exit(EXIT_FAILURE);
     } else if (c->assim_model == MATE) {
         if (c->ps_pathway == C3) {
-            // mate_C3_photosynthesis(c, f, m, p, s, daylen, ncontent, pcontent);   // commented out for annual version;
-            simple_photosynthesis(c, f, m, p, s);
+            mate_C3_photosynthesis(c, f, m, p, s, daylen, ncontent, pcontent);   // commented out for annual version;
+            // simple_photosynthesis(c, f, m, p, s);
         } else {
             mate_C4_photosynthesis(c, f, m, p, s, daylen, ncontent, pcontent);
         }
@@ -266,6 +276,8 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
     /* Calculate NPP */
     f->npp_gCm2 = f->gpp_gCm2 * p->cue;
     f->npp = f->npp_gCm2 * GRAM_C_2_TONNES_HA;
+    
+    // fprintf(stderr, "npp in carbon_daily_production %f\n", f->npp);   // supposed to be annual npp
 
     return;
 }
@@ -471,6 +483,9 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     f->retransp = phosphorus_retrans(c, f, p, s, fdecay, rdecay, doy);
     f->nuptake = calculate_nuptake(c, p, s);
     f->puptake = calculate_puptake(c, p, s, f);
+    
+    // fprintf(stderr, "nuptake %f\n", f->nuptake);
+    // fprintf(stderr, "puptake %f\n", f->puptake);
 
     /*  Ross's Root Model. */
     if (c->model_optroot) {
@@ -505,6 +520,10 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     } else {
         f->ploss = 0.0;
     }
+    
+    // fprintf(stderr, "nloss %f\n", f->nloss);
+    // fprintf(stderr, "ploss %f\n", f->ploss);
+    
 
     /* total nitrogen/phosphorus to allocate */
     ntot = MAX(0.0, f->nuptake + f->retrans);
@@ -644,8 +663,8 @@ int cut_back_production(control *c, fluxes *f, params *p, state *s,
     f->gpp_gCm2 = f->gpp / conv;
     
     // following two lines commented out for simplified version */
-    // f->gpp_am = f->gpp_gCm2 / 2.0;
-    // f->gpp_pm = f->gpp_gCm2 / 2.0;
+    f->gpp_am = f->gpp_gCm2 / 2.0;
+    f->gpp_pm = f->gpp_gCm2 / 2.0;
 
     /* New respiration flux */
     f->auto_resp =  f->gpp - f->npp;
@@ -724,7 +743,15 @@ double calculate_growth_stress_limitation(params *p, state *s, control *c) {
         nutrient_lim = MIN(nlim, plim);
         current_limitation = MAX(0.1, MIN(nutrient_lim, s->wtfac_root));
     }
-
+    
+    /*fprintf(stderr, "plim %f\n", plim);
+    fprintf(stderr, "nlim %f\n", nlim);
+    fprintf(stderr, "shootnc %f\n", s->shootnc);
+    fprintf(stderr, "shootpc %f\n", s->shootpc);
+    fprintf(stderr, "shootc %f\n", s->shoot);
+    fprintf(stderr, "shootn %f\n", s->shootn);
+    fprintf(stderr, "shootp %f\n", s->shootp);
+    */
     return (current_limitation);
 }
 
@@ -1342,9 +1369,9 @@ void allocate_stored_cnp(fluxes *f, params *p, state *s) {
     s->c_to_alloc_branch = f->albranch * s->cstore;
     s->c_to_alloc_stem = f->alstem * s->cstore;
     
-    fprintf(stderr, "flag 1 \n");
-    fprintf(stderr, "npp %f\n", f->npp);
-    fprintf(stderr, "cstore %f\n", s->cstore);
+    // fprintf(stderr, "flag 1 \n");
+    // fprintf(stderr, "npp %f\n", f->npp);
+    // fprintf(stderr, "cstore %f\n", s->cstore);
     
 
     /* =========================================================
@@ -1526,9 +1553,10 @@ double calculate_nuptake(control *c, params *p, state *s) {
         U0 = p->rateuptake * s->inorgn;
         Kr = p->kr;
         nuptake = MAX(U0 * s->root / (s->root + Kr), 0.0);
-
-        //fprintf(stderr, "inorgn %f\n", s->inorgn);
-        //fprintf(stderr, "nuptake %f\n", nuptake);
+        
+        // fprintf(stderr, "U0 %f\n", U0);
+        // fprintf(stderr, "root %f\n", s->root);
+        // fprintf(stderr, "root+Kr %f\n", s->root+Kr);
 
         /* Make minimum uptake rate supply rate for deciduous_model cases
            otherwise it is possible when growing from scratch we don't have

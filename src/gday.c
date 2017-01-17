@@ -88,15 +88,15 @@ int main(int argc, char **argv)
 
     // potentially allocating 1 extra spot, but will be fine as we always
     // index by num_days
-    /*if ((s->day_length = (double *)calloc(366, sizeof(double))) == NULL) {
+    if ((s->day_length = (double *)calloc(366, sizeof(double))) == NULL) {
         fprintf(stderr,"Error allocating space for day_length\n");
-		exit(EXIT_FAILURE);
-    } */
+		    exit(EXIT_FAILURE);
+    } 
     
-    if ((s->day_length = (double *)calloc(1, sizeof(double))) == NULL) {
+    /*if ((s->day_length = (double *)calloc(1, sizeof(double))) == NULL) {
       fprintf(stderr,"Error allocating space for day_length\n");
       exit(EXIT_FAILURE);
-    }
+    }*/
 
     initialise_control(c);
     initialise_params(p);
@@ -202,15 +202,15 @@ int main(int argc, char **argv)
             free_dvector(nr->y, 1, nr->N);
             free_dvector(nr->ystart, 1, nr->N);
             free_dvector(nr->dydx, 1, nr->N);
-			free_dvector(nr->yscal, 1, nr->N);
+			      free_dvector(nr->yscal, 1, nr->N);
             free_dvector(nr->xp, 1, nr->kmax);
             free_dmatrix(nr->yp, 1, nr->N, 1, nr->kmax);
             free_dvector(nr->ytemp, 1, nr->N);
-        	free_dvector(nr->ak6, 1, nr->N);
-        	free_dvector(nr->ak5, 1, nr->N);
-        	free_dvector(nr->ak4, 1, nr->N);
-        	free_dvector(nr->ak3, 1, nr->N);
-        	free_dvector(nr->ak2, 1, nr->N);
+        	  free_dvector(nr->ak6, 1, nr->N);
+        	  free_dvector(nr->ak5, 1, nr->N);
+        	  free_dvector(nr->ak4, 1, nr->N);
+        	  free_dvector(nr->ak3, 1, nr->N);
+        	  free_dvector(nr->ak2, 1, nr->N);
             free_dvector(nr->yerr, 1, nr->N);
         }
 
@@ -248,7 +248,7 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
 
     double fdecay, rdecay, current_limitation, npitfac, year;
     int   *disturbance_yrs = NULL;
-
+    
     if (c->deciduous_model) {
         /* Are we reading in last years average growing season? */
         if (float_eq(s->avg_alleaf, 0.0) &&
@@ -323,7 +323,7 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
      * units of days not years
      */
     // commented out for annual version;
-    // correct_rate_constants(p, FALSE);
+    correct_rate_constants(p, FALSE);
     day_end_calculations(c, p, s, -99, TRUE);
 
     if (c->sub_daily) {
@@ -331,7 +331,7 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
     } else {
         initialise_soils_day(c, f, p, s);
     }
-
+    
     if (c->water_balance == HYDRAULICS) {
         double root_zone_total, water_content;
 
@@ -392,13 +392,13 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
         }
         
         // commented out for annual version;
-        /*
+        
         if (is_leap_year(year))
             c->num_days = 366;  
         else
             c->num_days = 365;  
-        */
-        c->num_days = 1;
+        
+        // c->num_days = 1;
         
         calculate_daylength(s, c->num_days, p->latitude);
 
@@ -428,6 +428,7 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
             if (! c->sub_daily) {
                 unpack_met_data(c, f, ma, m, dummy, s->day_length[doy]);
             }
+            
             calculate_litterfall(c, f, p, s, doy, &fdecay, &rdecay);
 
             if (c->disturbance && p->disturbance_doy == doy+1) {
@@ -458,14 +459,13 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
                 hurricane(f, p, s);
             }
 
-
             calc_day_growth(cw, c, f, ma, m, nr, p, s, s->day_length[doy],
                             doy, fdecay, rdecay);
 
             //printf("%d %f %f\n", doy, f->gpp*100, s->lai);
             calculate_csoil_flows(c, f, p, s, m->tsoil, doy);
             calculate_nsoil_flows(c, f, p, s, doy);
-
+            
             if (c->pcycle == TRUE) {
                 calculate_psoil_flows(c, f, p, s, doy);
             }
@@ -484,6 +484,7 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
                 s->prev_sma = sma(SMA_MEAN, hw).sma;
             } else if (c->deciduous_model == FALSE) {
                 current_limitation = calculate_growth_stress_limitation(p, s, c);
+              
                 sma(SMA_ADD, hw, current_limitation);
                 s->prev_sma = sma(SMA_MEAN, hw).sma;
             }
@@ -500,14 +501,14 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
             /* Turn off all N calculations */
             if (c->ncycle == FALSE)
                 reset_all_n_pools_and_fluxes(f, s);
-
+            
             /* Turn off all P calculations */
             if (c->pcycle == FALSE)
                 reset_all_p_pools_and_fluxes(f, s);
-
+            
             /* calculate C:N ratios and increment annual flux sum */
             day_end_calculations(c, p, s, c->num_days, FALSE);
-
+            
             if (c->print_options == SUBDAILY && c->spin_up == FALSE) {
                 write_daily_outputs_ascii(c, f, s, year, doy+1);
             } else if (c->print_options == DAILY && c->spin_up == FALSE) {
@@ -558,7 +559,7 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
     **   E N D   O F   Y E A R   **
     ** ========================= */
     // commented out for annual version;
-    // correct_rate_constants(p, TRUE);
+    correct_rate_constants(p, TRUE);
 
     if (c->print_options == END && c->spin_up == FALSE) {
         write_final_state(c, p, s);
@@ -963,7 +964,7 @@ void day_end_calculations(control *c, params *p, state *s, int days_in_year,
     INIT : logical
         logical defining whether it is the first day of the simulation
     */
-
+    
     /* update N:C and P:C of plant pool */
     if (float_eq(s->shoot, 0.0)) {
         s->shootnc = 0.0;
@@ -1023,7 +1024,7 @@ void day_end_calculations(control *c, params *p, state *s, int days_in_year,
     if (init == FALSE)
         /* Required so max leaf & root N:C can depend on Age */
         s->age += 1.0 / days_in_year;
-
+    
     return;
 }
 

@@ -480,6 +480,8 @@ void calculate_soil_respiration(control *c, fluxes *f, params *p, state *s) {
                           f->slow_to_passive - s->passivesoil *
                           p->decayrate[6]);
     }
+    
+    // fprintf(stderr, "hetero_resp %f\n", f->hetero_resp);
 
     return;
 }
@@ -530,7 +532,11 @@ void calculate_cpools(fluxes *f, state *s) {
       zero can end up becoming zero but to a silly decimal place
     */
     precision_control_soil_c(f, s);
-
+    
+    /*fprintf(stderr, "activesoil in calculate_cpools %f\n", s->activesoil);
+    fprintf(stderr, "slowsoil in calculate_cpools %f\n", s->slowsoil);
+    fprintf(stderr, "passivesoil in calculate_cpools %f\n", s->passivesoil);
+    */
     return;
 }
 
@@ -603,7 +609,8 @@ void calculate_nsoil_flows(control *c, fluxes *f, params *p, state *s,
         adjust_residence_time_of_slow_pool(f, p);
     } else {
         /* Need to correct units of rate constant */
-        f->rtslow = 1.0 / (p->kdec6 * NDAYS_IN_YR);
+        f->rtslow = 1.0 / (p->kdec6 * NDAYS_IN_YR);    // commented out for annual version;
+        // f->rtslow = 1.0 / (p->kdec6); 
     }
 
     /* Update model soil N pools */
@@ -688,8 +695,8 @@ void adjust_residence_time_of_slow_pool(fluxes *f, params *p) {
 
     if (float_eq(f->factive, 0.0)) {
         /* Need to correct units of rate constant */
-        // rt_slow_pool = 1.0 / (p->kdec6 * NDAYS_IN_YR);   // commented out for annual version;
-        rt_slow_pool = 1.0 / (p->kdec6);
+        rt_slow_pool = 1.0 / (p->kdec6 * NDAYS_IN_YR);   // commented out for annual version;
+        // rt_slow_pool = 1.0 / (p->kdec6);
     } else {
         rt_slow_pool = (1.0 / p->prime_y) / \
                         MAX(0.3, (f->factive / (f->factive + p->prime_z)));
@@ -698,7 +705,7 @@ void adjust_residence_time_of_slow_pool(fluxes *f, params *p) {
         p->kdec6 = 1.0 / rt_slow_pool;
 
         /* rate constant needs to be per day inside GDAY */
-        // p->kdec6 /= NDAYS_IN_YR;   // commented out for annual version;
+        p->kdec6 /= NDAYS_IN_YR;   // commented out for annual version;
 
     }
 
@@ -1122,7 +1129,10 @@ void calculate_npools(control *c, fluxes *f, params *p, state *s,
        (grazer urine n goes directly into inorganic pool) nb inorgn may be
        unstable if rateuptake is large */
     s->inorgn += (f->ninflow + f->nurine + f->nmineralisation -
-                  f->nloss - f->nuptake);
+                  f->nloss - f->nuptake);                            // commented out for annual version;
+    
+    // s->inorgn += (f->ninflow * 365.25 + f->nurine + f->nmineralisation -
+    //   f->nloss - f->nuptake);
 
     //fprintf(stderr, "inorgn = %f\n", s->inorgn);
 
@@ -1959,13 +1969,9 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
     fixp = pc_flux(f->c_into_passive, p_into_passive, pass_pc);
     s->passivesoilp += p_into_passive + fixp - p_out_of_passive;
 
-    //fprintf(stderr, "inorglabp 1 %f\n", s->inorglabp);
-
     /* Daily increment of soil inorganic labile and sorbed P pool */
     s->inorglabp += f->p_lab_in - f->p_lab_out;
     s->inorgsorbp += f->p_sorb_in - f->p_sorb_out;
-
-    //fprintf(stderr, "psorb calc %f\n", (9 * s->inorglabp)/(0.0012+s->inorglabp));
 
     /* Daily increment of soil inorganic available P pool (lab + sorb) */
     s->inorgavlp = s->inorglabp + s->inorgsorbp;
@@ -1977,15 +1983,18 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
     s->inorgoccp += f->p_ssorb_to_occ;
 
     /* Daily increment of soil inorganic parent P pool */
-    s->inorgparp += f->p_atm_dep - f->p_par_to_min;
+    s->inorgparp += f->p_atm_dep - f->p_par_to_min;   //commented out for annual version;
+    
+   // s->inorgparp += f->p_atm_dep * 365.25 - f->p_par_to_min;
     
     //fprintf(stderr, "inorglabp %f\n", s->inorglabp);
     //fprintf(stderr, "inorgsorbp %f\n", s->inorgsorbp);
     //fprintf(stderr, "inorgssorbp %f\n", s->inorgssorbp);
     //fprintf(stderr, "inorgoccp %f\n", s->inorgoccp);
     //fprintf(stderr, "inorgparp %f\n", s->inorgparp);
+    //fprintf(stderr, "p_atm_dep %f\n", f->p_atm_dep);
+    //fprintf(stderr, "p_par_to_min %f\n", f->p_par_to_min);
     
-
     return;
 }
 

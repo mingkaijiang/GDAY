@@ -531,11 +531,18 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
     
     */
     
+    // fprintf(stderr, "npp in simple photo 1 %f\n", f->npp);
     double lue_avg, conv, I0;
+    
+    // fprintf(stderr, "par before conv %f\n", m->par);
 
     /* Covert PAR units (umol PAR MJ-1) */
     conv = MJ_TO_J * J_2_UMOL;
     m->par *= conv;
+    
+    // fprintf(stderr, "conv1 %f\n", conv);
+    
+    // fprintf(stderr, "par after conv %f\n", m->par);
     
     /* lue in umol C umol-1 PAR */
     lue_avg = lue_simplified(p, s, m->Ca);
@@ -556,6 +563,16 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
       f->npp_gCm2 = 0.0;
     }
     
+    // fprintf(stderr, "npp_gCm2 = %f\n", f->npp_gCm2);
+    // fprintf(stderr, "lue_avg = %f\n", lue_avg);
+    // fprintf(stderr, "apar = %f\n", f->apar);
+    // fprintf(stderr, "par = %f\n", m->par);
+    // fprintf(stderr, "fipar = %f\n", s->fipar);
+    // fprintf(stderr, "conv = %f\n", conv);
+    // fprintf(stderr, "kn = %f\n", p->kn);
+    // fprintf(stderr, "lai = %f\n", s->lai);
+
+    
     f->gpp_gCm2 = f->npp_gCm2 / p->cue;
     
     // f->npp_gCm2 = LUE * I * (1 - exp(-p->kn*SLA*af*NPP/sf/cfrac))
@@ -564,7 +581,7 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
     f->gpp = f->gpp_gCm2 * G_AS_TONNES / M2_AS_HA;
     f->npp = f->npp_gCm2 * G_AS_TONNES / M2_AS_HA;
     
-    // fprintf(stderr, "npp simple %f\n", f->npp);
+    // fprintf(stderr, "npp simple photo 2 %f\n", f->npp);
     
     /* save apar in MJ m-2 d-1 */
     f->apar *= UMOL_2_JOL * J_TO_MJ;
