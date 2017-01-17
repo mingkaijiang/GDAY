@@ -250,8 +250,8 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
         exit(EXIT_FAILURE);
     } else if (c->assim_model == MATE) {
         if (c->ps_pathway == C3) {
-            mate_C3_photosynthesis(c, f, m, p, s, daylen, ncontent, pcontent);   // commented out for annual version;
-            // simple_photosynthesis(c, f, m, p, s);
+            // mate_C3_photosynthesis(c, f, m, p, s, daylen, ncontent, pcontent);   // commented out for annual version;
+            simple_photosynthesis(c, f, m, p, s);
         } else {
             mate_C4_photosynthesis(c, f, m, p, s, daylen, ncontent, pcontent);
         }
@@ -277,8 +277,6 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
     f->npp_gCm2 = f->gpp_gCm2 * p->cue;
     f->npp = f->npp_gCm2 * GRAM_C_2_TONNES_HA;
     
-    // fprintf(stderr, "npp in carbon_daily_production %f\n", f->npp);   // supposed to be annual npp
-
     return;
 }
 
