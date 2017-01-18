@@ -6,20 +6,7 @@
 #include "utilities.h"
 
 void    initialise_soils_day(control *, fluxes *, params *, state *);
-void    calculate_water_balance(control *, fluxes *, met *, params *,
-                                state *, int, double, double, double);
-void    update_water_storage(control *, fluxes *, params *, state *, double,
-                             double, double, double *, double *, double *,
-                             double *);
 
-void    calc_interception(control *c, met *m, params *, fluxes *, state *,
-                          double *, double *, double *);
-void    penman_canopy_wrapper(params *, state *, double, double, double, double,
-                              double, double, double, double *, double *,
-                              double *, double *, double *);
-
-void    penman_monteith(double, double, double, double, double, double, double *,
-                        double *, double *, double *);
 double  calc_sat_water_vapour_press(double);
 
 double  calc_stomatal_conductance(params *, state *, double, double, double);
@@ -39,8 +26,5 @@ void    update_daily_water_struct(fluxes *, double, double, double, double,
                                   double, double, double);
 
 double  canopy_boundary_layer_conduct(params *, double, double, double, double);
-
-
-
 
 #endif /* WATER_BALANCE */

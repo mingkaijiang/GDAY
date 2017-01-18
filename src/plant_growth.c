@@ -35,8 +35,6 @@ void calc_day_growth(control *c, fluxes *f, met_arrays *ma,
 
     /* calculate daily GPP/NPP, respiration and update water balance */
     carbon_daily_production(c, f, m, p, s, day_length);
-    calculate_water_balance(c, f, m, p, s, day_length, dummy, dummy, dummy);
-
 
     // leaf N:C as a fraction of Ncmaxyoung, i.e. the max N:C ratio of
     //foliage in young stand, and leaf P:C as a fraction of Pcmaxyoung
@@ -78,17 +76,6 @@ void calc_day_growth(control *c, fluxes *f, met_arrays *ma,
         calc_root_exudation(c, f, p, s);
     }
 
-    /* If we didn't have enough N available to satisfy wood demand, NPP
-       is down-regulated and thus so is GPP. We also need to recalculate the
-       water balance given the lower GPP. */
-    if (recalc_wb) {
-        s->pawater_topsoil = previous_topsoil_store;
-        s->pawater_root = previous_rootzone_store;
-        
-        calculate_water_balance(c, f, m, p, s, day_length, dummy, dummy,
-                                dummy);
-        
-    }
     update_plant_state(c, f, p, s, fdecay, rdecay, doy);
 
     precision_control(f, s);

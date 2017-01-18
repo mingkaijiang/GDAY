@@ -341,7 +341,7 @@ void spin_up_pools(control *c, fluxes *f, met_arrays *ma, met *m,
     */
     double tol_c = 5E-03;
     double tol_n = 5E-04;
-    double tol_p = 5E-05;
+    double tol_p = 5E-04;
     double prev_plantc = 99999.9;
     double prev_soilc = 99999.9;
     double prev_plantn = 99999.9;
