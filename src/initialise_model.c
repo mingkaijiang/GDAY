@@ -28,7 +28,6 @@ void initialise_control(control *c) {
     c->fixed_lai = FALSE;           /* Fix LAI */
     c->fixleafnc = FALSE;           /* fixed leaf N C ? */
     c->fixleafpc = FALSE;           /* fixed leaf P C ? */
-    c->grazing = 0;                 /* Is foliage grazed? 0=No, 1=daily, 2=annual and then set disturbance_doy=doy */
     c->gs_model = MEDLYN;           /* Stomatal conductance model, currently only this one is implemented */
     c->model_optroot = FALSE;       /* Ross's optimal root model...not sure if this works yet...0=off, 1=on */
     c->modeljm = 1;                 /* modeljm=0, Jmax and Vcmax parameters are read in, modeljm=1, parameters are calculated from leaf N & P content, modeljm=2, Vcmax is calculated from leaf N & P content but Jmax is related to Vcmax */
@@ -113,7 +112,6 @@ void initialise_params(params *p) {
     p->density = 420.0;
     p->direct_frac = 0.5;
     p->displace_ratio = 0.78;
-    p->disturbance_doy = 1.0;
     p->dz0v_dh = 0.075;
     p->eac = 79430.0;   /* Temp. response of Kc (J mol-1) */
     p->eag = 37830.0;

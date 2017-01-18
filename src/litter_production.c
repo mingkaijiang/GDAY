@@ -74,72 +74,13 @@ void calculate_litterfall(control *c, fluxes *f, params *p, state *s,
     /* P in stemwood litter - only mobile p is retranslocated */
     f->deadstemp = p->wdecay * (s->stempimm + s->stempmob * \
                    (1.0 - p->wretrans));
-
-    /* Animal grazing? */
-
-    /* Daily... */
-    if (c->grazing == 1) {
-        daily_grazing_calc(*fdecay, p, f, s);
-
-    /* annually */
-    } else if (c->grazing == 2 && p->disturbance_doy == doy) {
-        annual_grazing_calc(p, f, s);
-
-    /* no grazing */
-    } else {
-        f->ceaten = 0.0;
-        f->neaten = 0.0;
-        f->peaten = 0.0;
-    }
+    
+    f->ceaten = 0.0;
+    f->neaten = 0.0;
+    f->peaten = 0.0;
+        
     return;
 
-}
-
-
-void daily_grazing_calc(double fdecay, params *p, fluxes *f, state *s) {
-    /* daily grass grazing...
-
-    Parameters:
-    -----------
-    fdecay : float
-        foliage decay rate
-
-    Returns:
-    --------
-    ceaten : float
-        C consumed by grazers [tonnes C/ha/day]
-    neaten : float
-        N consumed by grazers [tonnes N/ha/day]
-    peaten : float
-        P consumed by grazers [tonnes P/ha/day]
-    */
-    f->ceaten = fdecay * p->fracteaten / (1.0 - p->fracteaten) * s->shoot;
-    f->neaten = fdecay * p->fracteaten / (1.0 - p->fracteaten) * s->shootn;
-    f->peaten = fdecay * p->fracteaten / (1.0 - p->fracteaten) * s->shootp;
-
-
-    return;
-}
-
-void annual_grazing_calc(params *p, fluxes *f, state *s) {
-    /* Annual grass grazing...single one off event
-
-
-    Returns:
-    --------
-    ceaten : float
-        C consumed by grazers [tonnes C/ha/day]
-    neaten : float
-        N consumed by grazers [tonnes N/ha/day]
-    peaten : float
-        P consumed by grazers [tonnes P/ha/day]
-    */
-    f->ceaten = s->shoot * p->fracteaten;
-    f->neaten = s->shootn * p->fracteaten;
-    f->peaten = s->shootp * p->fracteaten;
-
-
-    return;
 }
 
 float decay_in_dry_soils(double decay_rate, double decay_rate_dry, params *p,
