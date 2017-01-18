@@ -30,13 +30,4 @@ double  lue_simplified(params *, state *, double co2);
 double  epsilon(params *, double, double, double, double);
 
 
-/* C4 additional prototypes */
-void   mate_C4_photosynthesis(control *, fluxes *, met *, params *,
-                              state *, double, double, double);
-void   calculate_vcmax_parameter(params *, state *s, double, double,
-                                 double *,
-                                 double *, double);
-double calc_respiration(double, double);
-double quadratic(double, double, double);
-
 #endif /* PHOTOSYNTHESIS */

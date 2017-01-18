@@ -235,12 +235,9 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
     if (c->assim_model == BEWDY){
         exit(EXIT_FAILURE);
     } else if (c->assim_model == MATE) {
-        if (c->ps_pathway == C3) {
-            mate_C3_photosynthesis(c, f, m, p, s, daylen, ncontent, pcontent);   // commented out for annual version;
-            // simple_photosynthesis(c, f, m, p, s);
-        } else {
-            mate_C4_photosynthesis(c, f, m, p, s, daylen, ncontent, pcontent);
-        }
+        mate_C3_photosynthesis(c, f, m, p, s, daylen, ncontent, pcontent);   // commented out for annual version;
+        // simple_photosynthesis(c, f, m, p, s);
+      
     } else {
         fprintf(stderr,"Unknown photosynthesis model'");
         exit(EXIT_FAILURE);
