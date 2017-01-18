@@ -193,16 +193,7 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
         s->wtfac_root = 1.0;
     }
     /* Estimate photosynthesis */
-    if (c->assim_model == BEWDY){
-        exit(EXIT_FAILURE);
-    } else if (c->assim_model == MATE) {
-        mate_C3_photosynthesis(c, f, m, p, s, daylen, ncontent, pcontent);   // commented out for annual version;
-        // simple_photosynthesis(c, f, m, p, s);
-      
-    } else {
-        fprintf(stderr,"Unknown photosynthesis model'");
-        exit(EXIT_FAILURE);
-    }
+    simple_photosynthesis(c, f, m, p, s);
 
 
     /* Calculate plant respiration */
