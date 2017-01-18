@@ -71,7 +71,6 @@
 #include "write_output_file.h"
 #include "read_param_file.h"
 #include "read_met_file.h"
-#include "disturbance.h"
 #include "phenology.h"
 #include "soils.h"
 #include "version.h"

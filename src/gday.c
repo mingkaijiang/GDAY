@@ -169,11 +169,9 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
 
     int    nyr, doy, window_size, i, dummy = 0;
     int    fire_found = FALSE;;
-    int    num_disturbance_yrs = 0;
 
     double fdecay, rdecay, current_limitation, npitfac, year;
-    int   *disturbance_yrs = NULL;
-    
+
     if (c->deciduous_model) {
         /* Are we reading in last years average growing season? */
         if (float_eq(s->avg_alleaf, 0.0) &&
@@ -292,16 +290,6 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
       
     }
 
-    if (c->disturbance) {
-        if ((disturbance_yrs = (int *)calloc(1, sizeof(int))) == NULL) {
-            fprintf(stderr,"Error allocating space for disturbance_yrs\n");
-    		exit(EXIT_FAILURE);
-        }
-        figure_out_years_with_disturbances(c, ma, p, &disturbance_yrs,
-                                           &num_disturbance_yrs);
-    }
-
-
     /* ====================== **
     **   Y E A R    L O O P   **
     ** ====================== */
@@ -356,34 +344,6 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
             
             calculate_litterfall(c, f, p, s, doy, &fdecay, &rdecay);
 
-            if (c->disturbance && p->disturbance_doy == doy+1) {
-                /* Fire Disturbance? */
-                fire_found = FALSE;
-                fire_found = check_for_fire(c, f, p, s, year, disturbance_yrs,
-                                            num_disturbance_yrs);
-
-                if (fire_found) {
-                    fire(c, f, p, s);
-                    /*
-                     * This will only work for evergreen, but that is fine
-                     * this should be removed after KSCO is done
-                     */
-                    sma(SMA_FREE, hw);
-                    hw = sma(SMA_NEW, window_size).handle;
-                    if (s->prev_sma > -900) {
-                        for (i = 0; i < window_size; i++) {
-                            sma(SMA_ADD, hw, s->prev_sma);
-                        }
-                    }
-                }
-            } else if (c->hurricane &&
-                p->hurricane_yr == year &&
-                p->hurricane_doy == doy) {
-
-                /* Hurricane? */
-                hurricane(f, p, s);
-            }
-
             calc_day_growth(c, f, ma, m, nr, p, s, s->day_length[doy],
                             doy, fdecay, rdecay);
 
@@ -412,15 +372,6 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
               
                 sma(SMA_ADD, hw, current_limitation);
                 s->prev_sma = sma(SMA_MEAN, hw).sma;
-            }
-
-            /*
-             * if grazing took place need to reset "stress" running mean
-             * calculation for grasses
-             */
-            if (c->grazing == 2 && p->disturbance_doy == doy+1) {
-                sma(SMA_FREE, hw);
-                hw = sma(SMA_NEW, p->growing_seas_len).handle;
             }
 
             /* Turn off all N calculations */
@@ -491,9 +442,6 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
     }
 
     sma(SMA_FREE, hw);
-    if (c->disturbance) {
-        free(disturbance_yrs);
-    }
 
     return;
 
@@ -529,17 +477,6 @@ void spin_up_pools(control *c, fluxes *f, met_arrays *ma, met *m,
 
     /* Final state + param file */
     open_output_file(c, c->out_param_fname, &(c->ofp));
-
-    /* If we are prescribing disturbance, first allow the forest to establish */
-    if (c->disturbance) {
-        cntrl_flag = c->disturbance;
-        c->disturbance = FALSE;
-        /*  1700 years (17 yrs x 100 cycles) */
-        for (i = 0; i < 100; i++) {
-            run_sim(c, f, ma, m, p, s, nr); /* run GDAY */
-        }
-        c->disturbance = cntrl_flag;
-    }
 
     fprintf(stderr, "Spinning up the model...\n");
     while (TRUE) {
