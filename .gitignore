@@ -7,14 +7,14 @@
 *.DS_Store
 */.DS_Store
 **/.DS_Store
-
 # Libraries
 *.lib
 *.a
 *.la
 *.lo
-
 src/gday
 src/version.c
 src/gday.dSYM*
 .Rproj.user
+.Rhistory
+.RData
