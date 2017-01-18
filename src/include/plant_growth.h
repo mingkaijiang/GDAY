@@ -24,13 +24,9 @@ double  alloc_goal_seek(double, double, double, double);
 void    update_plant_state(control *, fluxes *, params *, state *,
                            double, double, int);
 void    precision_control(fluxes *, state *);
-void    calculate_cnp_store(control *, fluxes *, state *);
-void    calculate_average_alloc_fractions(fluxes *, state *, int );
-void    allocate_stored_cnp(fluxes *f, params *p, state *s);
 void    carbon_daily_production(control *, fluxes *, met *m, params *, state *,
                                 double);
-void    calculate_subdaily_production(control *, fluxes *, met *m, params *,
-                                      state *, int, double);
+
 void    calculate_cnp_wood_ratios(control *c, params *, state *, double, double,
                                   double, double *, double *, double *,
                                   double *, double *,double *, double *,
