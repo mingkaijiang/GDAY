@@ -253,118 +253,6 @@ void update_water_storage(control *c, fluxes *f, params *p, state *s,
     return;
 }
 
-void update_water_storage_recalwb(control *c, fluxes *f, params *p, state *s,
-                                  met *m) {
-    /* Calculate root and top soil plant available water and runoff.
-    Soil drainage is estimated using a "leaky-bucket" approach with two
-    soil layers. In reality this is a combined drainage and runoff
-    calculation, i.e. "outflow". There is no drainage out of the "bucket"
-    soil.
-    Returns:
-    --------
-    outflow : float
-        outflow [mm d-1]
-    */
-    double transpiration_topsoil, transpiration_root, previous,
-           delta_topsoil, topsoil_loss;
-
-    /* This is used to account for transpiration losses from the top layer. */
-    transpiration_topsoil = (s->wtfac_topsoil * p->fractup_soil * \
-                             f->transpiration);
-
-    /* Top soil layer */
-    previous = s->pawater_topsoil;
-    topsoil_loss = transpiration_topsoil + f->soil_evap;
-    s->pawater_topsoil += f->throughfall - topsoil_loss;
-
-    /* We have attempted to evap more water than we have */
-    if (s->pawater_topsoil < 0.0) {
-
-        /* make the layer completely dry */
-        s->pawater_topsoil = 0.0;
-
-        /*
-        ** if there was any water in the layer before we over-evaporated
-        ** then use this to do some of the evaporation required
-        */
-        if (isgreater(previous, 0.0)) {
-            f->soil_evap = previous / 2.0;
-            transpiration_topsoil = previous / 2.0;
-            /**soil_evap = previous;
-            transpiration_topsoil = previous - *soil_evap;*/
-        } else {
-            f->soil_evap = 0.0;
-            transpiration_topsoil = 0.0;
-        }
-
-    /*
-    ** We have more water than the layer can hold, so set the layer to the
-    ** maximum
-    */
-    } else if (s->pawater_topsoil > p->wcapac_topsoil) {
-        s->pawater_topsoil = p->wcapac_topsoil;
-    }
-
-    /*
-    ** Root zone
-    ** - this is the layer we are actually taking all the water out of.
-    **   it really encompasses the topsoil so as well, so we need to have
-    **   the soil evpaoration here as well, although we aren't adjusting
-    **   that if water isn't available as we've already calculated that
-    **   above based on the top soil layer. Ditto the transpiration taken
-    **   from the top soil layer.
-    */
-
-    previous = s->pawater_root;
-    transpiration_root = f->transpiration - transpiration_topsoil;
-    s->pawater_root += f->throughfall - transpiration_root - f->soil_evap;
-
-    /* Default is we have no runoff */
-    f->runoff = 0.0;
-
-    /* We attempted to extract more water than the rootzone holds */
-    if (s->pawater_root < 0.0) {
-
-        /* make the layer completely dry */
-        s->pawater_root = 0.0;
-
-        /*
-        ** if there was any water in the layer before we over-evaporated
-        ** then use this to do some of the evaporation required
-        */
-        if (isgreater(previous, 0.0)) {
-            transpiration_root = previous;
-        } else {
-            transpiration_root = 0.0;
-        }
-
-    /* We have more water than the rootzone can hold -> runoff */
-    } else if (s->pawater_root > p->wcapac_root) {
-        f->runoff = s->pawater_root - p->wcapac_root;
-        s->pawater_root = p->wcapac_root;
-    }
-
-    /* Update transpiration & et accounting for the actual available water */
-    f->transpiration = transpiration_topsoil + transpiration_root;
-    f->et = f->transpiration + f->soil_evap + f->canopy_evap;
-
-    s->delta_sw_store = s->pawater_root - previous;
-
-    /* calculated at the end of the day for sub_daily */
-    if (c->water_stress) {
-        /* Calculate the soil moisture availability factors [0,1] in the
-           topsoil and the entire root zone */
-        calculate_soil_water_fac(c, p, s);
-    } else {
-        /* really this should only be a debugging option! */
-        s->wtfac_topsoil = 1.0;
-        s->wtfac_root = 1.0;
-    }
-
-
-    return;
-}
-
 void calc_interception(control *c, met *m, params *p, fluxes *f, state *s,
                        double *throughfall, double *interception,
                        double *canopy_evap) {
@@ -409,112 +297,6 @@ void calc_interception(control *c, met *m, params *p, fluxes *f, state *s,
 
     return;
 }
-
-double calc_soil_evaporation(met *m, params *p, state *s, double net_rad) {
-    /* Use Penman eqn to calculate top soil evaporation flux at the
-    potential rate.
-
-    Soil evaporation is dependent upon soil wetness and plant cover. The net
-    radiation term is scaled for the canopy cover passed to this func and
-    the impact of soil wetness is accounted for in the wtfac term. As the
-    soil dries the evaporation component reduces significantly.
-
-    Key assumptions from Ritchie...
-
-    * When plant provides shade for the soil surface, evaporation will not
-    be the same as bare soil evaporation. Wind speed, net radiation and VPD
-    will all belowered in proportion to the canopy density. Following
-    Ritchie role ofwind, VPD are assumed to be negligible and are therefore
-    ignored.
-
-    These assumptions are based on work with crops and whether this holds
-    for tree shading where the height from the soil to the base of the
-    crown is larger is questionable.
-
-    units = (mm/day)
-
-    References:
-    -----------
-    * Ritchie, 1972, Water Resources Research, 8, 1204-1213.
-
-    Parameters:
-    -----------
-    tair : float
-        temperature [degC]
-    net_rad : float
-        net radiation [W m-2]
-    press : float
-        air pressure [kPa]
-
-    Returns:
-    --------
-    soil_evap : float
-        soil evaporation [mm d-1]
-
-    */
-    double lambda, gamma, slope, soil_evap;
-
-    lambda = calc_latent_heat_of_vapourisation(m->tair);
-    gamma = calc_pyschrometric_constant(m->press, lambda);
-    slope = calc_slope_of_sat_vapour_pressure_curve(m->tair);
-
-    /* mol H20 m-2 s-1 */
-    soil_evap = ((slope / (slope + gamma)) * net_rad) / lambda;
-
-    /*
-      Surface radiation is reduced by overstory LAI cover. This empirical
-      fit comes from Ritchie (1972) and is formed by a fit between the LAI
-      of 5 crops types and the fraction of observed net radiation at the
-      surface. Whilst the LAI does cover a large range, nominal 0–6, there
-      are only 12 measurements and only three from LAI > 3. So this might
-      not hold as well for a forest canopy?
-      Ritchie 1972, Water Resources Research, 8, 1204-1213.
-    */
-    if (s->lai > 0.0)
-        soil_evap *= exp(-0.398 * s->lai);
-
-    /* reduce soil evaporation if top soil is dry */
-    soil_evap *= s->wtfac_topsoil;
-
-    return (soil_evap);
-}
-
-double calc_canopy_evaporation(met *m, params *p, state *s, double rnet) {
-    /* Use Penman eqn to calculate evaporation flux at the potential rate for
-    canopy evaporation
-
-    units = (mm/day)
-
-    Parameters:
-    -----------
-    tair : float
-        temperature [degC]
-    net_rad : float
-        net radiation [W m-2]
-    press : float
-        air pressure [kPa]
-
-    Returns:
-    --------
-    pot_evap : float
-        evaporation [mm d-1]
-
-    */
-    double lambda, gamma, slope, arg1, arg2, pot_evap, LE, ga;
-
-    ga = canopy_boundary_layer_conduct(p, s->canht, m->wind, m->press, m->tair);
-    lambda = calc_latent_heat_of_vapourisation(m->tair);
-    gamma = calc_pyschrometric_constant(m->press, lambda);
-    slope = calc_slope_of_sat_vapour_pressure_curve(m->tair);
-
-    arg1 = slope * rnet + m->vpd * ga * CP * MASS_AIR;
-    arg2 = slope + gamma;
-    LE = arg1 / arg2; /* W m-2 */
-    pot_evap = LE / lambda; /* mol H20 m-2 s-1 */
-
-    return (pot_evap);
-}
-
 
 double calc_net_radiation(params *p, double sw_rad, double tair) {
 
@@ -603,68 +385,6 @@ void penman_canopy_wrapper(params *p, state *s, double press, double vpd,
     return;
 }
 
-void penman_leaf_wrapper(met *m, params *p, state *s, double tleaf, double rnet,
-                         double gsc, double *transpiration, double *LE,
-                         double *gbc, double *gh, double *gv, double *omega) {
-    /*
-        Calculates transpiration by leaves using the Penman-Monteith
-
-        Parameters:
-        ----------
-        press : float
-            atmospheric pressure (Pa)
-        rnet : float
-            net radiation (J m-2 s-1)
-        vpd : float
-            vapour pressure deficit of air (Pa)
-        tair : float
-            air temperature (deg C)
-        transpiration : float
-            transpiration (mol H2O m-2 s-1) (returned)
-        LE : float
-            latent heat flux, W m-2 (returned)
-
-
-    */
-    double slope, epsilon, lambda, gradn, gbhu, gbhf, gbh, gbv, gsv, gamma;
-
-    /* Radiation conductance (mol m-2 s-1) */
-    gradn = calc_radiation_conductance(m->tair);
-
-    /* Boundary layer conductance for heat - single sided, forced
-       convection (mol m-2 s-1) */
-    gbhu = calc_bdn_layer_forced_conduct(m->tair, m->press, m->wind,
-                                         p->leaf_width);
-
-    /* Boundary layer conductance for heat - single sided, free convection */
-    gbhf = calc_bdn_layer_free_conduct(m->tair, tleaf, m->press, p->leaf_width);
-
-    /* Total boundary layer conductance for heat */
-    gbh = gbhu + gbhf;
-
-    /* Total conductance for heat - two-sided */
-    *gh = 2.0 * (gbh + gradn);
-
-    gbv = GBVGBH * gbh;
-    gsv = GSVGSC * gsc;
-
-    /* Total leaf conductance to water vapour */
-    *gv = (gbv * gsv) / (gbv + gsv);
-    *gbc = gbh / GBHGBC;
-
-    lambda = calc_latent_heat_of_vapourisation(m->tair);
-    gamma = calc_pyschrometric_constant(m->press, lambda);
-    slope = calc_slope_of_sat_vapour_pressure_curve(m->tair);
-
-    penman_monteith(m->press, m->vpd, rnet, slope, lambda, gamma, gh, gv,
-                    transpiration, LE);
-
-    /* Calculate decoupling coefficient (McNaughton and Jarvis 1986) */
-    epsilon = slope / gamma;
-    *omega = (1.0 + epsilon) / (1.0 + epsilon + gbv / gsv);
-
-    return;
-}
 
 void penman_monteith(double press, double vpd, double rnet, double slope,
                      double lambda, double gamma, double *gh, double *gv,
@@ -768,9 +488,6 @@ double calc_stomatal_conductance(params *p, state *s, double vpd, double Ca,
 }
 
 
-
-
-
 double canopy_boundary_layer_conduct(params *p, double canht, double wind,
                                      double press, double tair) {
     /*  Canopy boundary layer conductance, ga (from Jones 1992 p 68)
@@ -842,68 +559,6 @@ double canopy_boundary_layer_conduct(params *p, double canht, double wind,
 
     return (ga);
 }
-
-double calc_radiation_conductance(double tair) {
-    /*  Returns the 'radiation conductance' at given temperature.
-
-        Units: mol m-2 s-1
-
-        References:
-        -----------
-        * Formula from Ying-Ping's version of Maestro, cf. Wang and Leuning
-          1998, Table 1,
-        * See also Jones (1992) p. 108.
-        * And documented in Medlyn 2007, equation A3, although I think there
-          is a mistake. It should be Tk**3 not Tk**4, see W & L.
-    */
-    double grad;
-    double Tk;
-
-    Tk = tair + DEG_TO_KELVIN;
-    grad = 4.0 * SIGMA * (Tk * Tk * Tk) * LEAF_EMISSIVITY / (CP * MASS_AIR);
-
-    return (grad);
-}
-
-double calc_bdn_layer_forced_conduct(double tair, double press, double wind,
-                                     double leaf_width) {
-    /*
-        Boundary layer conductance for heat - single sided, forced convection
-        (mol m-2 s-1)
-        See Leuning et al (1995) PC&E 18:1183-1200 Eqn E1
-    */
-    double cmolar, Tk, gbh;
-
-    Tk = tair + DEG_TO_KELVIN;
-    cmolar = press / (RGAS * Tk);
-    gbh = 0.003 * sqrt(wind / leaf_width) * cmolar;
-
-    return (gbh);
-}
-
-double calc_bdn_layer_free_conduct(double tair, double tleaf, double press,
-                                   double leaf_width) {
-    /*
-        Boundary layer conductance for heat - single sided, free convection
-        (mol m-2 s-1)
-        See Leuning et al (1995) PC&E 18:1183-1200 Eqns E3 & E4
-    */
-    double cmolar, Tk, gbh, grashof, leaf_width_cubed;
-
-    Tk = tair + DEG_TO_KELVIN;
-    cmolar = press / (RGAS * Tk);
-    leaf_width_cubed = leaf_width * leaf_width * leaf_width;
-
-    if (float_eq((tleaf - tair), 0.0)) {
-        gbh = 0.0;
-    } else {
-        grashof = 1.6E8 * fabs(tleaf - tair) * leaf_width_cubed;
-        gbh = 0.5 * DHEAT * pow(grashof, 0.25) / leaf_width * cmolar;
-    }
-
-    return (gbh);
-}
-
 
 double calc_slope_of_sat_vapour_pressure_curve(double tair) {
     /*
@@ -1292,27 +947,6 @@ double calc_sw_modifier(double theta, double c_theta, double n_theta) {
 }
 
 
-void _calc_soil_water_potential(control *c, params *p, state *s) {
-    /*
-        Estimate pre-dawn soil water potential from soil water content
-    */
-    double theta_over_theta_sat, theta;
-
-    /* Soil water potential of topsoil (MPa) */
-    theta = (s->pawater_topsoil / p->topsoil_depth) + p->theta_wp_topsoil;
-    theta_over_theta_sat = theta / p->theta_sp_topsoil;
-    s->psi_s_topsoil = p->psi_sat_topsoil * \
-                        pow(theta_over_theta_sat, -p->b_topsoil);
-
-    /* Soil water potential of rootzone (MPa) */
-    theta = (s->pawater_root / p->rooting_depth) + p->theta_wp_root;
-    theta_over_theta_sat = theta / p->theta_sp_root;
-    s->psi_s_root = p->psi_sat_root * pow(theta_over_theta_sat, -p->b_root);
-    /*printf("%lf %lf %lf\n", s->psi_s_root, theta, theta_over_theta_sat);
-    exit(1);*/
-}
-
-
 
 void update_daily_water_struct(fluxes *f, double day_soil_evap,
                                double day_transpiration, double day_et,
@@ -1328,21 +962,6 @@ void update_daily_water_struct(fluxes *f, double day_soil_evap,
     f->throughfall = day_thoughfall;
     f->canopy_evap = day_canopy_evap;
     f->runoff = day_runoff;
-
-    return;
-}
-
-void zero_water_day_fluxes(fluxes *f) {
-
-    f->et = 0.0;
-    f->soil_evap = 0.0;
-    f->transpiration = 0.0;
-    f->interception = 0.0;
-    f->canopy_evap = 0.0;
-    f->throughfall = 0.0;
-    f->runoff = 0.0;
-    f->gs_mol_m2_sec = 0.0;
-    f->day_ppt = 0.0;
 
     return;
 }
