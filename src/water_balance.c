@@ -1,7 +1,5 @@
 #include "water_balance.h"
 #include "nrutil.h"
-#include "rkck.h"
-#include "rkqs.h"
 
 void initialise_soils_day(control *c, fluxes *f, params *p, state *s) {
     /* Initialise soil water state & parameters  */
