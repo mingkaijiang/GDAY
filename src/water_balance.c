@@ -1193,10 +1193,6 @@ void calculate_soil_water_fac(control *c, params *p, state *s) {
     double b, sf, psi_f;
     /*double psi_swp_topsoil;*/
 
-    //if (c->water_balance == HYDRAULICS) {
-    //    continue;
-    //    // should put non-stomatal limitation stuff in here.
-
     if (c->water_balance == BUCKET && c->sw_stress_model == 0) {
         /* JULES type model, see Egea et al. (2011) */
         s->wtfac_topsoil = calc_beta(s->pawater_topsoil, p->topsoil_depth,

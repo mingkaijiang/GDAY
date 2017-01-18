@@ -218,30 +218,9 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
 
     initialise_soils_day(c, f, p, s);
     
-    if (c->water_balance == HYDRAULICS) {
-        double root_zone_total, water_content;
-
-        // Update the soil water storage
-        root_zone_total = 0.0;
-        for (i = 0; i < p->n_layers; i++) {
-
-            // water content of soil layer (m)
-            water_content = s->water_frac[i] * s->thickness[i];
-
-            // update old GDAY effective two-layer buckets
-            // - this is just for outputting, these aren't used.
-            if (i == 0) {
-                s->pawater_topsoil = water_content * M_TO_MM;
-            } else {
-                root_zone_total += water_content * M_TO_MM;
-            }
-        }
-        s->pawater_root = root_zone_total;
-    } else {
-        s->pawater_root = p->wcapac_root;
-        s->pawater_topsoil = p->wcapac_topsoil;
-    }
-
+    s->pawater_root = p->wcapac_root;
+    s->pawater_topsoil = p->wcapac_topsoil;
+    
     if (c->fixed_lai) {
         s->lai = p->fix_lai;
     } else {
@@ -328,14 +307,6 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
             /* ======================= **
             **   E N D   O F   D A Y   **
             ** ======================= */
-        }
-
-        // Adjust rooting distribution at the end of the year to account for
-        // growth of new roots. It is debatable when this should be done. I've
-        // picked the year end for computation reasons and probably because
-        // plants wouldn't do this as dynamcially as on a daily basis. Probably
-        if (c->water_balance == HYDRAULICS) {
-            update_roots(c, p, s);
         }
     }
     /* ========================= **
