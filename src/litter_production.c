@@ -46,11 +46,8 @@ void calculate_litterfall(control *c, fluxes *f, params *p, state *s,
     // fprintf(stderr, "rdecay %f\n", *rdecay);
     // fprintf(stderr, "s->root %f\n", s->root);
 
-    if (c->deciduous_model)
-        f->deadleaves = f->lrate * s->remaining_days[doy];
-    else
-        f->deadleaves = *fdecay * s->shoot;
-
+    f->deadleaves = *fdecay * s->shoot;
+    
     /* N litter production */
     f->deadleafn = f->deadleaves * ncflit;
 

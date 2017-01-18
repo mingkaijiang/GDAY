@@ -170,26 +170,6 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
 
     double fdecay, rdecay, current_limitation, npitfac, year;
 
-    if (c->deciduous_model) {
-        /* Are we reading in last years average growing season? */
-        if (float_eq(s->avg_alleaf, 0.0) &&
-            float_eq(s->avg_alstem, 0.0) &&
-            float_eq(s->avg_albranch, 0.0) &&
-            float_eq(s->avg_alleaf, 0.0) &&
-            float_eq(s->avg_alroot, 0.0) &&
-            float_eq(s->avg_alcroot, 0.0)) {
-            npitfac = 0.0;
-            calc_carbon_allocation_fracs(c, f, p, s, npitfac);
-        } else {
-            f->alleaf = s->avg_alleaf;
-            f->alstem = s->avg_alstem;
-            f->albranch = s->avg_albranch;
-            f->alroot = s->avg_alroot;
-            f->alcroot = s->avg_alcroot;
-        }
-        allocate_stored_cnp(f, p, s);
-    }
-
     /* Setup output file */
 
     if (c->print_options == DAILY && c->spin_up == FALSE) {
@@ -236,9 +216,7 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
     correct_rate_constants(p, FALSE);
     day_end_calculations(c, p, s, -99, TRUE);
 
-
     initialise_soils_day(c, f, p, s);
-    
     
     if (c->water_balance == HYDRAULICS) {
         double root_zone_total, water_content;
@@ -296,20 +274,6 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
         
         calculate_daylength(s, c->num_days, p->latitude);
 
-        if (c->deciduous_model) {
-            phenology(c, f, ma, p, s);
-
-            /* Change window size to length of growing season */
-            sma(SMA_FREE, hw);
-            hw = sma(SMA_NEW, p->growing_seas_len).handle;
-            if (s->prev_sma > -900) {
-                for (i = 0; i < p->growing_seas_len; i++) {
-                    sma(SMA_ADD, hw, s->prev_sma);
-                }
-            }
-
-            zero_stuff(c, s);
-        }
         /* =================== **
         **   D A Y   L O O P   **
         ** =================== */
@@ -336,24 +300,11 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
             }
 
             /* update stress SMA */
-            if (c->deciduous_model && s->leaf_out_days[doy] > 0.0) {
-                 /*
-                  * Allocation is annually for deciduous "tree" model, but we
-                  * need to keep a check on stresses during the growing season
-                  * and the LAI figure out limitations during leaf growth period.
-                  * This also applies for deciduous grasses, need to do the
-                  * growth stress calc for grasses here too.
-                  */
-                current_limitation = calculate_growth_stress_limitation(p, s, c);
-                sma(SMA_ADD, hw, current_limitation);
-                s->prev_sma = sma(SMA_MEAN, hw).sma;
-            } else if (c->deciduous_model == FALSE) {
-                current_limitation = calculate_growth_stress_limitation(p, s, c);
-              
-                sma(SMA_ADD, hw, current_limitation);
-                s->prev_sma = sma(SMA_MEAN, hw).sma;
-            }
-
+            current_limitation = calculate_growth_stress_limitation(p, s, c);
+            
+            sma(SMA_ADD, hw, current_limitation);
+            s->prev_sma = sma(SMA_MEAN, hw).sma;
+            
             /* Turn off all N calculations */
             if (c->ncycle == FALSE)
                 reset_all_n_pools_and_fluxes(f, s);
@@ -377,13 +328,6 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
             /* ======================= **
             **   E N D   O F   D A Y   **
             ** ======================= */
-        }
-
-
-        /* Allocate stored C,N and P for the following year */
-        if (c->deciduous_model) {
-            calculate_average_alloc_fractions(f, s, p->growing_seas_len);
-            allocate_stored_cnp(f, p, s);
         }
 
         // Adjust rooting distribution at the end of the year to account for
@@ -767,13 +711,6 @@ void zero_stuff(control *c, state *s) {
     s->pstore = 0.0;
     s->anpp = 0.0;
 
-    if (c->deciduous_model) {
-        s->avg_alleaf = 0.0;
-        s->avg_alroot = 0.0;
-        s->avg_alcroot = 0.0;
-        s->avg_albranch  = 0.0;
-        s->avg_alstem = 0.0;
-    }
     return;
 }
 
