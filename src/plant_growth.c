@@ -195,7 +195,6 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
     /* Estimate photosynthesis */
     simple_photosynthesis(c, f, m, p, s);
 
-
     /* Calculate plant respiration */
     if (c->respiration_model == FIXED) {
         /* Plant respiration assuming carbon-use efficiency. */
