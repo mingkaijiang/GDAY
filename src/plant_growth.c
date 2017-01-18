@@ -106,21 +106,10 @@ void calc_day_growth(control *c, fluxes *f, met_arrays *ma,
     if (recalc_wb) {
         s->pawater_topsoil = previous_topsoil_store;
         s->pawater_root = previous_rootzone_store;
-
-        if (c->sub_daily) {
-            /* reduce transpiration to match cut back GPP
-                -there isn't an obvious way to make this work at the 30 min
-                 timestep, so invert T from WUE assumption and use that
-                 to recalculate the end day water balance
-            */
-            f->transpiration = f->gpp_gCm2 / f->wue;
-            update_water_storage_recalwb(c, f, p, s, m);
-
-        } else {
-            calculate_water_balance(c, f, m, p, s, day_length, dummy, dummy,
-                                    dummy);
-        }
-
+        
+        calculate_water_balance(c, f, m, p, s, day_length, dummy, dummy,
+                                dummy);
+        
     }
     update_plant_state(c, f, p, s, fdecay, rdecay, doy);
 
@@ -247,8 +236,8 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
         exit(EXIT_FAILURE);
     } else if (c->assim_model == MATE) {
         if (c->ps_pathway == C3) {
-            // mate_C3_photosynthesis(c, f, m, p, s, daylen, ncontent, pcontent);   // commented out for annual version;
-            simple_photosynthesis(c, f, m, p, s);
+            mate_C3_photosynthesis(c, f, m, p, s, daylen, ncontent, pcontent);   // commented out for annual version;
+            // simple_photosynthesis(c, f, m, p, s);
         } else {
             mate_C4_photosynthesis(c, f, m, p, s, daylen, ncontent, pcontent);
         }

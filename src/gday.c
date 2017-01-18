@@ -236,11 +236,9 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
     correct_rate_constants(p, FALSE);
     day_end_calculations(c, p, s, -99, TRUE);
 
-    if (c->sub_daily) {
-        initialise_soils_sub_daily(c, f, p, s);
-    } else {
-        initialise_soils_day(c, f, p, s);
-    }
+
+    initialise_soils_day(c, f, p, s);
+    
     
     if (c->water_balance == HYDRAULICS) {
         double root_zone_total, water_content;
@@ -285,11 +283,7 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
 
     for (nyr = 0; nyr < c->num_years; nyr++) {
 
-        if (c->sub_daily) {
-            year = ma->year[c->hour_idx];
-        } else {
-            year = ma->year[c->day_idx];
-        }
+        year = ma->year[c->day_idx];
         
         // commented out for annual version;
         
@@ -325,9 +319,8 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
             //    c->pdebug = TRUE;
             //}
 
-            if (! c->sub_daily) {
-                unpack_met_data(c, f, ma, m, dummy, s->day_length[doy]);
-            }
+            unpack_met_data(c, f, ma, m, dummy, s->day_length[doy]);
+            
             
             calculate_litterfall(c, f, p, s, doy, &fdecay, &rdecay);
 
@@ -866,60 +859,32 @@ void unpack_met_data(control *c, fluxes *f, met_arrays *ma, met *m, int hod,
     double c1, c2;
 
     /* unpack met forcing */
-    if (c->sub_daily) {
-        m->rain = ma->rain[c->hour_idx];
-        m->wind = ma->wind[c->hour_idx];
-        m->press = ma->press[c->hour_idx] * KPA_2_PA;
-        m->vpd = ma->vpd[c->hour_idx] * KPA_2_PA;
-        m->tair = ma->tair[c->hour_idx];
-        m->tsoil = ma->tsoil[c->hour_idx];
-        m->par = ma->par[c->hour_idx];
-        m->sw_rad = ma->par[c->hour_idx] * PAR_2_SW; /* W m-2 */
-        m->Ca = ma->co2[c->hour_idx];
+    m->Ca = ma->co2[c->day_idx];
+    m->tair = ma->tair[c->day_idx];
+    m->tair_am = ma->tam[c->day_idx];
+    m->tair_pm = ma->tpm[c->day_idx];
+    m->par = ma->par_am[c->day_idx] + ma->par_pm[c->day_idx];
+    
+    /* Conversion factor for PAR to SW rad */
+    c1 = MJ_TO_J * J_2_UMOL / (day_length * 60.0 * 60.0) * PAR_2_SW;
+    c2 = MJ_TO_J * J_2_UMOL / (day_length / 2.0 * 60.0 * 60.0) * PAR_2_SW;
+    m->sw_rad = m->par * c1;
+    m->sw_rad_am = ma->par_am[c->day_idx] * c2;
+    m->sw_rad_pm = ma->par_pm[c->day_idx] * c2;
+    m->rain = ma->rain[c->day_idx];
+    m->vpd_am = ma->vpd_am[c->day_idx] * KPA_2_PA;
+    m->vpd_pm = ma->vpd_pm[c->day_idx] * KPA_2_PA;
+    m->wind_am = ma->wind_am[c->day_idx];
+    m->wind_pm = ma->wind_pm[c->day_idx];
+    m->press = ma->press[c->day_idx] * KPA_2_PA;
+    m->ndep = ma->ndep[c->day_idx];
+    m->nfix = ma->nfix[c->day_idx];
+    m->pdep = ma->pdep[c->day_idx];
+    m->tsoil = ma->tsoil[c->day_idx];
+    m->Tk_am = ma->tam[c->day_idx] + DEG_TO_KELVIN;
+    m->Tk_pm = ma->tpm[c->day_idx] + DEG_TO_KELVIN;
 
-        /* NDEP is per 30 min so need to sum 30 min data */
-        if (hod == 0) {
-            m->ndep = ma->ndep[c->hour_idx];
-            m->nfix = ma->nfix[c->hour_idx];
-            m->pdep = ma->pdep[c->hour_idx];
-        } else {
-            m->ndep += ma->ndep[c->hour_idx];
-            m->nfix += ma->nfix[c->hour_idx];
-            m->pdep += ma->pdep[c->hour_idx];
-        }
-    } else {
-        m->Ca = ma->co2[c->day_idx];
-        m->tair = ma->tair[c->day_idx];
-        m->tair_am = ma->tam[c->day_idx];
-        m->tair_pm = ma->tpm[c->day_idx];
-        m->par = ma->par_am[c->day_idx] + ma->par_pm[c->day_idx];
-
-        /* Conversion factor for PAR to SW rad */
-        c1 = MJ_TO_J * J_2_UMOL / (day_length * 60.0 * 60.0) * PAR_2_SW;
-        c2 = MJ_TO_J * J_2_UMOL / (day_length / 2.0 * 60.0 * 60.0) * PAR_2_SW;
-        m->sw_rad = m->par * c1;
-        m->sw_rad_am = ma->par_am[c->day_idx] * c2;
-        m->sw_rad_pm = ma->par_pm[c->day_idx] * c2;
-        m->rain = ma->rain[c->day_idx];
-        m->vpd_am = ma->vpd_am[c->day_idx] * KPA_2_PA;
-        m->vpd_pm = ma->vpd_pm[c->day_idx] * KPA_2_PA;
-        m->wind_am = ma->wind_am[c->day_idx];
-        m->wind_pm = ma->wind_pm[c->day_idx];
-        m->press = ma->press[c->day_idx] * KPA_2_PA;
-        m->ndep = ma->ndep[c->day_idx];
-        m->nfix = ma->nfix[c->day_idx];
-        m->pdep = ma->pdep[c->day_idx];
-        m->tsoil = ma->tsoil[c->day_idx];
-        m->Tk_am = ma->tam[c->day_idx] + DEG_TO_KELVIN;
-        m->Tk_pm = ma->tpm[c->day_idx] + DEG_TO_KELVIN;
-
-        /*printf("%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f\n",
-               m->Ca, m->tair, m->tair_am, m->tair_pm, m->par, m->sw_rad,
-               m->sw_rad_am, m->sw_rad_pm, m->rain, m->vpd_am, m->vpd_pm,
-               m->wind_am, m->wind_pm, m->press, m->ndep, m->tsoil, m->Tk_am,
-               m->Tk_pm);*/
-
-    }
+    
 
     /* N deposition + biological N fixation */
     f->ninflow = m->ndep + m->nfix;
@@ -929,24 +894,4 @@ void unpack_met_data(control *c, fluxes *f, met_arrays *ma, met *m, int hod,
     
     return;
 }
-
-void allocate_numerical_libs_stuff(nrutil *nr) {
-
-    nr->xp = dvector(1, nr->kmax);
-    nr->yp = dmatrix(1, nr->N, 1, nr->kmax);
-    nr->yscal = dvector(1, nr->N);
-    nr->y = dvector(1, nr->N);
-    nr->dydx = dvector(1, nr->N);
-    nr->ystart = dvector(1, nr->N);
-    nr->ak2 = dvector(1, nr->N);
-    nr->ak3 = dvector(1, nr->N);
-    nr->ak4 = dvector(1, nr->N);
-    nr->ak5 = dvector(1, nr->N);
-    nr->ak6 = dvector(1, nr->N);
-    nr->ytemp = dvector(1, nr->N);
-    nr->yerr = dvector(1, nr->N);
-
-    return;
-}
-
 

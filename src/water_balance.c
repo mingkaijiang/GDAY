@@ -243,18 +243,16 @@ void update_water_storage(control *c, fluxes *f, params *p, state *s,
 
     s->delta_sw_store = s->pawater_root - previous;
 
-    /* calculated at the end of the day for sub_daily */
-    if (! c->sub_daily) {
-        if (c->water_stress) {
-            /* Calculate the soil moisture availability factors [0,1] in the
-               topsoil and the entire root zone */
-            calculate_soil_water_fac(c, p, s);
-        } else {
-            /* really this should only be a debugging option! */
-            s->wtfac_topsoil = 1.0;
-            s->wtfac_root = 1.0;
-        }
+    if (c->water_stress) {
+      /* Calculate the soil moisture availability factors [0,1] in the
+      topsoil and the entire root zone */
+      calculate_soil_water_fac(c, p, s);
+    } else {
+      /* really this should only be a debugging option! */
+      s->wtfac_topsoil = 1.0;
+      s->wtfac_root = 1.0;
     }
+
 
     return;
 }
@@ -394,73 +392,24 @@ void calc_interception(control *c, met *m, params *p, fluxes *f, state *s,
     */
     double canopy_spill, canopy_capacity, max_interception;
 
-    if (c->sub_daily) {
-
-        /* Max canopy intercept (mm): BATS-type canopy saturation
-           proportional to LAI */
-        canopy_capacity = 0.1 * s->lai;
-
-        /* Calculate canopy intercepted rainfall */
-        if (m->rain > 0.0) {
-            max_interception = MIN(m->rain, canopy_capacity - s->canopy_store);
-            *interception = MAX(0.0, max_interception);
-            if (m->tair < 0.0) {
-                *interception = 0.0;
-            }
-        } else {
-            *interception = 0.0;
-        }
-
-        /* Define canopy throughfall */
-        *throughfall = m->rain - *interception;
-
-        /* Add canopy interception to canopy storage term */
-        s->canopy_store += *interception;
-
-
-        /* Calculate canopy water storage excess */
-        if (s->canopy_store > canopy_capacity) {
-            canopy_spill = s->canopy_store - canopy_capacity;
-        } else {
-            canopy_spill = 0.0;
-        }
-
-        /* Move excess canopy water to throughfall */
-        *throughfall += canopy_spill;
-
-        /* Update canopy storage term */
-        s->canopy_store -= canopy_spill;
-
-        /* remove canopy evap flux */;
-        if (s->canopy_store > *canopy_evap) {
-            s->canopy_store -= *canopy_evap;
-        } else {
-            /* reduce evaporation to water available */
-            *canopy_evap = s->canopy_store;
-            s->canopy_store = 0.0;
-        }
-
-    } else {
-
-        if (m->rain > 0.0) {
-            /*
-            *throughfall  = MAX(0.0, m->rain * p->rfmult - s->lai * p->wetloss);
-            *canopy_evap = m->rain - *throughfall;
-            *interception = 0.0;
-            */
-
-            *canopy_evap = (m->rain * p->intercep_frac * \
-                            MIN(1.0, s->lai / p->max_intercep_lai));
-            *throughfall = m->rain - f->interception;
-            *interception = 0.0;
-
-
-        } else {
-            *canopy_evap = 0.0;
-            *throughfall = 0.0;
-            *interception = 0.0;
-        }
-    }
+  if (m->rain > 0.0) {
+    /*
+    *throughfall  = MAX(0.0, m->rain * p->rfmult - s->lai * p->wetloss);
+    *canopy_evap = m->rain - *throughfall;
+    *interception = 0.0;
+    */
+    
+    *canopy_evap = (m->rain * p->intercep_frac * \
+      MIN(1.0, s->lai / p->max_intercep_lai));
+    *throughfall = m->rain - f->interception;
+    *interception = 0.0;
+    
+    
+  } else {
+    *canopy_evap = 0.0;
+    *throughfall = 0.0;
+    *interception = 0.0;
+  }
 
     return;
 }
