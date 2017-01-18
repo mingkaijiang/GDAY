@@ -19,7 +19,7 @@ SOURCES  =  \
 $(PROGRAM).c version.c read_param_file.c read_met_file.c litter_production.c \
 utilities.c plant_growth.c photosynthesis.c water_balance.c \
 water_balance_sub_daily.c simple_moving_average.c soils.c optimal_root_model.c \
-initialise_model.c write_output_file.c phenology.c disturbance.c canopy.c \
+initialise_model.c write_output_file.c phenology.c canopy.c \
 radiation.c zbrent.c odeint.c nrutil.c rkqs.c rkck.c
 
 OBJECTS = $(SOURCES:.c=.o)
