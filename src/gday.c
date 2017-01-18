@@ -122,9 +122,7 @@ int main(int argc, char **argv)
 
     /* clean up */
     fclose(c->ofp);
-    if (c->print_options == SUBDAILY ) {
-        fclose(c->ofp_sd);
-    }
+
     fclose(c->ifp);
     if (c->output_ascii == FALSE) {
         fclose(c->ofp_hdr);
@@ -193,19 +191,8 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
     }
 
     /* Setup output file */
-    if (c->print_options == SUBDAILY && c->spin_up == FALSE) {
-        /* open the 30 min outputs file and the daily output files */
-        open_output_file(c, c->out_subdaily_fname, &(c->ofp_sd));
-        open_output_file(c, c->out_fname, &(c->ofp));
 
-        if (c->output_ascii) {
-            write_output_subdaily_header(c, &(c->ofp_sd));
-            write_output_header(c, &(c->ofp));
-        } else {
-            fprintf(stderr, "Nothing implemented for sub-daily binary\n");
-            exit(EXIT_FAILURE);
-        }
-    } else if (c->print_options == DAILY && c->spin_up == FALSE) {
+    if (c->print_options == DAILY && c->spin_up == FALSE) {
         /* Daily outputs */
         open_output_file(c, c->out_fname, &(c->ofp));
 
@@ -385,31 +372,14 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
             /* calculate C:N ratios and increment annual flux sum */
             day_end_calculations(c, p, s, c->num_days, FALSE);
             
-            if (c->print_options == SUBDAILY && c->spin_up == FALSE) {
-                write_daily_outputs_ascii(c, f, s, year, doy+1);
-            } else if (c->print_options == DAILY && c->spin_up == FALSE) {
+
+            if (c->print_options == DAILY && c->spin_up == FALSE) {
                 if(c->output_ascii)
                     write_daily_outputs_ascii(c, f, s, year, doy+1);
                 else
                     write_daily_outputs_binary(c, f, s, year, doy+1);
             }
             c->day_idx++;
-
-
-            //printf("%d %d %f", (int)year, doy, s->water_frac[0] * s->thickness[0] * M_TO_MM);
-            //printf("%d %d %f", (int)year, doy, s->water_frac[0]);
-            //for (i = 1; i < p->n_layers; i++) {
-            //
-            //    //printf(" %f", s->water_frac[i] * s->thickness[i] * M_TO_MM);
-            //    printf(" %f", s->water_frac[i]);
-            //
-            //}
-            //printf("\n");
-            //printf("%d %d %lf %lf %lf\n", (int)year, doy, s->saved_swp, s->wtfac_root, f->gpp*100);
-
-            //printf("%d %d %lf %lf %lf %lf\n", (int)year, doy, f->gpp*100, f->transpiration, s->wtfac_root, s->saved_swp);
-            //printf("%d %d %lf %lf %lf\n", (int)year, doy, f->gpp*100, f->transpiration, s->wtfac_root);
-
 
             /* ======================= **
             **   E N D   O F   D A Y   **
