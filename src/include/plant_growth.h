@@ -15,7 +15,7 @@
 #include "canopy.h"
 
 /* C stuff */
-void    calc_day_growth(canopy_wk *, control *, fluxes *, met_arrays *ma, met *,
+void    calc_day_growth(control *, fluxes *, met_arrays *ma, met *,
                         nrutil *, params *, state *, double, int, double,
                         double);
 void    carbon_allocation(control *, fluxes *, params *, state *, double, int);

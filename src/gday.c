@@ -1,8 +1,7 @@
 /* ============================================================================
 * Generic Decomposition And Yield (GDAY) model.
 *
-* G'DAY simulates carbon, nutrient and water state and fluxes on either a daily
-* sub-daily (30 min) timestep. See below for model description.
+* Simple version for quasi-equilibrium analysis
 * 
 * This version runs at annual timestep by using met forcing data averaged annually
 * and fluxes summed at the end of each year.
@@ -13,10 +12,10 @@
 *
 *
 * AUTHOR:
-*   Martin De Kauwe
+*   Martin De Kauwe & Mingkai Jiang
 *
 * DATE:
-*   14.01.2016
+*   18.01.2017
 *
 * =========================================================================== */
 
@@ -30,7 +29,6 @@ int main(int argc, char **argv)
      * Setup structures, initialise stuff, e.g. zero fluxes.
      */
     control *c;
-    canopy_wk *cw;
     fluxes *f;
     met_arrays *ma;
     met *m;
@@ -41,12 +39,6 @@ int main(int argc, char **argv)
     c = (control *)malloc(sizeof(control));
     if (c == NULL) {
         fprintf(stderr, "control structure: Not allocated enough memory!\n");
-    	exit(EXIT_FAILURE);
-    }
-
-    cw = (canopy_wk *)malloc(sizeof(canopy_wk));
-    if (cw == NULL) {
-        fprintf(stderr, "canopy wk structure: Not allocated enough memory!\n");
     	exit(EXIT_FAILURE);
     }
 
@@ -117,31 +109,15 @@ int main(int argc, char **argv)
         fprintf(stderr, "\n%s\n", c->git_code_ver);
         exit(EXIT_FAILURE);
     }
-
-    /* House keeping! */
-    if (c->water_balance == HYDRAULICS && c->sub_daily == FALSE) {
-        fprintf(stderr, "You can't run the hydraulics model with daily flag\n");
-        exit(EXIT_FAILURE);
-    }
-
-    if (c->water_balance == HYDRAULICS) {
-        allocate_numerical_libs_stuff(nr);
-        initialise_roots(f, p, s);
-        setup_hydraulics_arrays(f, p, s);
-    }
-
-    if (c->sub_daily) {
-        read_subdaily_met_data(argv, c, ma);
-        fill_up_solar_arrays(cw, c, ma, p);
-    } else {
-        read_daily_met_data(argv, c, ma);
-    }
-
-
+    
+    /* read met data */
+    read_daily_met_data(argv, c, ma);
+  
+    /* model runs */
     if (c->spin_up) {
-        spin_up_pools(cw, c, f, ma, m, p, s, nr);
+        spin_up_pools(c, f, ma, m, p, s, nr);
     } else {
-        run_sim(cw, c, f, ma, m, p, s, nr);
+        run_sim(c, f, ma, m, p, s, nr);
     }
 
     /* clean up */
@@ -154,7 +130,6 @@ int main(int argc, char **argv)
         fclose(c->ofp_hdr);
     }
 
-    free(cw);
     free(c);
     free(ma->year);
     free(ma->tair);
@@ -166,67 +141,19 @@ int main(int argc, char **argv)
     free(ma->wind);
     free(ma->press);
     free(ma->par);
-    if (c->sub_daily) {
-        free(ma->vpd);
-        free(ma->doy);
-        free(cw->cz_store);
-        free(cw->ele_store);
-        free(cw->df_store);
 
-        /* Clean up hydraulics */
-        if (c->water_balance == HYDRAULICS) {
-            free(f->soil_conduct);
-            free(f->swp);
-            free(f->soilR);
-            free(f->fraction_uptake);
-            free(f->ppt_gain);
-            free(f->water_loss);
-            free(f->water_gain);
-            free(f->est_evap);
-            free(s->water_frac);
-            free(s->wetting_bot);
-            free(s->wetting_top);
-            free(p->potA);
-            free(p->potB);
-            free(p->cond1);
-            free(p->cond2);
-            free(p->cond3);
-            free(p->porosity);
-            free(p->field_capacity);
-            free(s->thickness);
-            free(s->root_mass);
-            free(s->root_length);
-            free(s->layer_depth);
-
-
-            free_dvector(nr->y, 1, nr->N);
-            free_dvector(nr->ystart, 1, nr->N);
-            free_dvector(nr->dydx, 1, nr->N);
-			      free_dvector(nr->yscal, 1, nr->N);
-            free_dvector(nr->xp, 1, nr->kmax);
-            free_dmatrix(nr->yp, 1, nr->N, 1, nr->kmax);
-            free_dvector(nr->ytemp, 1, nr->N);
-        	  free_dvector(nr->ak6, 1, nr->N);
-        	  free_dvector(nr->ak5, 1, nr->N);
-        	  free_dvector(nr->ak4, 1, nr->N);
-        	  free_dvector(nr->ak3, 1, nr->N);
-        	  free_dvector(nr->ak2, 1, nr->N);
-            free_dvector(nr->yerr, 1, nr->N);
-        }
-
-    } else {
-        free(ma->prjday);
-        free(ma->tam);
-        free(ma->tpm);
-        free(ma->tmin);
-        free(ma->tmax);
-        free(ma->vpd_am);
-        free(ma->vpd_pm);
-        free(ma->wind_am);
-        free(ma->wind_pm);
-        free(ma->par_am);
-        free(ma->par_pm);
-    }
+    free(ma->prjday);
+    free(ma->tam);
+    free(ma->tpm);
+    free(ma->tmin);
+    free(ma->tmax);
+    free(ma->vpd_am);
+    free(ma->vpd_pm);
+    free(ma->wind_am);
+    free(ma->wind_pm);
+    free(ma->par_am);
+    free(ma->par_pm);
+    
     free(s->day_length);
     free(ma);
     free(m);
@@ -234,12 +161,10 @@ int main(int argc, char **argv)
     free(s);
     free(f);
 
-
-
     exit(EXIT_SUCCESS);
 }
 
-void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
+void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
              params *p, state *s, nrutil *nr){
 
     int    nyr, doy, window_size, i, dummy = 0;
@@ -459,7 +384,7 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
                 hurricane(f, p, s);
             }
 
-            calc_day_growth(cw, c, f, ma, m, nr, p, s, s->day_length[doy],
+            calc_day_growth(c, f, ma, m, nr, p, s, s->day_length[doy],
                             doy, fdecay, rdecay);
 
             //printf("%d %f %f\n", doy, f->gpp*100, s->lai);
@@ -575,7 +500,7 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
 
 }
 
-void spin_up_pools(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
+void spin_up_pools(control *c, fluxes *f, met_arrays *ma, met *m,
                    params *p, state *s, nrutil *nr){
     /* Spin up model plant & soil pools to equilibrium.
 
@@ -611,7 +536,7 @@ void spin_up_pools(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
         c->disturbance = FALSE;
         /*  1700 years (17 yrs x 100 cycles) */
         for (i = 0; i < 100; i++) {
-            run_sim(cw, c, f, ma, m, p, s, nr); /* run GDAY */
+            run_sim(c, f, ma, m, p, s, nr); /* run GDAY */
         }
         c->disturbance = cntrl_flag;
     }
@@ -635,7 +560,7 @@ void spin_up_pools(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
 
             /* 1700 years (17 yrs x 100 cycles) */
             for (i = 0; i < 100; i++) {
-                run_sim(cw, c, f, ma, m, p, s, nr); /* run GDAY */
+                run_sim(c, f, ma, m, p, s, nr); /* run GDAY */
             }
             if (c->pcycle) {
                 /* Have we reached a steady state? */
@@ -1118,52 +1043,3 @@ void allocate_numerical_libs_stuff(nrutil *nr) {
 }
 
 
-void fill_up_solar_arrays(canopy_wk *cw, control *c, met_arrays *ma, params *p) {
-
-    // This is a suprisingly big time hog. So I'm going to unpack it once into
-    // an array which we can then access during spinup to save processing time
-
-    int    nyr, doy, hod;
-    long   ntimesteps = c->total_num_days * 48;
-    double year, sw_rad;
-
-    cw->cz_store = malloc(ntimesteps * sizeof(double));
-    if (cw->cz_store == NULL) {
-        fprintf(stderr, "malloc failed allocating cz store\n");
-        exit(EXIT_FAILURE);
-    }
-
-    cw->ele_store = malloc(ntimesteps * sizeof(double));
-    if (cw->ele_store == NULL) {
-        fprintf(stderr, "malloc failed allocating ele store\n");
-        exit(EXIT_FAILURE);
-    }
-
-    cw->df_store = malloc(ntimesteps * sizeof(double));
-    if (cw->df_store == NULL) {
-        fprintf(stderr, "malloc failed allocating df store\n");
-        exit(EXIT_FAILURE);
-    }
-
-    c->hour_idx = 0;
-    for (nyr = 0; nyr < c->num_years; nyr++) {
-        year = ma->year[c->hour_idx];
-        if (is_leap_year(year))
-            c->num_days = 366;
-        else
-            c->num_days = 365;
-        for (doy = 0; doy < c->num_days; doy++) {
-            for (hod = 0; hod < c->num_hlf_hrs; hod++) {
-                calculate_solar_geometry(cw, p, doy, hod);
-                sw_rad = ma->par[c->hour_idx] * PAR_2_SW; /* W m-2 */
-                get_diffuse_frac(cw, doy, sw_rad);
-                cw->cz_store[c->hour_idx] = cw->cos_zenith;
-                cw->ele_store[c->hour_idx] = cw->elevation;
-                cw->df_store[c->hour_idx] = cw->diffuse_frac;
-                c->hour_idx++;
-            }
-        }
-    }
-    return;
-
-}

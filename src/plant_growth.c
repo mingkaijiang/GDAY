@@ -19,7 +19,7 @@
 #include "water_balance.h"
 #include "zbrent.h"
 
-void calc_day_growth(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma,
+void calc_day_growth(control *c, fluxes *f, met_arrays *ma,
                      met *m, nrutil *nr, params *p, state *s, double day_length,
                      int doy, double fdecay, double rdecay)
 {
@@ -33,14 +33,11 @@ void calc_day_growth(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma,
     previous_topsoil_store = s->pawater_topsoil;
     previous_rootzone_store = s->pawater_root;
 
-    if (c->sub_daily) {
-        /* calculate 30 min two-leaf GPP/NPP, respiration and water fluxes */
-        canopy(cw, c, f, ma, m, nr, p, s);
-    } else {
-        /* calculate daily GPP/NPP, respiration and update water balance */
-        carbon_daily_production(c, f, m, p, s, day_length);
-        calculate_water_balance(c, f, m, p, s, day_length, dummy, dummy, dummy);
-    }
+
+    /* calculate daily GPP/NPP, respiration and update water balance */
+    carbon_daily_production(c, f, m, p, s, day_length);
+    calculate_water_balance(c, f, m, p, s, day_length, dummy, dummy, dummy);
+
 
     // leaf N:C as a fraction of Ncmaxyoung, i.e. the max N:C ratio of
     //foliage in young stand, and leaf P:C as a fraction of Pcmaxyoung
