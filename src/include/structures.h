@@ -19,8 +19,6 @@ typedef struct {
     int   alloc_model;
     int   assim_model;
     int   calc_sw_params;
-    int   deciduous_model;
-    int   disturbance;
     int   fixed_stem_nc;
     int   fixed_stem_pc;
     int   fixleafnc;
@@ -51,9 +49,6 @@ typedef struct {
     char  git_code_ver[STRING_LENGTH];
     int   spin_up;
     int   PRINT_GIT;
-    int   hurricane;
-    int   exudation;
-    int   sub_daily;
     int   num_hlf_hrs;
     long  hour_idx;
     long  day_idx;
@@ -284,7 +279,6 @@ typedef struct {
     double ncwimmz;                         /* N alloc param: Immobile stem N C at zero leaf N C */
     double ncwnew;                          /* N alloc param: New stem ring N:C at critical leaf N:C (mob) */
     double ncwnewz;                         /* N alloc param: New stem ring N:C at zero leaf N:C (mobile) */
-    double nf_crit;                         /* leaf N:C below which N availability limits productivity  */
     double nf_min;                          /* leaf N:C minimum N concentration which allows productivity */
     double nmax;
     double nmin;                            /* (bewdy) minimum leaf n for +ve p/s (g/m2) */

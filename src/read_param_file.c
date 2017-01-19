@@ -179,32 +179,6 @@ int handler(char *section, char *name, char *value, control *c,
             fprintf(stderr, "Unknown SW param option: %s\n", temp);
             exit(EXIT_FAILURE);
         }
-    } else if (MATCH("control", "deciduous_model")) {
-        if (strcmp(temp, "False") == 0 ||
-            strcmp(temp, "FALSE") == 0 ||
-            strcmp(temp, "false") == 0)
-            c->deciduous_model = FALSE;
-        else if (strcmp(temp, "True") == 0 ||
-            strcmp(temp, "TRUE") == 0 ||
-            strcmp(temp, "true") == 0)
-            c->deciduous_model = TRUE;
-        else {
-            fprintf(stderr, "Unknown deciduous option: %s\n", temp);
-            exit(EXIT_FAILURE);
-        }
-    } else if (MATCH("control", "exudation")) {
-            if (strcmp(temp, "False") == 0 ||
-                strcmp(temp, "FALSE") == 0 ||
-                strcmp(temp, "false") == 0)
-                c->exudation = FALSE;
-            else if (strcmp(temp, "True") == 0 ||
-                strcmp(temp, "TRUE") == 0 ||
-                strcmp(temp, "true") == 0)
-                c->exudation = TRUE;
-            else {
-                fprintf(stderr, "Unknown exudation option: %s\n", temp);
-                exit(EXIT_FAILURE);
-            }
     } else if (MATCH("control", "fixed_stem_nc")) {
         if (strcmp(temp, "False") == 0 ||
             strcmp(temp, "FALSE") == 0 ||
@@ -392,19 +366,6 @@ int handler(char *section, char *name, char *value, control *c,
              fprintf(stderr, "Unknown respiration model: %s\n", temp);
              exit(EXIT_FAILURE);
          }
-    } else if (MATCH("control", "sub_daily")) {
-        if (strcmp(temp, "False") == 0 ||
-            strcmp(temp, "FALSE") == 0 ||
-            strcmp(temp, "false") == 0)
-            c->sub_daily = FALSE;
-        else if (strcmp(temp, "True") == 0 ||
-            strcmp(temp, "TRUE") == 0 ||
-            strcmp(temp, "true") == 0)
-            c->sub_daily = TRUE;
-        else {
-            fprintf(stderr, "Unknown sub_daily option: %s\n", temp);
-            exit(EXIT_FAILURE);
-        }
     } else if (MATCH("control", "strfloat")) {
         c->strfloat = atoi(value);
     } else if (MATCH("control", "strpfloat")) {
@@ -748,8 +709,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->pcwnew = atof(value);
     } else if (MATCH("params", "pcwnewz")) {
         p->pcwnewz = atof(value);
-    } else if (MATCH("params", "nf_crit")) {
-        p->nf_crit = atof(value);
     } else if (MATCH("params", "nf_min")) {
         p->nf_min = atof(value);
     } else if (MATCH("params", "pf_crit")) {

@@ -72,63 +72,9 @@ void calc_day_growth(control *c, fluxes *f, met_arrays *ma,
                               pcbnew, pccnew, pcwimm, pcwnew,
                               fdecay, rdecay, doy);
 
-    if (c->exudation && c->alloc_model != GRASSES) {
-        calc_root_exudation(c, f, p, s);
-    }
-
     update_plant_state(c, f, p, s, fdecay, rdecay, doy);
 
     precision_control(f, s);
-
-    return;
-}
-
-void calc_root_exudation(control *c, fluxes *f, params *p, state *s) {
-    /*
-        Rhizodeposition (f->root_exc) is assumed to be a fraction of the
-        current root growth rate (f->cproot), which increases with increasing
-        N stress of the plant.
-    */
-    double CN_leaf, frac_to_rexc, CN_ref, arg;
-
-    if (float_eq(s->shoot, 0.0) || float_eq(s->shootn, 0.0)) {
-        /* nothing happens during leaf off period */
-        CN_leaf = 0.0;
-        frac_to_rexc = 0.0;
-    } else {
-
-        /* conifer */
-        CN_ref = 42.0;
-        
-
-        /*
-        ** The fraction of growth allocated to rhizodeposition, constrained
-        ** to solutions lower than 0.5
-        */
-        CN_leaf = 1.0 / s->shootnc;
-        arg = MAX(0.0, (CN_leaf - CN_ref) / CN_ref);
-        frac_to_rexc = MIN(0.5, p->a0rhizo + p->a1rhizo * arg);
-    }
-
-    /* Rhizodeposition */
-    f->root_exc = frac_to_rexc * f->cproot;
-    if (float_eq(f->cproot, 0.0)) {
-        f->root_exn = 0.0;
-    } else {
-        /*
-        ** N flux associated with rhizodeposition is based on the assumption
-        ** that the CN ratio of rhizodeposition is equal to that of fine root
-        ** growth
-        */
-        f->root_exn = f->root_exc * (f->nproot / f->cproot);
-    }
-
-    /*
-    ** Need to remove exudation C & N fluxes from fine root growth fluxes so
-    ** that things balance.
-    */
-    f->cproot -= f->root_exc;
-    f->nproot -= f->root_exn;
 
     return;
 }

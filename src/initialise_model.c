@@ -22,7 +22,6 @@ void initialise_control(control *c) {
     c->alloc_model = ALLOMETRIC;    /* C allocation scheme: FIXED, GRASSES, ALLOMETRIC */
     c->assim_model = MATE;          /* Photosynthesis model: BEWDY (not coded :p) or MATE */
     c->calc_sw_params = FALSE;      /* false=user supplies field capacity and wilting point, true=calculate them based on cosby et al. */
-    c->deciduous_model = FALSE;     /* evergreen_model=False, deciduous_model=True */
     c->fixed_stem_nc = TRUE;        /* False=vary stem N:C with foliage, True=fixed stem N:C */
     c->fixed_stem_pc = TRUE;        /* False=vary stem P:C with foliage, True=fixed stem P:C */
     c->fixleafnc = FALSE;           /* fixed leaf N C ? */
@@ -55,7 +54,6 @@ void initialise_control(control *c) {
     c->total_num_days = 0;          /* Total number of days  */
     c->PRINT_GIT = FALSE;           /* print the git hash to the cmd line and exit? Called from cmd line parsar */
 
-    c->sub_daily = FALSE;           /* Run at daily or 30 minute timestep */
     c->num_hlf_hrs = 48;
     c->pdebug = FALSE;              /* Use to debug a specific day */
     return;
@@ -151,7 +149,6 @@ void initialise_params(params *p) {
     p->ncwimmz = 0.003;
     p->ncwnew = 0.003;
     p->ncwnewz = 0.003;
-    p->nf_crit = 0.015;
     p->nf_min = 0.005;
     p->nmax = 0.24;
     p->nmin = 0.95;
