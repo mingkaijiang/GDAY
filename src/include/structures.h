@@ -236,7 +236,6 @@ typedef struct {
     double kr;                              /* N uptake coefficent (0.05 kg C m-2 to 0.5 tonnes/ha) see Silvia's PhD, Dewar and McM, 96. */
     double krp;                             /* P uptake coefficent */
     double ks;                              /* an empirical constant [t P ha-1] - sorption capacity increased with the age of the substrate */
-    double lad;                             /* Leaf angle distribution: 0 = spherical leaf angle distribution; 1 = horizontal leaves; -1 = vertical leaves */
     double lai_closed;                      /* LAI of closed canopy (max cover fraction is reached (m2 (leaf) m-2 (ground) ~ 2.5) */
     double latitude;                        /* latitude (degrees, negative for south) */
     double longitude;                       /* longitude (degrees, negative for west) */
@@ -354,10 +353,7 @@ typedef struct {
     double wcapac_root;                     /* Max plant avail soil water -root zone, i.e. total (mm) (smc_sat-smc_wilt) * root_depth (750mm) = [mm (water) / m (soil depth)] */
     double wcapac_topsoil;                  /* Max plant avail soil water -top soil (mm) */
     double wdecay;                          /* wood turnover rate (1/yr) */
-    double wetloss;                         /* Daily rainfall lost per lai (mm/day) */
     double wretrans;                        /* mobile wood N retranslocation fraction */
-    double z0h_z0m;                         /* Assume z0m = z0h, probably a big assumption [as z0h often < z0m.], see comment in code!! But 0.1 might be a better assumption */
-    int    growing_seas_len;
     double prime_y;
     double prime_z;
     int    return_interval;                 /* years */
@@ -642,17 +638,6 @@ typedef struct {
     double rexc_cue;
 
     double ninflow;
-
-    /* hydraulics */
-    double *soil_conduct;
-    double *swp;
-    double *soilR;
-    double *fraction_uptake;
-    double *ppt_gain;
-    double *water_loss;
-    double *water_gain;
-    double *est_evap;
-    double total_soil_resist;
 
 } fluxes;
 

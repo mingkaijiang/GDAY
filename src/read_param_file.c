@@ -549,8 +549,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->krp = atof(value);
     } else if (MATCH("params", "ks")) {
         p->ks = atof(value);
-    } else if (MATCH("params", "lad")) {
-        p->lad = atof(value);
     } else if (MATCH("params", "lai_closed")) {
         p->lai_closed = atof(value);
     } else if (MATCH("params", "latitude")) {
@@ -787,8 +785,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->wcapac_topsoil = atof(value);
     } else if (MATCH("params", "wdecay")) {
         p->wdecay = atof(value);
-    } else if (MATCH("params", "wetloss")) {
-        p->wetloss = atof(value);
     } else if (MATCH("params", "wretrans")) {
         p->wretrans = atof(value);
     } else if (MATCH("params", "crit_n_cost_of_p")) {
@@ -797,9 +793,7 @@ int handler(char *section, char *name, char *value, control *c,
         p->max_p_biochemical = atof(value);
     } else if (MATCH("params", "biochemical_p_constant")) {
         p->biochemical_p_constant = atof(value);
-    } else if (MATCH("params", "z0h_z0m")) {
-        p->z0h_z0m = atof(value);
-    }
+    } 
 
     return (1);
 }

@@ -235,12 +235,8 @@ void initialise_params(params *p) {
     p->wcapac_root = 96.75;
     p->wcapac_topsoil = 25.8;
     p->wdecay = 0.02;
-    p->wetloss = 0.5;
     p->wretrans = 0.0;
-    p->z0h_z0m = 1.0;
-    p->growing_seas_len = 0;
-    p->lad = 0.0; /* spherical leaf angle distribution */
-
+    
     for (i = 0; i < 7; i++) {
         p->decayrate[i] = 0.0;
     }
@@ -298,7 +294,6 @@ void initialise_fluxes(fluxes *f) {
     f->omega = 0.0;
     f->day_ppt = 0.0;
     f->day_wbal = 0.0;
-    f->total_soil_resist = 0.0;
 
     /* daily C production */
     f->cpleaf = 0.0;
@@ -454,17 +449,6 @@ void initialise_fluxes(fluxes *f) {
     f->co2_rel_from_active_pool = 0.0;
     f->co2_rel_from_slow_pool = 0.0;
     f->co2_rel_from_passive_pool = 0.0;
-
-    /* Hydraulics stuff */
-    f->soil_conduct = NULL;
-    f->swp = NULL;
-    f->soilR = NULL;
-    f->fraction_uptake = NULL;
-    f->ppt_gain = NULL;
-    f->water_loss = NULL;
-    f->water_gain = NULL;
-    f->est_evap = NULL;
-
 
     return;
 }
