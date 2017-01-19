@@ -63,10 +63,6 @@ void calculate_litterfall(control *c, fluxes *f, params *p, state *s,
     /* P in stemwood litter - only mobile p is retranslocated */
     f->deadstemp = p->wdecay * (s->stempimm + s->stempmob * \
                    (1.0 - p->wretrans));
-    
-    f->ceaten = 0.0;
-    f->neaten = 0.0;
-    f->peaten = 0.0;
         
     return;
 

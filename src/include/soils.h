@@ -10,7 +10,6 @@ double calc_soil_temp_factor(double);
 void   calculate_csoil_flows(control *, fluxes *, params *, state *,
                              double, int);
 void   calculate_decay_rates(fluxes *, params *, state *);
-void   flux_from_grazers(control *c, fluxes *, params *);
 double calc_ligin_nratio_leaves(control *c, fluxes *f, params *);
 double calc_ligin_nratio_fine_roots(control *c, fluxes *f, params *);
 double ratio_of_litternc_to_live_rootnc(control *, fluxes *, params *);
@@ -30,7 +29,6 @@ void   precision_control_soil_c(fluxes *, state *);
 
 /* N stuff */
 void   calculate_nsoil_flows(control *, fluxes *, params *, state *, int);
-void   grazer_inputs(control *, fluxes *, params *);
 void   n_inputs_from_plant_litter(fluxes *, params *, double *, double *);
 void   partition_plant_litter_n(control *, fluxes *, params *, double, double);
 void   nfluxes_from_structural_pools(fluxes *, params *, state *);
@@ -51,7 +49,6 @@ void   precision_control_soil_n(fluxes *, state *);
 
 /* P stuff */
 void   calculate_psoil_flows(control *, fluxes *, params *, state *, int);
-void   grazer_inputs_p(control *, fluxes *, params *);
 void   p_inputs_from_plant_litter(fluxes *, params *, double *, double *);
 void   partition_plant_litter_p(control *, fluxes *, params *, double, double);
 void   pfluxes_from_structural_pools(fluxes *, params *, state *);

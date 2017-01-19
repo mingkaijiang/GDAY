@@ -446,7 +446,7 @@ int cut_back_production(control *c, fluxes *f, params *p, state *s,
     } else {
         lai_inc = (f->cpleaf *
                    (p->sla * M2_AS_HA / (KG_AS_TONNES * p->cfracts)) -
-                   (f->deadleaves + f->ceaten) * s->lai / s->shoot);
+                   f->deadleaves * s->lai / s->shoot);
     }
 
     f->npp *= tot / (f->npstemimm + f->npstemmob + \
@@ -493,7 +493,7 @@ int cut_back_production(control *c, fluxes *f, params *p, state *s,
       s->lai += (f->cpleaf *
         (p->sla * M2_AS_HA / \
         (KG_AS_TONNES * p->cfracts)) -
-        (f->deadleaves + f->ceaten) * s->lai / s->shoot);
+        f->deadleaves * s->lai / s->shoot);
     }
     
 
@@ -698,7 +698,7 @@ void carbon_allocation(control *c, fluxes *f, params *p, state *s,
     } else {
       s->lai += (f->cpleaf *
         (p->sla * M2_AS_HA / (KG_AS_TONNES * p->cfracts)) -
-        (f->deadleaves + f->ceaten) * s->lai / s->shoot);
+        f->deadleaves * s->lai / s->shoot);
     }
 
     //fprintf(stderr, "lai %f\n", s->lai);
@@ -729,7 +729,7 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s,
     /*
     ** Carbon pools
     */
-    s->shoot += f->cpleaf - f->deadleaves - f->ceaten;
+    s->shoot += f->cpleaf - f->deadleaves;
     s->root += f->cproot - f->deadroots;
     s->branch += f->cpbranch - f->deadbranch;
     s->stem += f->cpstem - f->deadstems;
@@ -754,8 +754,8 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s,
     /*
     ** Nitrogen and Phosphorus pools
     */
-    s->shootn += f->npleaf - fdecay * s->shootn - f->neaten;
-    s->shootp += f->ppleaf - fdecay * s->shootp - f->peaten;
+    s->shootn += f->npleaf - fdecay * s->shootn;
+    s->shootp += f->ppleaf - fdecay * s->shootp;
 
     s->branchn += f->npbranch - p->bdecay * s->branchn;
     s->rootn += f->nproot - rdecay * s->rootn;
@@ -1087,7 +1087,7 @@ double calculate_puptake(control *c, params *p, state *s, fluxes *f) {
             U0 = p->prateuptake * s->inorglabp * p->p_lab_avail;
         } else {
             U0 = MIN((f->p_par_to_min + f->pmineralisation +
-                     f->purine + f->p_slow_biochemical),
+                      f->p_slow_biochemical),
                      (p->prateuptake * s->inorglabp * p->p_lab_avail));
         }
 

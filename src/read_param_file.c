@@ -487,22 +487,12 @@ int handler(char *section, char *name, char *value, control *c,
         p->d0x = atof(value);
     } else if (MATCH("params", "density")) {
         p->density = atof(value);
-    } else if (MATCH("params", "faecesn")) {
-        p->faecesn = atof(value);
-    } else if (MATCH("params", "faecesp")) {
-        p->faecesp = atof(value);
     } else if (MATCH("params", "fdecay")) {
         p->fdecay = atof(value);
     } else if (MATCH("params", "fhw")) {
         p->fhw = atof(value);
     } else if (MATCH("params", "finesoil")) {
         p->finesoil = atof(value);
-    } else if (MATCH("params", "fracfaeces")) {
-        p->fracfaeces = atof(value);
-    } else if (MATCH("params", "fractosoil")) {
-        p->fractosoil = atof(value);
-    } else if (MATCH("params", "fractosoilp")) {
-        p->fractosoilp = atof(value);
     } else if (MATCH("params", "fretrans")) {
         p->fretrans = atof(value);
     } else if (MATCH("params", "fretransp")) {

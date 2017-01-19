@@ -41,7 +41,6 @@ void calculate_csoil_flows(control *c, fluxes *f, params *p, state *s,
     p->fmroot = metafract(lnroot);
 
     /* input from faeces */
-    flux_from_grazers(c, f, p);
     partition_plant_litter(f, p);
     cfluxes_from_structural_pool(f, p, s);
     cfluxes_from_metabolic_pool(f, p, s);
@@ -54,7 +53,7 @@ void calculate_csoil_flows(control *c, fluxes *f, params *p, state *s,
     calculate_cpools(f, s);
 
     /* calculate NEP */
-    f->nep = f->npp - f->hetero_resp - f->ceaten * (1.0 - p->fracfaeces);
+    f->nep = f->npp - f->hetero_resp;
 
     /* save fluxes for NCEAS output */
     f->co2_rel_from_surf_struct_litter = f->co2_to_air[0];
@@ -145,14 +144,6 @@ double calc_soil_temp_factor(double tsoil) {
     return (tfac);
 }
 
-void flux_from_grazers(control *c, fluxes *f, params *p) {
-    /*  Input from faeces */
-    p->fmfaeces = 0.0;
-    f->faecesc = 0.0;
-    
-
-    return;
-}
 
 double calc_ligin_nratio_leaves(control *c, fluxes *f, params *p) {
     /* Estimate Lignin/N ratio, as this dictates the how plant litter is
@@ -274,7 +265,7 @@ void partition_plant_litter(fluxes *f, params *p) {
     /* Partition litter from the plant (surface) and roots into metabolic
     and structural pools  */
 
-    double leaf_material, wood_material, faeces_material;
+    double leaf_material, wood_material;
     /*
      * Surface (leaves, branches, stem) Litter
      */
@@ -282,11 +273,10 @@ void partition_plant_litter(fluxes *f, params *p) {
     /* ...to the structural pool*/
     leaf_material = f->deadleaves * (1.0 - p->fmleaf);
     wood_material = f->deadbranch + f->deadstems;
-    faeces_material = f->faecesc * (1.0 - p->fmfaeces);
-    f->surf_struct_litter = leaf_material + wood_material + faeces_material;
+    f->surf_struct_litter = leaf_material + wood_material;
 
     /* ...to the metabolic pool */
-    f->surf_metab_litter = f->deadleaves * p->fmleaf + f->faecesc * p->fmfaeces;
+    f->surf_metab_litter = f->deadleaves * p->fmleaf;
 
     /*
     ** Root Litter
@@ -508,7 +498,6 @@ void calculate_nsoil_flows(control *c, fluxes *f, params *p, state *s,
     double frac_microb_resp = 0.85 - (0.68 * p->finesoil);
     double nsurf, nsoil, active_nc_slope, slow_nc_slope, passive_nc_slope;
 
-    grazer_inputs(c, f, p);
     n_inputs_from_plant_litter(f, p, &nsurf, &nsoil);
     partition_plant_litter_n(c, f, p, nsurf, nsoil);
 
@@ -578,26 +567,6 @@ void adjust_residence_time_of_slow_pool(fluxes *f, params *p) {
     return;
 }
 
-void grazer_inputs(control *c, fluxes *f, params *p) {
-    /* Grazer inputs from faeces and urine, flux detd by faeces c:n */
-    double arg;
-
-    p->faecesn = 0.0;
-  
-    /* make sure faecesn <= total n input to soil from grazing */
-    arg = f->neaten * p->fractosoil;
-    if (p->faecesn > arg)
-        p->faecesn = f->neaten * p->fractosoil;
-
-    /* urine=total-faeces */
-    f->nurine = 0.0;
-
-    if (f->nurine < 0.0)
-        f->nurine = 0.0;
-
-    return;
-}
-
 void n_inputs_from_plant_litter(fluxes *f, params *p, double *nsurf,
                               double *nsoil) {
     /* inputs from plant litter.
@@ -614,7 +583,7 @@ void n_inputs_from_plant_litter(fluxes *f, params *p, double *nsurf,
     */
 
     /* surface and soil inputs (faeces n goes to abovgrd litter pools) */
-    *nsurf = f->deadleafn + f->deadbranchn + f->deadstemn + p->faecesn;
+    *nsurf = f->deadleafn + f->deadbranchn + f->deadstemn;
     *nsoil = f->deadrootn;
 
     return;
@@ -985,10 +954,10 @@ void calculate_npools(control *c, fluxes *f, params *p, state *s,
     /* Daily increment of soil inorganic N pool, diff btw in and effluxes
        (grazer urine n goes directly into inorganic pool) nb inorgn may be
        unstable if rateuptake is large */
-    s->inorgn += (f->ninflow + f->nurine + f->nmineralisation -
+    s->inorgn += (f->ninflow + f->nmineralisation -
                   f->nloss - f->nuptake);                            // commented out for annual version;
     
-    // s->inorgn += (f->ninflow * 365.25 + f->nurine + f->nmineralisation -
+    // s->inorgn += (f->ninflow * 365.25 + f->nmineralisation -
     //   f->nloss - f->nuptake);
 
     //fprintf(stderr, "inorgn = %f\n", s->inorgn);
@@ -1129,7 +1098,6 @@ void calculate_psoil_flows(control *c, fluxes *f, params *p, state *s,
     double frac_microb_resp = 0.85 - (0.68 * p->finesoil);
     double psurf, psoil, active_pc_slope, slow_pc_slope, passive_pc_slope;
 
-    grazer_inputs_p(c, f, p);
     p_inputs_from_plant_litter(f, p, &psurf, &psoil);
     partition_plant_litter_p(c, f, p, psurf, psoil);
 
@@ -1173,27 +1141,6 @@ void calculate_psoil_flows(control *c, fluxes *f, params *p, state *s,
     return;
 }
 
-
-void grazer_inputs_p(control *c, fluxes *f, params *p) {
-    /* Grazer inputs from faeces and urine, flux detd by faeces c:p */
-    double arg;
-
-    p->faecesp = 0.0;
-
-    /* make sure faecesp <= total p input to soil from grazing */
-    arg = f->peaten * p->fractosoilp;
-    if (p->faecesp > arg)
-        p->faecesp = f->peaten * p->fractosoilp;
-
-    /* urine=total-faeces */
-    f->purine = 0.0;
-
-    if (f->purine < 0.0)
-        f->purine = 0.0;
-
-    return;
-}
-
 void p_inputs_from_plant_litter(fluxes *f, params *p, double *psurf,
                                 double *psoil) {
     /* inputs from plant litter.
@@ -1210,7 +1157,7 @@ void p_inputs_from_plant_litter(fluxes *f, params *p, double *psurf,
     */
 
     /* surface and soil inputs (faeces p goes to abovgrd litter pools) */
-    *psurf = f->deadleafp + f->deadbranchp + f->deadstemp + p->faecesp;
+    *psurf = f->deadleafp + f->deadbranchp + f->deadstemp;
     *psoil = f->deadrootp;
 
     return;
@@ -1577,7 +1524,7 @@ void calculate_p_min_fluxes(fluxes *f, params *p, state *s) {
     // in some cases, but it does not affect the final equilibrated state, so
     // leave as is until better method is found
     tot_in = f->p_par_to_min + f->pmineralisation +
-             f->purine + f->p_slow_biochemical +
+             f->p_slow_biochemical +
              f->p_ssorb_to_min;
 
     if (s->inorglabp > 0) {

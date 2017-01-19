@@ -199,17 +199,11 @@ typedef struct {
     double d0x;                             /* Length scale for exponential decline of Umax(z) */
     double decayrate[7];
     double density;                         /* sapwood density kg DM m-3 (trees) */
-    double faecesn;                         /* Faeces N content */
-    double faecesp;                         /* Faeces P content */
     double fdecay;                          /* foliage turnover rate (1/yr) */
     double fhw;                             /* n:c ratio of stemwood - immobile pool and new ring */
     double finesoil;                        /* clay+silt fraction */
     double fmleaf;
     double fmroot;
-    double fmfaeces;
-    double fracfaeces;                      /* Fractn of grazd C that ends up in faeces (0..1) */
-    double fractosoil;                      /* Fractn of grazed N recycled to soil:faeces+urine */
-    double fractosoilp;                     /* Fractn of grazed P recycled to soil:faeces+urine */
     double fretrans;                        /* foliage n retranslocation fraction - 46-57% in young E. globulus trees - see Corbeels et al 2005 ecological modelling 187, pg 463. Roughly 50% from review Aerts '96 */
     double fretransp;                       /* foliage p retranslocation fraction - 39.5-69 in Southern US FACE site - Finzi et al. 2001 Ecology  */
     double height0;                         /* Height when leaf:sap area ratio = leafsap0 (trees) */
@@ -460,14 +454,6 @@ typedef struct {
     double deadsapwood;
 
     /* grazing stuff */
-    double ceaten;          /* C consumed by grazers (t C/ha/y) */
-    double neaten;          /* N consumed by grazers (t N/ha/y) */
-    double peaten;          /* P consumed by grazers (t P/ha/y) */
-
-    double faecesc;         /* Flux determined by faeces C:N */
-    double nurine;          /* Rate of N input to soil in urine (t/ha/y) */
-    double purine;          /* Rate of P input to soil in urine (t/ha/y) */
-
     double leafretransn;    /* N retranslocation leaf */
     double leafretransp;    /* P version of leafretransn */
 

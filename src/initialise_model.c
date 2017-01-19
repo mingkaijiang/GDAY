@@ -87,17 +87,11 @@ void initialise_params(params *p) {
     p->d0 = 0.0;
     p->d0x = 0.35;
     p->density = 420.0;
-    p->faecesn = 0.0;
-    p->faecesp = 0.0;
     p->fdecay = 0.59988;
     p->fhw = 0.8;      
     p->finesoil = 0.51;
     p->fmleaf = 0.0;
     p->fmroot = 0.0;
-    p->fmfaeces = 0.0;
-    p->fracfaeces = 0.3;
-    p->fractosoil = 0.85;
-    p->fractosoilp = 0.85;
     p->fretrans = 0.5;
     p->fretransp = 0.6;
     p->height0 = 5.0;
@@ -309,13 +303,6 @@ void initialise_fluxes(fluxes *f) {
     f->deadsapwood = 0.0;
 
     /* grazing stuff */
-    f->ceaten = 0.0;       /* C consumed by grazers (t C/ha/y) */
-    f->neaten = 0.0;       /* N consumed by grazers (t N/ha/y) */
-    f->peaten = 0.0;       /* P consumed by grazers (t P/ha/y) */
-    f->faecesc = 0.0;      /* Flux determined by faeces C:N */
-    f->nurine = 0.0;       /* Rate of N input to soil in urine (t/ha/y) */
-    f->purine = 0.0;       /* Rate of P input to soil in urine (t/ha/y) */
-
     f->leafretransn = 0.0;
     f->leafretransp = 0.0;
 
