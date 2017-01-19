@@ -118,8 +118,6 @@ int handler(char *section, char *name, char *value, control *c,
         strcpy(c->met_fname, temp);
     } else if (MATCH("files", "out_fname")) {
         strcpy(c->out_fname, temp);
-    } else if (MATCH("files", "out_subdaily_fname")) {
-        strcpy(c->out_subdaily_fname, temp);
     } else if (MATCH("files", "out_fname_hdr")) {
         strcpy(c->out_fname_hdr, temp);
     } else if (MATCH("files", "out_param_fname")) {
@@ -278,18 +276,6 @@ int handler(char *section, char *name, char *value, control *c,
             c->print_options = END;
         else {
             fprintf(stderr, "Unknown print option: %s\n", temp);
-            exit(EXIT_FAILURE);
-        }
-    } else if (MATCH("control", "ps_pathway")) {
-        if (strcmp(temp, "C3") == 0 ||
-            strcmp(temp, "c3") == 0)
-            c->ps_pathway = C3;
-        else if (strcmp(temp, "End") == 0 ||
-            strcmp(temp, "C4") == 0 ||
-            strcmp(temp, "c4") == 0)
-            c->ps_pathway = C4;
-        else {
-            fprintf(stderr, "Unknown ps pathway : %s\n", temp);
             exit(EXIT_FAILURE);
         }
      } else if (MATCH("control", "respiration_model")) {
