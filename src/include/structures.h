@@ -497,15 +497,12 @@ typedef struct {
     double *tmin;
     double *tmax;
     double *tday;
-    double *vpd_am;
-    double *vpd_pm;
     double *wind_am;
     double *wind_pm;
     double *par_am;
     double *par_pm;
 
     /* sub-daily timestep */
-    double *vpd;
     double *doy;
     double *diffuse_frac;
 
@@ -518,7 +515,6 @@ typedef struct {
     /* sub-daily */
     double rain;
     double wind;
-    double vpd;
     double tair;
     double sw_rad;
     double par;
@@ -533,8 +529,6 @@ typedef struct {
     double tair_pm;
     double sw_rad_am;
     double sw_rad_pm;
-    double vpd_am;
-    double vpd_pm;
     double wind_am;
     double wind_pm;
     double Tk_am;
