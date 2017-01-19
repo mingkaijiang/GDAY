@@ -350,8 +350,6 @@ int handler(char *section, char *name, char *value, control *c,
         s->prev_sma = atof(value);
     } else if (MATCH("state", "root")) {
         s->root = atof(value);
-    } else if (MATCH("state", "root_depth")) {
-        s->root_depth = atof(value);
     } else if (MATCH("state", "rootn")) {
         s->rootn = atof(value);
     } else if (MATCH("state", "rootp")) {
@@ -639,8 +637,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->rdecay = atof(value);
     } else if (MATCH("params", "retransmob")) {
         p->retransmob = atof(value);
-    } else if (MATCH("params", "rooting_depth")) {
-        p->rooting_depth = atof(value);
     } else if (MATCH("params", "soil_order")) {
        strcpy(p->soil_order, value);
     } else if (MATCH("params", "rretrans")) {

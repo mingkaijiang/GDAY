@@ -76,7 +76,6 @@ typedef struct {
     double passivesoilp;                /* passive P som pool (t/ha) */
     double prev_sma;
     double root;                        /* root c (t/ha) */
-    double root_depth;                  /* rooting depth, Dmax (m) */
     double rootn;                       /* root n (t/ha) */
     double rootp;                       /* root p (t/ha) */
     double sapwood;
@@ -276,7 +275,6 @@ typedef struct {
     double rateuptake;                      /* Rate of N uptake from mineral N pool (/yr) from here? http://face.ornl.gov/Finzi-PNAS.pdf Seems to correspond to very low NPP values */
     double rdecay;                          /* root turnover rate (1/yr) */
     double retransmob;                      /* Fraction stem mobile N retranscd (/yr) */
-    double rooting_depth;                   /* Rooting depth (mm) */
     char   soil_order[STRING_LENGTH];       /* soil order */
     double rretrans;                        /* root n retranslocation fraction */
     double sapturnover;                     /* Sapwood turnover rate: conversion of sapwood to heartwood (1/yr) */

@@ -441,9 +441,6 @@ int ohandler(char *section, char *name, char *value, control *c, params *p,
     } else if (MATCH("state", "root")) {
         fprintf(c->ofp, "root = %.10f\n", s->root);
         *match = TRUE;
-    } else if (MATCH("state", "root_depth")) {
-        fprintf(c->ofp, "root_depth = %.10f\n", s->root_depth);
-        *match = TRUE;
     } else if (MATCH("state", "rootn")) {
         fprintf(c->ofp, "rootn = %.10f\n", s->rootn);
         *match = TRUE;
