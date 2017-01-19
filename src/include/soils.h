@@ -4,7 +4,6 @@
 #include "gday.h"
 #include "utilities.h"
 #include "constants.h"
-#include "water_balance.h"
 
 double calc_soil_temp_factor(double);
 void   calculate_csoil_flows(control *, fluxes *, params *, state *,

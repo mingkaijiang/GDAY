@@ -204,8 +204,6 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
     correct_rate_constants(p, FALSE);
     day_end_calculations(c, p, s, -99, TRUE);
 
-    initialise_soils_day(c, f, p, s);
-
     s->lai = MAX(0.01, (p->sla * M2_AS_HA / KG_AS_TONNES /
                           p->cfracts * s->shoot));
     

@@ -8,7 +8,6 @@
 
 #include "gday.h"
 #include "constants.h"
-#include "water_balance.h"
 #include "utilities.h"
 #include "photosynthesis.h"
 
