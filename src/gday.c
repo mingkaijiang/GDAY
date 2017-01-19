@@ -138,8 +138,6 @@ int main(int argc, char **argv)
     free(ma->par);
 
     free(ma->prjday);
-    free(ma->tam);
-    free(ma->tpm);
     free(ma->par_am);
     free(ma->par_pm);
     
@@ -760,8 +758,6 @@ void unpack_met_data(control *c, fluxes *f, met_arrays *ma, met *m, int hod,
     /* unpack met forcing */
     m->Ca = ma->co2[c->day_idx];
     m->tair = ma->tair[c->day_idx];
-    m->tair_am = ma->tam[c->day_idx];
-    m->tair_pm = ma->tpm[c->day_idx];
     m->par = ma->par_am[c->day_idx] + ma->par_pm[c->day_idx];
     
     /* Conversion factor for PAR to SW rad */
@@ -774,9 +770,6 @@ void unpack_met_data(control *c, fluxes *f, met_arrays *ma, met *m, int hod,
     m->nfix = ma->nfix[c->day_idx];
     m->pdep = ma->pdep[c->day_idx];
     m->tsoil = ma->tsoil[c->day_idx];
-    m->Tk_am = ma->tam[c->day_idx] + DEG_TO_KELVIN;
-    m->Tk_pm = ma->tpm[c->day_idx] + DEG_TO_KELVIN;
-
     
 
     /* N deposition + biological N fixation */

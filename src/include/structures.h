@@ -490,8 +490,6 @@ typedef struct {
 
     /* Day timestep */
     double *prjday; /* should really be renamed to doy for consistancy */
-    double *tam;
-    double *tpm;
     double *par_am;
     double *par_pm;
 
@@ -516,12 +514,8 @@ typedef struct {
     double tsoil;
 
     /* daily */
-    double tair_am;
-    double tair_pm;
     double sw_rad_am;
     double sw_rad_pm;
-    double Tk_am;
-    double Tk_pm;
 
 } met;
 
