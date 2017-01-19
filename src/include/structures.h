@@ -259,7 +259,6 @@ typedef struct {
     double intercep_frac;                   /* Maximum intercepted fraction, values in Oishi et al 2008, AFM, 148, 1719-1732 ~13.9% +/- 4.1, so going to assume 15% following Landsberg and Sands 2011, pg. 193. */
     double jv_intercept;                    /* Jmax to Vcmax intercept */
     double jv_slope;                        /* Jmax to Vcmax slope */
-    double kc25;                            /* Base rate for carboxylation by Rubisco at 25degC [mmol mol-1] */
     double kdec1;                           /* surface structural decay rate (1/yr) */
     double kdec2;                           /* surface metabolic decay rate (1/yr) */
     double kdec3;                           /* soil structural decay rate (1/yr) */
@@ -268,11 +267,6 @@ typedef struct {
     double kdec6;                           /* slow pool decay rate (1/yr) */
     double kdec7;                           /* passive pool decay rate (1/yr) */
     double kext;                            /* extinction coefficient for light  */
-    double kn;                              /* extinction coefficient of nitrogen in the canopy, assumed to be 0.3 by default which comes half from Belinda's head and is supported by fig 10 in Lloyd et al. Biogeosciences, 7, 1833–1859, 2010 */
-    double kp;                              /* extinction coefficient of phosphorus in the canopy */
-    double knl;
-    double ko25;                            /* Base rate for oxygenation by Rubisco at 25degC [umol mol-1]. Note value in Bernacchie 2001 is in mmol!! */
-    double kq10;                            /* exponential coefficient for Rm vs T */
     double kr;                              /* N uptake coefficent (0.05 kg C m-2 to 0.5 tonnes/ha) see Silvia's PhD, Dewar and McM, 96. */
     double krp;                             /* P uptake coefficent */
     double ks;                              /* an empirical constant [t P ha-1] - sorption capacity increased with the age of the substrate */

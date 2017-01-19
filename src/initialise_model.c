@@ -129,7 +129,6 @@ void initialise_params(params *p) {
     p->intercep_frac = 0.15;
     p->jv_intercept = 0.0;
     p->jv_slope = 1.86;
-    p->kc25 = 404.9;      /* MM coefft of Rubisco for CO2 (umol mol-1) */
     p->kdec1 = 3.965571;
     p->kdec2 = 14.61;
     p->kdec3 = 4.904786;
@@ -138,10 +137,6 @@ void initialise_params(params *p) {
     p->kdec6 = 0.198279;
     p->kdec7 = 0.006783;
     p->kext = 0.5;
-    p->kn = 0.3;         /* extinction coefficient of nitrogen in the canopy, assumed to be 0.3 by defaul which comes half from Belinda's head and is supported by fig 10 in Lloyd et al. Biogeosciences, 7, 1833–1859, 2010 */
-    p->kp = 0.3;         
-    p->ko25 = 278400.0;  /* MM coefft of Rubisco for O2 (umol mol-1) */
-    p->kq10 = 0.08;
     p->kr = 0.5;          /* this value is 1.0 in Wang et al. 2007 Global Biogeochemical Cycles, Kn Michaelis-Menten constant for plant N uptake [g P m-2] */
     p->krp = 0.01;        /* Wang et al. 2007 Global Biogeochemical Cycles, Kp Michaelis-Menten constant for plant P uptake [g P m-2] */
     p->ks = 0.5;          /* used intermediately weatherred soil value of 0.3 [g P m-2] in Yang et al. 2016 */

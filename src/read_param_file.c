@@ -670,8 +670,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->jv_intercept = atof(value);
     } else if (MATCH("params", "jv_slope")) {
         p->jv_slope = atof(value);
-    } else if (MATCH("params", "kc25")) {
-        p->kc25 = atof(value);
     } else if (MATCH("params", "kdec1")) {
         p->kdec1 = atof(value);
     } else if (MATCH("params", "kdec2")) {
@@ -686,18 +684,10 @@ int handler(char *section, char *name, char *value, control *c,
         p->kdec6 = atof(value);
     } else if (MATCH("params", "kdec7")) {
         p->kdec7 = atof(value);
-    } else if (MATCH("params", "ko25")) {
-        p->ko25 = atof(value);
-    } else if (MATCH("params", "kq10")) {
-        p->kq10 = atof(value);
     } else if (MATCH("params", "kr")) {
         p->kr = atof(value);
     } else if (MATCH("params", "krp")) {
         p->krp = atof(value);
-    } else if (MATCH("params", "kn")) {
-        p->kn = atof(value);
-    } else if (MATCH("params", "kp")) {
-        p->kp = atof(value);
     } else if (MATCH("params", "ks")) {
         p->ks = atof(value);
     } else if (MATCH("params", "lad")) {
