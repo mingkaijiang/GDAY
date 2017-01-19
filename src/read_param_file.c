@@ -142,19 +142,6 @@ int handler(char *section, char *name, char *value, control *c,
             fprintf(stderr, "Unknown adjust_rtslow option: %s\n", temp);
             exit(EXIT_FAILURE);
         }
-    } else if (MATCH("control", "calc_sw_params")) {
-        if (strcmp(temp, "False") == 0 ||
-            strcmp(temp, "FALSE") == 0 ||
-            strcmp(temp, "false") == 0)
-            c->calc_sw_params = FALSE;
-        else if (strcmp(temp, "True") == 0 ||
-            strcmp(temp, "TRUE") == 0 ||
-            strcmp(temp, "true") == 0)
-            c->calc_sw_params = TRUE;
-        else {
-            fprintf(stderr, "Unknown SW param option: %s\n", temp);
-            exit(EXIT_FAILURE);
-        }
     } else if (MATCH("control", "fixed_stem_nc")) {
         if (strcmp(temp, "False") == 0 ||
             strcmp(temp, "FALSE") == 0 ||

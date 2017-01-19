@@ -19,7 +19,6 @@ void initialise_control(control *c) {
     strcpy(c->out_fname_hdr, "*NOT SET*");
     strcpy(c->out_param_fname, "*NOT SET*");
 
-    c->calc_sw_params = FALSE;      /* false=user supplies field capacity and wilting point, true=calculate them based on cosby et al. */
     c->fixed_stem_nc = TRUE;        /* False=vary stem N:C with foliage, True=fixed stem N:C */
     c->fixed_stem_pc = TRUE;        /* False=vary stem P:C with foliage, True=fixed stem P:C */
     c->fixleafnc = FALSE;           /* fixed leaf N C ? */

@@ -12,8 +12,6 @@ double  calc_sw_modifier(double, double, double);
 double *get_soil_fracs(char *);
 double  calc_beta(double, double, double, double, double);
 void    get_soil_params(char *, double *, double *);
-void    calc_soil_params(double *, double *, double *,
-                        double *, double *, double *);
 void    calculate_soil_water_fac(control *, params *, state *);
 
 #endif /* WATER_BALANCE */

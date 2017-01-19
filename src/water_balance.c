@@ -7,30 +7,6 @@ void initialise_soils_day(control *c, fluxes *f, params *p, state *s) {
     double *fsoil_top = NULL, *fsoil_root = NULL;
     int     i;
 
-    /* site params not known, so derive them based on Cosby et al */
-
-    if (c->calc_sw_params) {
-        fsoil_top = get_soil_fracs(p->topsoil_type);
-        fsoil_root = get_soil_fracs(p->rootsoil_type);
-
-        /* top soil */
-        calc_soil_params(fsoil_top, &p->theta_fc_topsoil, &p->theta_wp_topsoil,
-                         &p->theta_sp_topsoil, &p->b_topsoil,
-                         &p->psi_sat_topsoil);
-
-        /* Plant available water in top soil (mm) */
-        p->wcapac_topsoil = p->topsoil_depth  *\
-                            (p->theta_fc_topsoil - p->theta_wp_topsoil);
-        /* Root zone */
-        calc_soil_params(fsoil_root, &p->theta_fc_root, &p->theta_wp_root,
-                         &p->theta_sp_root, &p->b_root, &p->psi_sat_root);
-
-        /* Plant available water in rooting zone (mm) */
-        p->wcapac_root = p->rooting_depth * \
-                            (p->theta_fc_root - p->theta_wp_root);
-    }
-
-
     /* calculate Landsberg and Waring SW modifier parameters if not
        specified by the user based on a site calibration */
     if (p->ctheta_topsoil < -900.0 && p->ntheta_topsoil  < -900.0 &&
@@ -171,70 +147,6 @@ void get_soil_params(char *soil_type, double *c_theta, double *n_theta) {
     }
 
     return;
-}
-
-void calc_soil_params(double *fsoil, double *theta_fc, double *theta_wp,
-                      double *theta_sp, double *b, double *psi_sat_mpa) {
-    /* Cosby parameters for use within the Clapp Hornberger soil hydraulics
-    scheme are calculated based on the texture components of the soil.
-
-    NB: Cosby et al were ambiguous in their paper as to what log base to
-    use.  The correct implementation is base 10, as below.
-
-    Parameters:
-    ----------
-    fsoil : list
-        fraction of silt, sand, and clay (in that order
-
-    Returns:
-    --------
-    theta_fc : float
-        volumetric soil water concentration at field capacity
-    theta_wp : float
-        volumetric soil water concentration at the wilting point
-
-    */
-    /* soil suction of 3.364m and 152.9m, or equivalent of -0.033 & -1.5 MPa */
-    double pressure_head_wilt = -152.9;
-    double pressure_head_crit = -3.364;
-    double psi_sat;
-
-    /* *Note* subtle unit change to be consistent with fractions as opposed
-     * to percentages of sand, silt, clay, e.g. I've changed the slope in
-     * the "b" Clapp paramter from 0.157 to 15.7
-     *
-     * Also Cosby is unclear about which log base were used. 'Generally' now
-     * assumed that logarithms to the base 10
-     */
-
-    /* Clapp Hornberger exponent [-] */
-    *b = 3.1 + 15.7 * fsoil[CLAY] - 0.3 * fsoil[SAND];
-
-    /*
-     * soil matric potential at saturation, taking inverse of log (base10)
-     * units = m
-     */
-    psi_sat = CM_2_M * -(pow(10.0, (1.54 - 0.95 * fsoil[SAND] +\
-              0.63 * fsoil[SILT])));
-    *psi_sat_mpa = psi_sat * METER_OF_HEAD_TO_MPA;
-
-    /* volumetric soil moisture concentrations at the saturation point */
-    *theta_sp = 0.505 - 0.037 * fsoil[CLAY] - 0.142 * fsoil[SAND];
-
-    /*
-     * volumetric soil moisture concentrations at the wilting point
-     * assumed to equal suction of -1.5 MPa or a depth of water of 152.9 m
-     */
-    *theta_wp = *theta_sp * pow((psi_sat / pressure_head_wilt), (1.0 / *b));
-
-    /*
-     * volumetric soil moisture concentrations at field capacity assumed to
-     * equal a suction of -0.0033 MPa or a depth of water of 3.364 m
-     */
-    *theta_fc = *theta_sp * pow((psi_sat / pressure_head_crit), (1.0 / *b));
-
-    return;
-
 }
 
 void calculate_soil_water_fac(control *c, params *p, state *s) {
