@@ -184,7 +184,6 @@ void initialise_params(params *p) {
     p->prateuptake = 365.0;
     p->prescribed_leaf_NC = 0.03;
     p->prescribed_leaf_PC = 0.00249;   /*Crous et al. 2015, C:P ratio of 400, Figure 3, Plant Soil */
-    p->previous_ncd = 35.0;
     p->psecmnp = 0.000022;
     p->psi_sat_root = -999.9;
     p->psi_sat_topsoil = -999.9;
@@ -217,7 +216,6 @@ void initialise_params(params *p) {
     p->soilph = 6.7;               /* pft-specific parameter, century value */
     p->sorpmx = 5.0;                 /* pft-specific parameter, check CENTURY for values */
     p->sorpaf = 1.0;
-    p->store_transfer_len = -999.9;
     p->structcn = 150.0;
     p->structrat = 0.0;
     p->structcp = 5500.0;
@@ -246,17 +244,6 @@ void initialise_params(params *p) {
     for (i = 0; i < 7; i++) {
         p->decayrate[i] = 0.0;
     }
-
-    /* Hydraulics stuff - private */
-    p->potA = NULL;
-    p->potB = NULL;
-    p->cond1 = NULL;
-    p->cond2 = NULL;
-    p->cond3 = NULL;
-    p->porosity = NULL;
-    p->field_capacity = NULL;
-    p->wetting = 10;
-
 
 }
 

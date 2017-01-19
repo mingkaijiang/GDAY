@@ -303,7 +303,6 @@ typedef struct {
     double prateuptake;                     /* Rate of P uptake from mineral P pool (/yr), guess value */
     double prescribed_leaf_NC;              /* If the N-Cycle is switched off this needs to be set, e.g. 0.03 */
     double prescribed_leaf_PC;              /* If the P-Cycle is switched off this needs to be set, e.g. 0.00249 */
-    double previous_ncd;                    /* In the first year we don't have last years data, so I have precalculated the average of all the november-jan chilling values  */
     double psecmnp;                         /* controls the flow from secondary to mineral P, used when text_effect_p set to 0 */
     double psi_sat_root;                    /* MPa */
     double psi_sat_topsoil;                 /* MPa */
@@ -333,7 +332,6 @@ typedef struct {
     double slowpcmax;                       /* Slow pool (=1/90) P:C ratio of new SOM - maximum [units: gP/gC]. */
     double slowpcmin;                       /* Slow pool (=1/200) P:C of new SOM - when Pmin=Pmin0" [units: gP/gC]. */
     double smax;                            /* Maximum amount of sorbed P in the soil [tt P ha-1] */
-    double store_transfer_len;
     double structcn;                        /* C:N ratio of structural bit of litter input */
     double structrat;                       /* structural input n:c as fraction of metab */
     double structcp;                        /* C:P ratio of structural bit of litter input, Ref Attiwill 1980, Aus. J. Bot. 28, 199-222 Table 9 sum of branch, stem, sap and heartwood; */
@@ -364,16 +362,6 @@ typedef struct {
     double prime_z;
     int    return_interval;                 /* years */
     double root_exu_CUE;
-
-    /* not shared via cmd line */
-    double *potA;
-    double *potB;
-    double *cond1;
-    double *cond2;
-    double *cond3;
-    double *porosity;
-    double *field_capacity;
-    int     wetting;                        /* number of wetting layers */
 
 } params;
 

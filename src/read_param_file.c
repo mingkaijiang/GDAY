@@ -681,8 +681,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->prescribed_leaf_NC = atof(value);
     } else if (MATCH("params", "prescribed_leaf_PC")) {
         p->prescribed_leaf_PC = atof(value);
-    } else if (MATCH("params", "previous_ncd")) {
-        p->previous_ncd = atof(value);
     } else if (MATCH("params", "psi_sat_root")) {
         p->psi_sat_root = atof(value);
     } else if (MATCH("params", "psi_sat_topsoil")) {
@@ -745,8 +743,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->slowpcmin = atof(value);
     } else if (MATCH("params", "smax")) {
         p->smax = atof(value);
-    } else if (MATCH("params", "store_transfer_len")) {
-        p->store_transfer_len = atof(value);
     } else if (MATCH("params", "structcn")) {
         p->structcn = atof(value);
     } else if (MATCH("params", "structrat")) {

@@ -389,14 +389,6 @@ int ohandler(char *section, char *name, char *value, control *c, params *p,
     }
 
     /*
-    ** PARAMS
-    */
-    if (MATCH("params", "previous_ncd")) {
-        fprintf(c->ofp, "previous_ncd = %.10f\n", p->previous_ncd);
-        *match = TRUE;
-    }
-
-    /*
     ** STATE
     */
 
