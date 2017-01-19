@@ -246,10 +246,12 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
             //}
 
             unpack_met_data(c, f, ma, m, dummy, s->day_length[doy]);
-            
-            
+          
+            fdecay = p->fdecay;
+            rdecay = p->rdecay;
+          
             calculate_litterfall(c, f, p, s, doy, &fdecay, &rdecay);
-
+            
             calc_day_growth(c, f, ma, m, nr, p, s, s->day_length[doy],
                             doy, fdecay, rdecay);
 
@@ -436,10 +438,8 @@ void correct_rate_constants(params *p, int output) {
         p->prateloss *= NDAYS_IN_YR;
         p->retransmob *= NDAYS_IN_YR;
         p->fdecay *= NDAYS_IN_YR;
-        p->fdecaydry *= NDAYS_IN_YR;
         p->crdecay *= NDAYS_IN_YR;
         p->rdecay *= NDAYS_IN_YR;
-        p->rdecaydry *= NDAYS_IN_YR;
         p->bdecay *= NDAYS_IN_YR;
         p->wdecay *= NDAYS_IN_YR;
         p->sapturnover *= NDAYS_IN_YR;
@@ -465,10 +465,8 @@ void correct_rate_constants(params *p, int output) {
         p->prateloss /= NDAYS_IN_YR;
         p->retransmob /= NDAYS_IN_YR;
         p->fdecay /= NDAYS_IN_YR;
-        p->fdecaydry /= NDAYS_IN_YR;
         p->crdecay /= NDAYS_IN_YR;
         p->rdecay /= NDAYS_IN_YR;
-        p->rdecaydry /= NDAYS_IN_YR;
         p->bdecay /= NDAYS_IN_YR;
         p->wdecay /= NDAYS_IN_YR;
         p->sapturnover /= NDAYS_IN_YR;

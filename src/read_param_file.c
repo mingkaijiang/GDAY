@@ -505,8 +505,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->faecesp = atof(value);
     } else if (MATCH("params", "fdecay")) {
         p->fdecay = atof(value);
-    } else if (MATCH("params", "fdecaydry")) {
-        p->fdecaydry = atof(value);
     } else if (MATCH("params", "fhw")) {
         p->fhw = atof(value);
     } else if (MATCH("params", "finesoil")) {
@@ -703,8 +701,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->prateuptake = atof(value);
     } else if (MATCH("params", "rdecay")) {
         p->rdecay = atof(value);
-    } else if (MATCH("params", "rdecaydry")) {
-        p->rdecaydry = atof(value);
     } else if (MATCH("params", "retransmob")) {
         p->retransmob = atof(value);
     } else if (MATCH("params", "rooting_depth")) {

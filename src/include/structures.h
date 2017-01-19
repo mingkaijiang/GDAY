@@ -210,7 +210,6 @@ typedef struct {
     double faecesn;                         /* Faeces N content */
     double faecesp;                         /* Faeces P content */
     double fdecay;                          /* foliage turnover rate (1/yr) */
-    double fdecaydry;                       /* Foliage turnover rate - dry soil (1/yr) */
     double fhw;                             /* n:c ratio of stemwood - immobile pool and new ring */
     double finesoil;                        /* clay+silt fraction */
     double fmleaf;
@@ -314,7 +313,6 @@ typedef struct {
     double rateloss;                        /* Rate of N loss from mineral N pool (/yr) */
     double rateuptake;                      /* Rate of N uptake from mineral N pool (/yr) from here? http://face.ornl.gov/Finzi-PNAS.pdf Seems to correspond to very low NPP values */
     double rdecay;                          /* root turnover rate (1/yr) */
-    double rdecaydry;                       /* root turnover rate - dry soil (1/yr) */
     double retransmob;                      /* Fraction stem mobile N retranscd (/yr) */
     double rooting_depth;                   /* Rooting depth (mm) */
     char   rootsoil_type[STRING_LENGTH];

@@ -22,11 +22,6 @@ void calculate_litterfall(control *c, fluxes *f, params *p, state *s,
     double  ncflit, ncrlit;
     double  pcflit, pcrlit;
 
-    /* Leaf/root litter rates are higher during dry periods and therefore is
-    dependent on soil water content */
-    *fdecay = decay_in_dry_soils(p->fdecay, p->fdecaydry, p, s);
-    *rdecay = decay_in_dry_soils(p->rdecay, p->rdecaydry, p, s);
-
     /* litter N:C ratios, roots and shoot */
     ncflit = s->shootnc * (1.0 - p->fretrans);
     ncrlit = s->rootnc * (1.0 - p->rretrans);
@@ -78,44 +73,4 @@ void calculate_litterfall(control *c, fluxes *f, params *p, state *s,
         
     return;
 
-}
-
-float decay_in_dry_soils(double decay_rate, double decay_rate_dry, params *p,
-                         state *s) {
-    /* Decay rates (e.g. leaf litterfall) can increase in dry soil, adjust
-    decay param. This is based on field measurements by F. J. Hingston
-    (unpublished) cited in Corbeels.
-
-    Parameters:
-    -----------
-    decay_rate : float
-        default model parameter decay rate [tonnes C/ha/day]
-    decay_rate_dry : float
-        default model parameter dry deacy rate [tonnes C/ha/day]
-
-    Returns:
-    --------
-    decay_rate : float
-        adjusted deacy rate if the soil is dry [tonnes C/ha/day]
-
-    Reference:
-    ----------
-    Corbeels et al. (2005) Ecological Modelling, 187, 449-474.
-
-    */
-    /* turn into fraction... */
-    double smc_root, new_decay_rate;
-    smc_root = s->pawater_root / p->wcapac_root;
-
-    new_decay_rate = (decay_rate_dry - (decay_rate_dry - decay_rate) *
-                     (smc_root - p->watdecaydry) /
-                     (p->watdecaywet - p->watdecaydry));
-
-    if (new_decay_rate < decay_rate)
-        new_decay_rate = decay_rate;
-
-    if (new_decay_rate > decay_rate_dry)
-        new_decay_rate = decay_rate_dry;
-
-    return new_decay_rate;
 }

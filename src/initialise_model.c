@@ -92,7 +92,6 @@ void initialise_params(params *p) {
     p->faecesn = 0.0;
     p->faecesp = 0.0;
     p->fdecay = 0.59988;
-    p->fdecaydry = 0.59988;
     p->fhw = 0.8;      
     p->finesoil = 0.51;
     p->fmleaf = 0.0;
@@ -194,7 +193,6 @@ void initialise_params(params *p) {
     p->rateloss = 0.5;                /* value = 0.05 in Wang et al., 2007 GB1018 */
     p->rateuptake = 2.7;
     p->rdecay = 0.33333;
-    p->rdecaydry = 0.33333;
     p->retransmob = 0.0;
     p->rooting_depth = 750.0;
     strcpy(p->rootsoil_type, "clay");
