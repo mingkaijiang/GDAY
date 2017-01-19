@@ -140,8 +140,6 @@ int main(int argc, char **argv)
     free(ma->prjday);
     free(ma->tam);
     free(ma->tpm);
-    free(ma->tmin);
-    free(ma->tmax);
     free(ma->par_am);
     free(ma->par_pm);
     

@@ -492,8 +492,6 @@ typedef struct {
     double *prjday; /* should really be renamed to doy for consistancy */
     double *tam;
     double *tpm;
-    double *tmin;
-    double *tmax;
     double *tday;
     double *par_am;
     double *par_pm;
