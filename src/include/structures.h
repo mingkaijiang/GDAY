@@ -579,9 +579,6 @@ typedef struct {
     double alstem;             /* allocation to stems */
 
     /* Misc stuff */
-    double cica_avg; /* used in water balance, only when running mate model */
-
-    double rabove;
     double tfac_soil_decomp;
     double co2_rel_from_surf_struct_litter;
     double co2_rel_from_soil_struct_litter;
@@ -591,28 +588,7 @@ typedef struct {
     double co2_rel_from_slow_pool;
     double co2_rel_from_passive_pool;
 
-    double lrate;
-    double wrate;
-    double brate;
-    double crate;
-
-    /* N allocation rates across growing season */
-    double lnrate;
-    double bnrate;
-    double wnimrate;
-    double wnmobrate;
-    double cnrate;
-
-    /* P allocation rates across growing season */
-    double lprate;              /* leaf allocation rate across growing season */
-    double bprate;              /* branch */
-    double wpimrate;            /* immobilised */
-    double wpmobrate;           /* mobilised */
-    double cprate;              /* coarse root */
-
     /* priming/exudation */
-    double root_exc;
-    double root_exn;
     double co2_released_exud;
     double factive;
     double rtslow;

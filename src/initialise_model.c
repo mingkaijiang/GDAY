@@ -421,9 +421,6 @@ void initialise_fluxes(fluxes *f) {
     f->alstem = 0.0;
 
     /* Misc stuff */
-    f->cica_avg = 0.0; /* used in water balance, only when running mate model */
-
-    f->rabove = 0.0;
     f->tfac_soil_decomp = 0.0;
     f->co2_rel_from_surf_struct_litter = 0.0;
     f->co2_rel_from_soil_struct_litter = 0.0;
