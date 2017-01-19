@@ -80,8 +80,6 @@ void initialise_params(params *p) {
     p->cfracts = 0.5;
     p->crdecay = 0.0;
     p->cretrans = 0.0;
-    p->croot0 = 0.34;
-    p->croot1 = 0.84;
     p->crit_n_cost_of_p = 15.0; 
     p->ctheta_root = 0.4;
     p->ctheta_topsoil = 0.5;
@@ -198,7 +196,6 @@ void initialise_params(params *p) {
     strcpy(p->rootsoil_type, "clay");
     strcpy(p->soil_order, "aridsol");
     p->rretrans = 0.0;
-    //p->sand_frac = 0.2;          /* commented out because finesoil is provided externally */
     p->sapturnover = 0.1;
     p->sla = 4.4;
     p->slamax = 4.4;
@@ -279,14 +276,12 @@ void initialise_fluxes(fluxes *f) {
     /* daily C production */
     f->cpleaf = 0.0;
     f->cproot = 0.0;
-    f->cpcroot = 0.0;
     f->cpbranch = 0.0;
     f->cpstem = 0.0;
 
     /* daily N production */
     f->npleaf = 0.0;
     f->nproot = 0.0;
-    f->npcroot = 0.0;
     f->npbranch = 0.0;
     f->npstemimm = 0.0;
     f->npstemmob = 0.0;
@@ -294,7 +289,6 @@ void initialise_fluxes(fluxes *f) {
     /* daily P production */
     f->ppleaf = 0.0;
     f->pproot = 0.0;
-    f->ppcroot = 0.0;
     f->ppbranch = 0.0;
     f->ppstemimm = 0.0;
     f->ppstemmob = 0.0;
@@ -302,17 +296,14 @@ void initialise_fluxes(fluxes *f) {
     /* dying stuff */
     f->deadleaves = 0.0;   /* Leaf litter C production (t/ha/yr) */
     f->deadroots = 0.0;    /* Root litter C production (t/ha/yr) */
-    f->deadcroots = 0.0;   /* Coarse root litter C production (t/ha/yr) */
     f->deadbranch = 0.0;   /* Branch litter C production (t/ha/yr) */
     f->deadstems = 0.0;    /* Stem litter C production (t/ha/yr) */
     f->deadleafn = 0.0;    /* Leaf litter N production (t/ha/yr) */
     f->deadrootn = 0.0;    /* Root litter N production (t/ha/yr) */
-    f->deadcrootn = 0.0;   /* Coarse root litter N production (t/ha/yr) */
     f->deadbranchn = 0.0;  /* Branch litter N production (t/ha/yr) */
     f->deadstemn = 0.0;    /* Stem litter N production (t/ha/yr) */
     f->deadleafp = 0.0;    /* Leaf litter P production (t/ha/yr) */
     f->deadrootp = 0.0;    /* Root litter P production (t/ha/yr) */
-    f->deadcrootp = 0.0;   /* Coarse root litter P production (t/ha/yr) */
     f->deadbranchp = 0.0;  /* Branch litter P production (t/ha/yr) */
     f->deadstemp = 0.0;    /* Stem litter P production (t/ha/yr) */
     f->deadsapwood = 0.0;
@@ -414,7 +405,6 @@ void initialise_fluxes(fluxes *f) {
     /* C allocated fracs  */
     f->alleaf = 0.0;
     f->alroot = 0.0;
-    f->alcroot = 0.0;
     f->albranch = 0.0;
     f->alstem = 0.0;
 
@@ -445,9 +435,6 @@ void initialise_state(state *s) {
     s->branchn = 0.0442890661217;
     s->branchp = 0.00580548;
     s->canht = 23.0964973582;
-    s->croot = 0.0;
-    s->crootn = 0.0;
-    s->crootp = 0.0;
     s->inorgn = 0.0274523714275;
     s->inorgp = 0.0205;
     s->inorgavlp = 0.096;               /* lab p + sorb p */

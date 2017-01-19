@@ -332,12 +332,6 @@ int handler(char *section, char *name, char *value, control *c,
         s->branchp = atof(value);
     } else if (MATCH("state", "canht")) {
         s->canht = atof(value);
-    } else if (MATCH("state", "croot")) {
-        s->croot = atof(value);
-    } else if (MATCH("state", "crootn")) {
-        s->crootn = atof(value);
-    } else if (MATCH("state", "crootp")) {
-        s->crootp = atof(value);
     } else if (MATCH("state", "inorgn")) {
         s->inorgn = atof(value);
     } else if (MATCH("state", "inorgp")) {
@@ -481,12 +475,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->crdecay = atof(value);
     } else if (MATCH("params", "cretrans")) {
         p->cretrans = atof(value);
-    //} else if (MATCH("params", "cretransp")) {
-    //  p->cretransp = atof(value);
-    } else if (MATCH("params", "croot0")) {
-        p->croot0 = atof(value);
-    } else if (MATCH("params", "croot1")) {
-        p->croot1 = atof(value);
     } else if (MATCH("params", "ctheta_root")) {
         p->ctheta_root = atof(value);
     } else if (MATCH("params", "ctheta_topsoil")) {

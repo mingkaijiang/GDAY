@@ -383,30 +383,28 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     woody tissue) */
     f->npstemmob = f->npp * f->alstem * (ncwnew - ncwimm);
     f->npbranch = f->npp * f->albranch * ncbnew;
-    f->npcroot = f->npp * f->alcroot * nccnew;
-    
+
     /* allocate P to pools with fixed P:C ratios */
     f->ppstemimm = f->npp * f->alstem * pcwimm;
     f->ppstemmob = f->npp * f->alstem * (pcwnew - pcwimm);
     f->ppbranch = f->npp * f->albranch * pcbnew;
-    f->ppcroot = f->npp * f->alcroot * pccnew;
-    
+
     /* If we have allocated more N than we have avail, cut back C prodn */
-    arg = f->npstemimm + f->npstemmob + f->npbranch + f->npcroot;
+    arg = f->npstemimm + f->npstemmob + f->npbranch;
     if (arg > ntot && c->fixleafnc == FALSE && c->ncycle) {
       recalc_wb = cut_back_production(c, f, p, s, ntot, ncbnew, nccnew,
                                       ncwimm, ncwnew, doy);
     }
     
     /* If we have allocated more P than we have avail, cut back C prodn */
-    arg = f->ppstemimm + f->ppstemmob + f->ppbranch + f->ppcroot;
+    arg = f->ppstemimm + f->ppstemmob + f->ppbranch;
     if (arg > ptot && c->fixleafpc == FALSE && c->pcycle) {
       recalc_wb = cut_back_production(c, f, p, s, ptot, pcbnew, pccnew,
                                       pcwimm, pcwnew, doy);
     }
     
     /* Nitrogen reallocation to flexible-ratio pools */
-    ntot -= f->npbranch + f->npstemimm + f->npstemmob + f->npcroot;
+    ntot -= f->npbranch + f->npstemimm + f->npstemmob;
     ntot = MAX(0.0, ntot);
     
     /* allocate remaining N to flexible-ratio pools */
@@ -414,7 +412,7 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     f->nproot = ntot - f->npleaf;
     
     /* Phosphorus reallocation to flexible-ratio pools */
-    ptot -= f->ppbranch + f->ppstemimm + f->ppstemmob + f->ppcroot;
+    ptot -= f->ppbranch + f->ppstemimm + f->ppstemmob;
     ptot = MAX(0.0, ptot);
     
     /* allocate remaining P to flexible-ratio pools */
@@ -452,12 +450,11 @@ int cut_back_production(control *c, fluxes *f, params *p, state *s,
     }
 
     f->npp *= tot / (f->npstemimm + f->npstemmob + \
-                      f->npbranch + f->npcroot);
+                      f->npbranch);
 
     /* need to adjust growth values accordingly as well */
     f->cpleaf = f->npp * f->alleaf;
     f->cproot = f->npp * f->alroot;
-    f->cpcroot = f->npp * f->alcroot;
     f->cpbranch = f->npp * f->albranch;
     f->cpstem = f->npp * f->alstem;
 
@@ -467,12 +464,10 @@ int cut_back_production(control *c, fluxes *f, params *p, state *s,
         f->ppbranch = f->npp * f->albranch * xcbnew;
         f->ppstemimm = f->npp * f->alstem * xcwimm;
         f->ppstemmob = f->npp * f->alstem * (xcwnew - xcwimm);
-        f->ppcroot = f->npp * f->alcroot * xccnew;
     } else {
         f->npbranch = f->npp * f->albranch * xcbnew;
         f->npstemimm = f->npp * f->alstem * xcwimm;
         f->npstemmob = f->npp * f->alstem * (xcwnew - xcwimm);
-        f->npcroot = f->npp * f->alcroot * xccnew;
     }
 
     /* Also need to recalculate GPP and thus Ra and return a flag
@@ -637,10 +632,6 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
     f->albranch = alloc_goal_seek(s->branch, target_branch, p->c_alloc_bmax,
                                   p->targ_sens);
     
-    coarse_root_target = p->croot0 * pow(s->stem, p->croot1);
-    f->alcroot = alloc_goal_seek(s->croot, coarse_root_target,
-                                 p->c_alloc_cmax, p->targ_sens);
-    
     /* figure out root allocation given available water & nutrients
      hyperbola shape to allocation, this is adjusted below as we aim
      to maintain a functional balance */
@@ -649,12 +640,12 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
                    (p->c_alloc_rmin + (p->c_alloc_rmax - p->c_alloc_rmin) *
                      s->prev_sma));
     
-    f->alstem = 1.0 - f->alroot - f->albranch - f->alleaf - f->alcroot;
+    f->alstem = 1.0 - f->alroot - f->albranch - f->alleaf;
     
 
     
     /* Total allocation should be one, if not print warning */
-    total_alloc = f->alroot + f->alleaf + f->albranch + f->alstem + f->alcroot;
+    total_alloc = f->alroot + f->alleaf + f->albranch + f->alstem;
     if (total_alloc > 1.0+EPSILON) {
         fprintf(stderr, "Allocation fracs > 1: %.13f\n", total_alloc);
         exit(EXIT_FAILURE);
@@ -688,7 +679,6 @@ void carbon_allocation(control *c, fluxes *f, params *p, state *s,
     double days_left;
     f->cpleaf = f->npp * f->alleaf;
     f->cproot = f->npp * f->alroot;
-    f->cpcroot = f->npp * f->alcroot;
     f->cpbranch = f->npp * f->albranch;
     f->cpstem = f->npp * f->alstem;
 
@@ -741,7 +731,6 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s,
     */
     s->shoot += f->cpleaf - f->deadleaves - f->ceaten;
     s->root += f->cproot - f->deadroots;
-    s->croot += f->cpcroot - f->deadcroots;
     s->branch += f->cpbranch - f->deadbranch;
     s->stem += f->cpstem - f->deadstems;
 
@@ -770,7 +759,6 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s,
 
     s->branchn += f->npbranch - p->bdecay * s->branchn;
     s->rootn += f->nproot - rdecay * s->rootn;
-    s->crootn += f->npcroot - p->crdecay * s->crootn;
     s->stemnimm += f->npstemimm - p->wdecay * s->stemnimm;
     s->stemnmob += (f->npstemmob - p->wdecay * s->stemnmob - p->retransmob *
                     s->stemnmob);
@@ -780,7 +768,6 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s,
 
     s->rootp += f->pproot - rdecay * s->rootp;
 
-    s->crootp += f->ppcroot - p->crdecay * s->crootp;
     s->stempimm += f->ppstemimm - p->wdecay * s->stempimm;
 
     s->stempmob += (f->ppstemmob - p->wdecay * s->stempmob - p->retransmob *
@@ -916,15 +903,6 @@ void precision_control(fluxes *f, state *s) {
         s->rootp = 0.0;
     }
 
-    if (s->croot < tolerance) {
-        f->deadcrootn += s->crootn;
-        f->deadcrootp += s->crootp;
-        f->deadcroots += s->croot;
-        s->croot = 0.0;
-        s->crootn = 0.0;
-        s->crootp = 0.0;
-    }
-
     /* Not setting these to zero as this just leads to errors with desert
        regrowth...instead seeding them to a small value with a CN~25 and CP~300. */
 
@@ -986,13 +964,11 @@ double nitrogen_retrans(control *c, fluxes *f, params *p, state *s,
         N retranslocated plant matter
 
     */
-    double leafretransn, rootretransn, crootretransn, branchretransn,
-           stemretransn;
+    double leafretransn, rootretransn, branchretransn,stemretransn;
 
     leafretransn = p->fretrans * fdecay * s->shootn;
 
     rootretransn = p->rretrans * rdecay * s->rootn;
-    crootretransn = p->cretrans * p->crdecay * s->crootn;
     branchretransn = p->bretrans * p->bdecay * s->branchn;
     stemretransn = (p->wretrans * p->wdecay * s->stemnmob + p->retransmob *
                     s->stemnmob);
@@ -1000,7 +976,7 @@ double nitrogen_retrans(control *c, fluxes *f, params *p, state *s,
     /* store for NCEAS output */
     f->leafretransn = leafretransn;
 
-    return (leafretransn + rootretransn + crootretransn + branchretransn +
+    return (leafretransn + rootretransn + branchretransn +
             stemretransn);
 }
 
@@ -1022,14 +998,12 @@ double phosphorus_retrans(control *c, fluxes *f, params *p, state *s,
         P retrans : float
         P retranslocated plant matter
     */
-    double leafretransp, rootretransp, crootretransp, branchretransp,
-            stemretransp;
+    double leafretransp, rootretransp, branchretransp, stemretransp;
 
     leafretransp = p->fretransp * fdecay * s->shootp;
     
 
     rootretransp = p->rretrans * rdecay * s->rootp;
-    crootretransp = p->cretrans * p->crdecay * s->crootp;
     branchretransp = p->bretrans * p->bdecay * s->branchp;
     stemretransp = (p->wretrans * p->wdecay * s->stempmob + p->retransmob *
                     s->stempmob);
@@ -1037,7 +1011,7 @@ double phosphorus_retrans(control *c, fluxes *f, params *p, state *s,
     /* store for NCEAS output */
     f->leafretransp = leafretransp;
 
-    return (leafretransp + rootretransp + crootretransp + branchretransp +
+    return (leafretransp + rootretransp + branchretransp +
             stemretransp);
 }
 

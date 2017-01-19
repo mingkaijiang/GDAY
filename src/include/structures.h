@@ -59,9 +59,6 @@ typedef struct {
     double branchn;                     /* branch n (t/ha) */
     double branchp;                     /* branch p (t/ha) */
     double canht;                       /* canopy height (m) */
-    double croot;                       /* coarse root c (t/ha) */
-    double crootn;                      /* coarse root n (t/ha) */
-    double crootp;                      /* coarse root p (t/ha) */
     double inorgn;                      /* Inorganic soil N pool - dynamic (t/ha) */
     double inorgp;                      /* Inorganic soil P pool - dynamic (t/ha) */
     double inorgavlp;                   /* Inorganic soil P pool - available mineral P = lab + sorbed (t/ha) */
@@ -131,9 +128,6 @@ typedef struct {
     double c_to_alloc_root;
     double n_to_alloc_root;
     double p_to_alloc_root;
-    double c_to_alloc_croot;
-    double n_to_alloc_croot;
-    double p_to_alloc_croot;
     double c_to_alloc_branch;
     double n_to_alloc_branch;
     double p_to_alloc_branch;
@@ -197,8 +191,6 @@ typedef struct {
     double cfracts;                         /* carbon fraction of dry biomass */
     double crdecay;                         /* coarse roots turnover rate (1/yr) */
     double cretrans;                        /* coarse root n retranslocation fraction */
-    double croot0;                          /* constant in coarse_root-stem allometry (trees) */
-    double croot1;                          /* exponent in coarse_root-stem allometry */
     double crit_n_cost_of_p;                /* Critical value of N cost of root P uptake above which phosphatase production starts [g N (g P)-1]; Wang et al., 2007, GB1018*/
     double ctheta_root;                     /* Fitted parameter based on Landsberg and Waring */
     double ctheta_topsoil;                  /* Fitted parameter based on Landsberg and Waring */
@@ -433,14 +425,12 @@ typedef struct {
     /* daily C production */
     double cpleaf;
     double cproot;
-    double cpcroot;
     double cpbranch;
     double cpstem;
 
     /* daily N production */
     double npleaf;
     double nproot;
-    double npcroot;
     double npbranch;
     double npstemimm;
     double npstemmob;
@@ -449,7 +439,6 @@ typedef struct {
     /* daily P production */
     double ppleaf;
     double pproot;
-    double ppcroot;
     double ppbranch;
     double ppstemimm;
     double ppstemmob;
@@ -458,17 +447,14 @@ typedef struct {
     /* dying stuff */
     double deadleaves;      /* Leaf litter C production (t/ha/yr) */
     double deadroots;       /* Root litter C production (t/ha/yr) */
-    double deadcroots;      /* Coarse root litter C production (t/ha/yr) */
     double deadbranch;      /* Branch litter C production (t/ha/yr) */
     double deadstems;       /* Stem litter C production (t/ha/yr) */
     double deadleafn;       /* Leaf litter N production (t/ha/yr) */
     double deadrootn;       /* Root litter N production (t/ha/yr) */
-    double deadcrootn;      /* Coarse root litter N production (t/ha/yr) */
     double deadbranchn;     /* Branch litter N production (t/ha/yr) */
     double deadstemn;       /* Stem litter N production (t/ha/yr) */
     double deadleafp;       /* Leaf litter P production (t/ha/yr) */
     double deadrootp;       /* Root litter P production (t/ha/yr) */
-    double deadcrootp;      /* Coarse root litter P production (t/ha/yr) */
     double deadbranchp;     /* Branch litter P production (t/ha/yr) */
     double deadstemp;       /* Stem litter P production (t/ha/yr) */
     double deadsapwood;
@@ -572,7 +558,6 @@ typedef struct {
     /* C allocated fracs  */
     double alleaf;             /* allocation to leaf */
     double alroot;             /* allocation to fine root */
-    double alcroot;            /* allocation to coarse root */
     double albranch;           /* allocation to branch */
     double alstem;             /* allocation to stems */
 

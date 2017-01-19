@@ -503,7 +503,6 @@ void reset_all_n_pools_and_fluxes(fluxes *f, state *s) {
     */
     s->shootn = 0.0;
     s->rootn = 0.0;
-    s->crootn = 0.0;
     s->branchn = 0.0;
     s->stemnimm = 0.0;
     s->stemnmob = 0.0;
@@ -531,13 +530,11 @@ void reset_all_n_pools_and_fluxes(fluxes *f, state *s) {
     f->nmineralisation = 0.0;
     f->npleaf = 0.0;
     f->nproot = 0.0;
-    f->npcroot = 0.0;
     f->npbranch = 0.0;
     f->npstemimm = 0.0;
     f->npstemmob = 0.0;
     f->deadleafn = 0.0;
     f->deadrootn = 0.0;
-    f->deadcrootn = 0.0;
     f->deadbranchn = 0.0;
     f->deadstemn = 0.0;
     f->neaten = 0.0;
@@ -574,7 +571,6 @@ void reset_all_p_pools_and_fluxes(fluxes *f, state *s) {
     */
     s->shootp = 0.0;
     s->rootp = 0.0;
-    s->crootp = 0.0;
     s->branchp = 0.0;
     s->stempimm = 0.0;
     s->stempmob = 0.0;
@@ -608,13 +604,11 @@ void reset_all_p_pools_and_fluxes(fluxes *f, state *s) {
     f->pmineralisation = 0.0;
     f->ppleaf = 0.0;
     f->pproot = 0.0;
-    f->ppcroot = 0.0;
     f->ppbranch = 0.0;
     f->ppstemimm = 0.0;
     f->ppstemmob = 0.0;
     f->deadleafp = 0.0;
     f->deadrootp = 0.0;
-    f->deadcrootp = 0.0;
     f->deadbranchp = 0.0;
     f->deadstemp = 0.0;
     f->peaten = 0.0;
@@ -703,7 +697,7 @@ void day_end_calculations(control *c, params *p, state *s, int days_in_year,
     s->litternag = s->structsurfn + s->metabsurfn;
     s->litternbg = s->structsoiln + s->metabsoiln;
     s->littern = s->litternag + s->litternbg;
-    s->plantn = s->shootn + s->rootn + s->crootn + s->branchn + s->stemn;
+    s->plantn = s->shootn + s->rootn + s->branchn + s->stemn;
     s->totaln = s->plantn + s->littern + s->soiln;
 
     /* total plant, soil & litter phosphorus */
@@ -712,7 +706,7 @@ void day_end_calculations(control *c, params *p, state *s, int days_in_year,
     s->litterpag = s->structsurfp + s->metabsurfp;
     s->litterpbg = s->structsoilp + s->metabsoilp;
     s->litterp = s->litterpag + s->litterpbg;
-    s->plantp = s->shootp + s->rootp + s->crootp + s->branchp + s->stemp;
+    s->plantp = s->shootp + s->rootp + s->branchp + s->stemp;
     s->totalp = s->plantp + s->litterp + s->soilp;
 
     /* total plant, soil, litter and system carbon */
@@ -720,7 +714,7 @@ void day_end_calculations(control *c, params *p, state *s, int days_in_year,
     s->littercag = s->structsurf + s->metabsurf;
     s->littercbg = s->structsoil + s->metabsoil;
     s->litterc = s->littercag + s->littercbg;
-    s->plantc = s->root + s->croot + s->shoot + s->stem + s->branch;
+    s->plantc = s->root + s->shoot + s->stem + s->branch;
     s->totalc = s->soilc + s->litterc + s->plantc;
 
     /* optional constant passive pool */

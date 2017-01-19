@@ -293,7 +293,7 @@ void partition_plant_litter(fluxes *f, params *p) {
     */
 
     /* ...to the structural pool */
-    f->soil_struct_litter = f->deadroots * (1.0 - p->fmroot) + f->deadcroots;
+    f->soil_struct_litter = f->deadroots * (1.0 - p->fmroot);
 
     /* ...to the metabolic pool */
     f->soil_metab_litter = f->deadroots * p->fmroot;
@@ -615,7 +615,7 @@ void n_inputs_from_plant_litter(fluxes *f, params *p, double *nsurf,
 
     /* surface and soil inputs (faeces n goes to abovgrd litter pools) */
     *nsurf = f->deadleafn + f->deadbranchn + f->deadstemn + p->faecesn;
-    *nsoil = f->deadrootn + f->deadcrootn;
+    *nsoil = f->deadrootn;
 
     return;
 }
@@ -1211,7 +1211,7 @@ void p_inputs_from_plant_litter(fluxes *f, params *p, double *psurf,
 
     /* surface and soil inputs (faeces p goes to abovgrd litter pools) */
     *psurf = f->deadleafp + f->deadbranchp + f->deadstemp + p->faecesp;
-    *psoil = f->deadrootp + f->deadcrootp;
+    *psoil = f->deadrootp;
 
     return;
 }
