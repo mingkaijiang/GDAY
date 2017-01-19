@@ -234,9 +234,7 @@ typedef struct {
     double d0x;                             /* Length scale for exponential decline of Umax(z) */
     double decayrate[7];
     double density;                         /* sapwood density kg DM m-3 (trees) */
-    double faecescn;                        /* Faeces C:N ratio */
     double faecesn;                         /* Faeces N content */
-    double faecescp;                        /* Faeces C:P ratio */
     double faecesp;                         /* Faeces P content */
     double fdecay;                          /* foliage turnover rate (1/yr) */
     double fdecaydry;                       /* Foliage turnover rate - dry soil (1/yr) */
@@ -246,10 +244,8 @@ typedef struct {
     double fmroot;
     double fmfaeces;
     double fracfaeces;                      /* Fractn of grazd C that ends up in faeces (0..1) */
-    double fracteaten;                      /* Fractn of leaf production eaten by grazers */
     double fractosoil;                      /* Fractn of grazed N recycled to soil:faeces+urine */
     double fractosoilp;                     /* Fractn of grazed P recycled to soil:faeces+urine */
-    double fractup_soil;                    /* fraction of uptake from top soil layer */
     double fretrans;                        /* foliage n retranslocation fraction - 46-57% in young E. globulus trees - see Corbeels et al 2005 ecological modelling 187, pg 463. Roughly 50% from review Aerts '96 */
     double fretransp;                       /* foliage p retranslocation fraction - 39.5-69 in Southern US FACE site - Finzi et al. 2001 Ecology  */
     double height0;                         /* Height when leaf:sap area ratio = leafsap0 (trees) */
@@ -257,8 +253,6 @@ typedef struct {
     double heighto;                         /* constant in avg tree height (m) - stem (t C/ha) reln */
     double htpower;                         /* Exponent in avg tree height (m) - stem (t C/ha) reln */
     double intercep_frac;                   /* Maximum intercepted fraction, values in Oishi et al 2008, AFM, 148, 1719-1732 ~13.9% +/- 4.1, so going to assume 15% following Landsberg and Sands 2011, pg. 193. */
-    double jv_intercept;                    /* Jmax to Vcmax intercept */
-    double jv_slope;                        /* Jmax to Vcmax slope */
     double kdec1;                           /* surface structural decay rate (1/yr) */
     double kdec2;                           /* surface metabolic decay rate (1/yr) */
     double kdec3;                           /* soil structural decay rate (1/yr) */

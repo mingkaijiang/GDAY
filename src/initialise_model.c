@@ -81,10 +81,6 @@ void initialise_params(params *p) {
     p->branch0 = 5.61;
     p->branch1 = 0.346;
     p->bretrans = 0.0;
-    //p->c_alloc_bmaxp = 0.095;       /* CENTURY temperate broad leaf forest value */
-    //p->c_alloc_cmaxp = 0.06;        /* CENTURY temperate broad leaf forest value */
-    //p->c_alloc_fmaxp = 0.295;       /* CENTURY temperate broad leaf forest value */
-    //p->c_alloc_rmaxp = 0.325;       /* CENTURY temperate broad leaf forest value */
     p->c_alloc_bmax = 0.1;       
     p->c_alloc_bmin = 0.1;
     p->c_alloc_cmax = 0.0;        
@@ -104,9 +100,7 @@ void initialise_params(params *p) {
     p->d0 = 0.0;
     p->d0x = 0.35;
     p->density = 420.0;
-    p->faecescn = 25.0;
     p->faecesn = 0.0;
-    p->faecescp = 300.0;
     p->faecesp = 0.0;
     p->fdecay = 0.59988;
     p->fdecaydry = 0.59988;
@@ -116,10 +110,8 @@ void initialise_params(params *p) {
     p->fmroot = 0.0;
     p->fmfaeces = 0.0;
     p->fracfaeces = 0.3;
-    p->fracteaten = 0.5;
     p->fractosoil = 0.85;
     p->fractosoilp = 0.85;
-    p->fractup_soil = 0.5;
     p->fretrans = 0.5;
     p->fretransp = 0.6;
     p->height0 = 5.0;
@@ -127,8 +119,6 @@ void initialise_params(params *p) {
     p->heighto = 4.826;
     p->htpower = 0.35;
     p->intercep_frac = 0.15;
-    p->jv_intercept = 0.0;
-    p->jv_slope = 1.86;
     p->kdec1 = 3.965571;
     p->kdec2 = 14.61;
     p->kdec3 = 4.904786;
