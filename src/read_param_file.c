@@ -656,8 +656,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->heighto = atof(value);
     } else if (MATCH("params", "htpower")) {
         p->htpower = atof(value);
-    } else if (MATCH("params", "intercep_frac")) {
-        p->intercep_frac = atof(value);
     } else if (MATCH("params", "kdec1")) {
         p->kdec1 = atof(value);
     } else if (MATCH("params", "kdec2")) {
@@ -702,8 +700,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->longitude = atof(value);
     } else if (MATCH("params", "max_depth")) {
         p->max_depth = atof(value);
-    } else if (MATCH("params", "max_intercep_lai")) {
-        p->max_intercep_lai = atof(value);
     } else if (MATCH("params", "measurement_temp")) {
         p->measurement_temp = atof(value);
     } else if (MATCH("params", "min_lwp")) {

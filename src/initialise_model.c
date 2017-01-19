@@ -118,7 +118,6 @@ void initialise_params(params *p) {
     p->height1 = 30.0;
     p->heighto = 4.826;
     p->htpower = 0.35;
-    p->intercep_frac = 0.15;
     p->kdec1 = 3.965571;
     p->kdec2 = 14.61;
     p->kdec3 = 4.904786;
@@ -140,7 +139,6 @@ void initialise_params(params *p) {
     p->ligshoot = 0.24;
     p->liteffnc = 0.0;     
     p->max_p_biochemical = 0.001;  /* converted from 0.1 g P m-2 yr-1 to t/ha/yr */
-    p->max_intercep_lai = 3.0;
     p->measurement_temp = 25.0;
     p->ncbnew = 0.003;
     p->ncbnewz = 0.003;
@@ -335,7 +333,6 @@ void initialise_fluxes(fluxes *f) {
     f->et = 0.0;
     f->soil_evap = 0.0;
     f->transpiration = 0.0;
-    f->interception = 0.0;
     f->throughfall = 0.0;
     f->canopy_evap = 0.0;
     f->runoff = 0.0;

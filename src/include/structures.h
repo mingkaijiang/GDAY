@@ -252,7 +252,6 @@ typedef struct {
     double height1;                         /* Height when leaf:sap area ratio = leafsap1 (trees) */
     double heighto;                         /* constant in avg tree height (m) - stem (t C/ha) reln */
     double htpower;                         /* Exponent in avg tree height (m) - stem (t C/ha) reln */
-    double intercep_frac;                   /* Maximum intercepted fraction, values in Oishi et al 2008, AFM, 148, 1719-1732 ~13.9% +/- 4.1, so going to assume 15% following Landsberg and Sands 2011, pg. 193. */
     double kdec1;                           /* surface structural decay rate (1/yr) */
     double kdec2;                           /* surface metabolic decay rate (1/yr) */
     double kdec3;                           /* soil structural decay rate (1/yr) */
@@ -275,7 +274,6 @@ typedef struct {
     double ligshoot;                        /* lignin-to-biomass ratio in leaf litter; Values from White et al. DBF = 0.18; ENF = 0.24l; GRASS = 0.09; Shrub = 0.15 - Value in smith et al. 2013 = 0.2, note subtly difference in eqn C9. */
     double liteffnc;
     double lue0;                            /* maximum LUE in kg C GJ-1 */
-    double max_intercep_lai;                /* canopy LAI at which interception is maximised. */
     double max_p_biochemical;               /* max rate of biochemical P mineralisation [g P m-2 y-1]; Wang et al., 2007, GB1018*/
     double measurement_temp;                /* temperature Vcmax/Jmax are measured at, typical 25.0 (celsius)  */
     double ncbnew;                          /* N alloc param: new branch N C at critical leaf N C */
@@ -503,7 +501,6 @@ typedef struct {
     double et;
     double soil_evap;
     double transpiration;
-    double interception;
     double throughfall;
     double canopy_evap;
     double runoff;
