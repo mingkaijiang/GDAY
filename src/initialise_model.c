@@ -189,7 +189,6 @@ void initialise_params(params *p) {
     p->psi_sat_topsoil = -999.9;
     p->puptakez = 0.0255;             /* calculated based on prateuptake 0.5 and inorglabp 0.051 */
     p->qs = 1.0;                      /* exponent in water stress modifier, =1.0 JULES type representation, the smaller the values the more curved the depletion. */
-    p->r0 = 0.1325;
     p->rate_ssorb_occ = 0.000012;      
     p->rate_sorb_ssorb = 0.048;
     p->rateloss = 0.5;                /* value = 0.05 in Wang et al., 2007 GB1018 */
@@ -197,8 +196,6 @@ void initialise_params(params *p) {
     p->rdecay = 0.33333;
     p->rdecaydry = 0.33333;
     p->retransmob = 0.0;
-    p->rfmult = 1.0;
-    p->root_exu_CUE = -999.9;
     p->rooting_depth = 750.0;
     strcpy(p->rootsoil_type, "clay");
     strcpy(p->soil_order, "aridsol");

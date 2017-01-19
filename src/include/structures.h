@@ -309,7 +309,6 @@ typedef struct {
     double psie_root;                       /* Soil water potential at saturation (m) */
     double puptakez;                        /* constant P uptake per year (1/yr) */
     double qs;                              /* exponent in water stress modifier, =1.0 JULES type representation, the smaller the values the more curved the depletion.  */
-    double r0;                              /* root C at half-maximum N uptake (kg C/m3) */
     double rate_ssorb_occ;                  /* Rate constant of the transfer of P from strongly sorbed pool to occluded pool, m-1 Yang et al. 2014, Biogeosciences */
     double rate_sorb_ssorb;                 /* Rate constant of the transfer of P from sorbed pool to strongly sorbed pool, m-1 Yang et al. 2014, Biogeosciences */
     double rateloss;                        /* Rate of N loss from mineral N pool (/yr) */
@@ -317,7 +316,6 @@ typedef struct {
     double rdecay;                          /* root turnover rate (1/yr) */
     double rdecaydry;                       /* root turnover rate - dry soil (1/yr) */
     double retransmob;                      /* Fraction stem mobile N retranscd (/yr) */
-    double rfmult;
     double rooting_depth;                   /* Rooting depth (mm) */
     char   rootsoil_type[STRING_LENGTH];
     char   soil_order[STRING_LENGTH];       /* soil order */
@@ -356,8 +354,6 @@ typedef struct {
     double wretrans;                        /* mobile wood N retranslocation fraction */
     double prime_y;
     double prime_z;
-    int    return_interval;                 /* years */
-    double root_exu_CUE;
 
 } params;
 

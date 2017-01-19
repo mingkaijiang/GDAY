@@ -689,8 +689,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->prime_z = atof(value);
     } else if (MATCH("params", "qs")) {
         p->qs = atof(value);
-    } else if (MATCH("params", "r0")) {
-        p->r0 = atof(value);
     } else if (MATCH("params", "rate_ssorb_occ")) {
         p->rate_ssorb_occ = atof(value);
     } else if (MATCH("params", "rate_sorb_ssorb")) {
@@ -709,18 +707,12 @@ int handler(char *section, char *name, char *value, control *c,
         p->rdecaydry = atof(value);
     } else if (MATCH("params", "retransmob")) {
         p->retransmob = atof(value);
-    //} else if (MATCH("params", "retransmobp")) {
-    //  p->retransmobp = atof(value);
-    } else if (MATCH("params", "rfmult")) {
-        p->rfmult = atof(value);
     } else if (MATCH("params", "rooting_depth")) {
         p->rooting_depth = atof(value);
     } else if (MATCH("params", "rootsoil_type")) {
         strcpy(p->rootsoil_type, value);
     } else if (MATCH("params", "soil_order")) {
        strcpy(p->soil_order, value);
-    } else if (MATCH("params", "root_exu_CUE")) {
-        p->root_exu_CUE = atof(value);
     } else if (MATCH("params", "rretrans")) {
         p->rretrans = atof(value);
     } else if (MATCH("params", "sapturnover")) {
