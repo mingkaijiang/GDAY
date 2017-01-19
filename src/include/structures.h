@@ -23,10 +23,8 @@ typedef struct {
     int   disturbance;
     int   fixed_stem_nc;
     int   fixed_stem_pc;
-    int   fixed_lai;
     int   fixleafnc;
     int   fixleafpc;
-    int   grazing;
     int   gs_model;
     int   model_optroot;
     int   modeljm;

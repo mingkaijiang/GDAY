@@ -479,14 +479,14 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     
     /* If we have allocated more N than we have avail, cut back C prodn */
     arg = f->npstemimm + f->npstemmob + f->npbranch + f->npcroot;
-    if (arg > ntot && c->fixleafnc == FALSE && c->fixed_lai && c->ncycle) {
+    if (arg > ntot && c->fixleafnc == FALSE && c->ncycle) {
       recalc_wb = cut_back_production(c, f, p, s, ntot, ncbnew, nccnew,
                                       ncwimm, ncwnew, doy);
     }
     
     /* If we have allocated more P than we have avail, cut back C prodn */
     arg = f->ppstemimm + f->ppstemmob + f->ppbranch + f->ppcroot;
-    if (arg > ptot && c->fixleafpc == FALSE && c->fixed_lai && c->pcycle) {
+    if (arg > ptot && c->fixleafpc == FALSE && c->pcycle) {
       recalc_wb = cut_back_production(c, f, p, s, ptot, pcbnew, pccnew,
                                       pcwimm, pcwnew, doy);
     }

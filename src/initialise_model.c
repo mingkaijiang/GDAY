@@ -25,7 +25,6 @@ void initialise_control(control *c) {
     c->deciduous_model = FALSE;     /* evergreen_model=False, deciduous_model=True */
     c->fixed_stem_nc = TRUE;        /* False=vary stem N:C with foliage, True=fixed stem N:C */
     c->fixed_stem_pc = TRUE;        /* False=vary stem P:C with foliage, True=fixed stem P:C */
-    c->fixed_lai = FALSE;           /* Fix LAI */
     c->fixleafnc = FALSE;           /* fixed leaf N C ? */
     c->fixleafpc = FALSE;           /* fixed leaf P C ? */
     c->gs_model = MEDLYN;           /* Stomatal conductance model, currently only this one is implemented */

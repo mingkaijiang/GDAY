@@ -25,10 +25,6 @@ void calculate_csoil_flows(control *c, fluxes *f, params *p, state *s,
     double lnleaf, lnroot;
     /* Fraction of C lost due to microbial respiration */
     double frac_microb_resp = 0.85 - (0.68 * p->finesoil);
-
-    /* need to store grazing flag. Allows us to switch on the annual
-       grazing event, but turn it off for every other day of the year.  */
-    int cntrl_grazing = c->grazing;
     
     f->tfac_soil_decomp = calc_soil_temp_factor(tsoil);
 
@@ -68,9 +64,6 @@ void calculate_csoil_flows(control *c, fluxes *f, params *p, state *s,
     f->co2_rel_from_active_pool = f->co2_to_air[4];
     f->co2_rel_from_slow_pool = f->co2_to_air[5];
     f->co2_rel_from_passive_pool = f->co2_to_air[6];
-
-    /* switch off grazing if this was just activated as an annual event */
-    c->grazing = cntrl_grazing;
 
     if (c->exudation && c->alloc_model != GRASSES) {
         calc_root_exudation_uptake_of_C(f, p, s);
@@ -204,13 +197,9 @@ double calc_soil_temp_factor(double tsoil) {
 
 void flux_from_grazers(control *c, fluxes *f, params *p) {
     /*  Input from faeces */
-    if (c->grazing) {
-        p->fmfaeces = metafract(p->ligfaeces * p->faecescn / p->cfracts);
-        f->faecesc = f->ceaten * p->fracfaeces;
-    } else {
-        p->fmfaeces = 0.0;
-        f->faecesc = 0.0;
-    }
+    p->fmfaeces = 0.0;
+    f->faecesc = 0.0;
+    
 
     return;
 }
@@ -565,10 +554,6 @@ void precision_control_soil_c(fluxes *f, state *s) {
 void calculate_nsoil_flows(control *c, fluxes *f, params *p, state *s,
                            int doy) {
 
-    /* need to store grazing flag. Allows us to switch on the annual
-       grazing event, but turn it off for every other day of the year.  */
-    int cntrl_grazing = c->grazing;
-
     /* Fraction of C lost due to microbial respiration */
     double frac_microb_resp = 0.85 - (0.68 * p->finesoil);
     double nsurf, nsoil, active_nc_slope, slow_nc_slope, passive_nc_slope;
@@ -610,9 +595,6 @@ void calculate_nsoil_flows(control *c, fluxes *f, params *p, state *s,
     /* Update model soil N pools */
     calculate_npools(c, f, p, s, active_nc_slope, slow_nc_slope,
                      passive_nc_slope);
-
-    /* switch off grazing if this was just activated as an annual event */
-    c->grazing = cntrl_grazing;
 
     return;
 }
@@ -713,21 +695,15 @@ void grazer_inputs(control *c, fluxes *f, params *p) {
     /* Grazer inputs from faeces and urine, flux detd by faeces c:n */
     double arg;
 
-    if (c->grazing)
-        p->faecesn = f->faecesc / p->faecescn;
-    else
-        p->faecesn = 0.0;
-
+    p->faecesn = 0.0;
+  
     /* make sure faecesn <= total n input to soil from grazing */
     arg = f->neaten * p->fractosoil;
     if (p->faecesn > arg)
         p->faecesn = f->neaten * p->fractosoil;
 
     /* urine=total-faeces */
-    if (c->grazing)
-        f->nurine = f->neaten * p->fractosoil - p->faecesn;
-    else
-        f->nurine = 0.0;
+    f->nurine = 0.0;
 
     if (f->nurine < 0.0)
         f->nurine = 0.0;
@@ -1261,11 +1237,6 @@ void soil_sorption_parameters(char *soil_order, params *p) {
 
 void calculate_psoil_flows(control *c, fluxes *f, params *p, state *s,
                            int doy) {
-    /*
-        need to store grazing flag. Allows us to switch on the annual
-        grazing event, but turn it off for every other day of the year.
-    */
-    int cntrl_grazing = c->grazing;
 
     /* Fraction of C lost due to microbial respiration */
     double frac_microb_resp = 0.85 - (0.68 * p->finesoil);
@@ -1312,9 +1283,6 @@ void calculate_psoil_flows(control *c, fluxes *f, params *p, state *s,
     calculate_ppools(c, f, p, s, active_pc_slope, slow_pc_slope,
                      passive_pc_slope);
 
-    /* switch off grazing if this was just activated as an annual event */
-    c->grazing = cntrl_grazing;
-
     return;
 }
 
@@ -1323,10 +1291,7 @@ void grazer_inputs_p(control *c, fluxes *f, params *p) {
     /* Grazer inputs from faeces and urine, flux detd by faeces c:p */
     double arg;
 
-    if (c->grazing)
-        p->faecesp = f->faecesc / p->faecescp;
-    else
-        p->faecesp = 0.0;
+    p->faecesp = 0.0;
 
     /* make sure faecesp <= total p input to soil from grazing */
     arg = f->peaten * p->fractosoilp;
@@ -1334,10 +1299,7 @@ void grazer_inputs_p(control *c, fluxes *f, params *p) {
         p->faecesp = f->peaten * p->fractosoilp;
 
     /* urine=total-faeces */
-    if (c->grazing)
-        f->purine = f->peaten * p->fractosoilp - p->faecesp;
-    else
-        f->purine = 0.0;
+    f->purine = 0.0;
 
     if (f->purine < 0.0)
         f->purine = 0.0;
