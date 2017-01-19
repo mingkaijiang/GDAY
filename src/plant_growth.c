@@ -142,17 +142,9 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
     simple_photosynthesis(c, f, m, p, s);
 
     /* Calculate plant respiration */
-    if (c->respiration_model == FIXED) {
-        /* Plant respiration assuming carbon-use efficiency. */
-        f->auto_resp = f->gpp * p->cue;
-    } else if(c->respiration_model == TEMPERATURE) {
-        fprintf(stderr, "Not implemented yet");
-        exit(EXIT_FAILURE);
-    } else if (c->respiration_model == BIOMASS) {
-        fprintf(stderr, "Not implemented yet");
-        exit(EXIT_FAILURE);
-    }
 
+    f->auto_resp = f->gpp * p->cue;
+    
     /* Calculate NPP */
     f->npp_gCm2 = f->gpp_gCm2 * p->cue;
     f->npp = f->npp_gCm2 * GRAM_C_2_TONNES_HA;

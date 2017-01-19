@@ -28,7 +28,6 @@ typedef struct {
     int   output_ascii;
     int   passiveconst;
     int   print_options;
-    int   respiration_model;
     int   strfloat;
     int   strpfloat;
     int   sw_stress_model;

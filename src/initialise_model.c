@@ -30,7 +30,6 @@ void initialise_control(control *c) {
     c->output_ascii = TRUE;         /* If this is false you get a binary file as an output. */
     c->passiveconst = FALSE;        /* hold passive pool at passivesoil */
     c->print_options = DAILY;       /* DAILY=every timestep, END=end of run */
-    c->respiration_model = FIXED;   /* Plant respiration ... Fixed, TEMPERATURE or BIOMASS */
     c->strfloat = 0;                /* Structural pool input N:C varies=1, fixed=0 */
     c->strpfloat = 0;               /* Structural pool input P:C varies=1, fixed=0 */
     c->sw_stress_model = 1;         /* JULES type linear stress func, or Landsberg and Waring non-linear func */
