@@ -166,17 +166,6 @@ typedef struct {
     double psi_s_root;
 
     /* hydraulics */
-    double *thickness;
-    double *root_mass;
-    double *root_length;
-    double *layer_depth;
-    double *wetting_bot;
-    double *wetting_top;
-    double *water_frac;
-    double initial_water;
-    double weighted_swp;
-    double dry_thick;   /* Thickness of dry soil layer above water table (m)*/
-    int    rooted_layers;
     double predawn_swp;     /* MPa */
 
 } state;

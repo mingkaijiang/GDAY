@@ -11,7 +11,6 @@
 #include "water_balance.h"
 #include "utilities.h"
 #include "photosynthesis.h"
-#include "optimal_root_model.h"
 
 /* C stuff */
 void    calc_day_growth(control *, fluxes *, met_arrays *ma, met *,

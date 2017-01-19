@@ -18,7 +18,7 @@ PROGRAM  =  gday
 SOURCES  =  \
 $(PROGRAM).c version.c read_param_file.c read_met_file.c litter_production.c \
 utilities.c plant_growth.c photosynthesis.c water_balance.c \
-simple_moving_average.c soils.c optimal_root_model.c \
+simple_moving_average.c soils.c \
 initialise_model.c write_output_file.c  \
 nrutil.c
 

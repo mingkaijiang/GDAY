@@ -562,14 +562,6 @@ void initialise_state(state *s) {
     s->wtfac_root = 1.0;
 
     /* Hydraulics stuff */
-    s->thickness = NULL;
-    s->root_mass = NULL;
-    s->root_length = NULL;
-    s->layer_depth = NULL;
-    s->water_frac = NULL;
-    s->initial_water = 0.0;
-    s->dry_thick = 0.1;
-    s->rooted_layers = 0;
     s->predawn_swp = 0.0;
 
     return;
