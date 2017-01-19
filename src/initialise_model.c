@@ -564,8 +564,6 @@ void initialise_state(state *s) {
     s->metabsurf = 0.0336324759951;
     s->metabsurfn = 0.0013452990398;
     s->metabsurfp = 0.0002924563;       /* based on metabolic pool C/P ratio of 115 from Parton et al., 1989, Ecology of arable land. */
-    s->nstore = 0.01;
-    s->pstore = 0.00018;
     s->passivesoil = 59.5304597863;
     s->passivesoiln = 8.0134056319;
     s->passivesoilp = 0.541186;         /* based on passive SOM pool C/P ratio of 110 from Parton et al., 1989, Ecology of arable land. */

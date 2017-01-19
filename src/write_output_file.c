@@ -491,12 +491,6 @@ int ohandler(char *section, char *name, char *value, control *c, params *p,
     } else if (MATCH("state", "metabsurfp")) {
         fprintf(c->ofp, "metabsurfp = %.10f\n", s->metabsurfp);
         *match = TRUE;
-    } else if (MATCH("state", "nstore")) {
-        fprintf(c->ofp, "nstore = %.10f\n", s->nstore);
-        *match = TRUE;
-    } else if (MATCH("state", "pstore")) {
-        fprintf(c->ofp, "pstore = %.10f\n", s->pstore);
-        *match = TRUE;
     } else if (MATCH("state", "passivesoil")) {
         fprintf(c->ofp, "passivesoil = %.10f\n", s->passivesoil);
         *match = TRUE;

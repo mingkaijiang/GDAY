@@ -93,8 +93,6 @@ typedef struct {
     double metabsurf;                   /* metabolic surface c (t/ha) */
     double metabsurfn;                  /* metabolic surface n (t/ha) */
     double metabsurfp;                  /* metabolic surface p (t/ha) */
-    double nstore;                      /* N store for deciduous model (t/ha) */
-    double pstore;                      /* P store for deciduous model (t/ha) */
     double passivesoil;                 /* passive C som pool (t/ha) */
     double passivesoiln;                /* passive N som pool (t/ha) */
     double passivesoilp;                /* passive P som pool (t/ha) */

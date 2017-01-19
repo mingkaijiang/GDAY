@@ -520,7 +520,6 @@ void reset_all_n_pools_and_fluxes(fluxes *f, state *s) {
     s->stemn = 0.0;
     s->stemnimm = 0.0;
     s->stemnmob = 0.0;
-    s->nstore = 0.0;
 
     /*
     ** Fluxes
@@ -598,7 +597,6 @@ void reset_all_p_pools_and_fluxes(fluxes *f, state *s) {
     s->stemp = 0.0;
     s->stempimm = 0.0;
     s->stempmob = 0.0;
-    s->pstore = 0.0;
 
     /*
     ** Fluxes

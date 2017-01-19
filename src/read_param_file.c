@@ -192,19 +192,6 @@ int handler(char *section, char *name, char *value, control *c,
             fprintf(stderr, "Unknown deciduous option: %s\n", temp);
             exit(EXIT_FAILURE);
         }
-    } else if (MATCH("control", "disturbance")) {
-        if (strcmp(temp, "False") == 0 ||
-            strcmp(temp, "FALSE") == 0 ||
-            strcmp(temp, "false") == 0)
-            c->disturbance = FALSE;
-        else if (strcmp(temp, "True") == 0 ||
-            strcmp(temp, "TRUE") == 0 ||
-            strcmp(temp, "true") == 0)
-            c->disturbance = TRUE;
-        else {
-            fprintf(stderr, "Unknown disturbance option: %s\n", temp);
-            exit(EXIT_FAILURE);
-        }
     } else if (MATCH("control", "exudation")) {
             if (strcmp(temp, "False") == 0 ||
                 strcmp(temp, "FALSE") == 0 ||
@@ -510,10 +497,6 @@ int handler(char *section, char *name, char *value, control *c,
         s->metabsurfn = atof(value);
     } else if (MATCH("state", "metabsurfp")) {
         s->metabsurfp = atof(value);
-    } else if (MATCH("state", "nstore")) {
-        s->nstore = atof(value);
-    } else if (MATCH("state", "pstore")) {
-        s->pstore = atof(value);
     } else if (MATCH("state", "passivesoil")) {
         s->passivesoil = atof(value);
     } else if (MATCH("state", "passivesoiln")) {
