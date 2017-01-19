@@ -16,8 +16,6 @@ typedef struct {
     char  out_param_fname[STRING_LENGTH];
     char  git_hash[STRING_LENGTH];
     int   adjust_rtslow;
-    int   alloc_model;
-    int   assim_model;
     int   calc_sw_params;
     int   fixed_stem_nc;
     int   fixed_stem_pc;

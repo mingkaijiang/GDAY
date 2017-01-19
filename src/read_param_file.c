@@ -142,30 +142,6 @@ int handler(char *section, char *name, char *value, control *c,
             fprintf(stderr, "Unknown adjust_rtslow option: %s\n", temp);
             exit(EXIT_FAILURE);
         }
-    } else if (MATCH("control", "alloc_model")) {
-        if (strcmp(temp, "FIXED") == 0||
-            strcmp(temp, "fixed") == 0)
-            c->alloc_model = FIXED;
-        else if (strcmp(temp, "GRASSES") == 0 || strcmp(temp, "grasses") == 0)
-            c->alloc_model = GRASSES;
-        else if (strcmp(temp, "ALLOMETRIC") == 0 ||
-                 strcmp(temp, "allometric") == 0)
-            c->alloc_model = ALLOMETRIC;
-        else {
-            fprintf(stderr, "Unknown alloc model: %s\n", temp);
-            exit(EXIT_FAILURE);
-        }
-    } else if (MATCH("control", "assim_model")) {
-        if (strcmp(temp, "BEWDY") == 0||
-            strcmp(temp, "bewdy") == 0)
-            c->assim_model = BEWDY;
-        else if (strcmp(temp, "MATE") == 0||
-                 strcmp(temp, "mate") == 0)
-            c->assim_model = MATE;
-        else {
-            fprintf(stderr, "Unknown photosynthesis model: %s\n", temp);
-            exit(EXIT_FAILURE);
-        }
     } else if (MATCH("control", "calc_sw_params")) {
         if (strcmp(temp, "False") == 0 ||
             strcmp(temp, "FALSE") == 0 ||
@@ -829,10 +805,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->root_radius = atof(value);
     } else if (MATCH("params", "rretrans")) {
         p->rretrans = atof(value);
-    //} else if (MATCH("params", "rretransp")) {
-    //    p->rretransp = atof(value);
-    //} else if (MATCH("params", "sand_frac")) {
-    //  p->sand_frac = atof(value);
     } else if (MATCH("params", "sapturnover")) {
         p->sapturnover = atof(value);
     } else if (MATCH("params", "sla")) {
