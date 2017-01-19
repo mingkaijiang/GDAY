@@ -6,7 +6,7 @@ void read_daily_met_data(char **argv, control *c, met_arrays *ma)
     char   line[STRING_LENGTH];
     int    file_len = 0;
     int    i = 0;
-    int    nvars = 18;
+    int    nvars = 15;
     int    skipped_lines = 0;
     double current_yr = -999.9;
 
@@ -93,21 +93,6 @@ void read_daily_met_data(char **argv, control *c, met_arrays *ma)
       exit(EXIT_FAILURE);
     }
 
-    if ((ma->wind = (double *)calloc(file_len, sizeof(double))) == NULL) {
-        fprintf(stderr,"Error allocating space for wind array\n");
-		exit(EXIT_FAILURE);
-    }
-
-    if ((ma->wind_am = (double *)calloc(file_len, sizeof(double))) == NULL) {
-        fprintf(stderr,"Error allocating space for wind_am array\n");
-		exit(EXIT_FAILURE);
-    }
-
-    if ((ma->wind_pm = (double *)calloc(file_len, sizeof(double))) == NULL) {
-        fprintf(stderr,"Error allocating space for wind_pm array\n");
-		exit(EXIT_FAILURE);
-    }
-
     if ((ma->par = (double *)calloc(file_len, sizeof(double))) == NULL) {
         fprintf(stderr,"Error allocating space for par array\n");
 		exit(EXIT_FAILURE);
@@ -139,7 +124,6 @@ void read_daily_met_data(char **argv, control *c, met_arrays *ma)
                           %lf,%lf,%lf,\
                           %lf,%lf,\
                           %lf,%lf,\
-                          %lf,%lf,%lf,\
                           %lf,%lf,\
                           %lf,%lf",\
                           &(ma->year[i]), &(ma->prjday[i]), \
@@ -147,8 +131,7 @@ void read_daily_met_data(char **argv, control *c, met_arrays *ma)
                           &(ma->tam[i]), &(ma->tpm[i]), &(ma->tmin[i]), \
                           &(ma->tmax[i]), &(ma->tday[i]), \
                           &(ma->co2[i]), &(ma->ndep[i]), \
-                          &(ma->nfix[i]),  &(ma->pdep[i]), &(ma->wind[i]), \
-                          &(ma->wind_am[i]), &(ma->wind_pm[i]), \
+                          &(ma->nfix[i]),  &(ma->pdep[i]), \
                           &(ma->par_am[i]), &(ma->par_pm[i])) != nvars) {
             fprintf(stderr, "%s: badly formatted input in met file on line %d %d\n", \
                     *argv, (int)i+1+skipped_lines, nvars);

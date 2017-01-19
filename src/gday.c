@@ -135,7 +135,6 @@ int main(int argc, char **argv)
     free(ma->co2);
     free(ma->ndep);
     free(ma->pdep);
-    free(ma->wind);
     free(ma->par);
 
     free(ma->prjday);
@@ -143,8 +142,6 @@ int main(int argc, char **argv)
     free(ma->tpm);
     free(ma->tmin);
     free(ma->tmax);
-    free(ma->wind_am);
-    free(ma->wind_pm);
     free(ma->par_am);
     free(ma->par_pm);
     
@@ -775,8 +772,6 @@ void unpack_met_data(control *c, fluxes *f, met_arrays *ma, met *m, int hod,
     m->sw_rad = m->par * c1;
     m->sw_rad_am = ma->par_am[c->day_idx] * c2;
     m->sw_rad_pm = ma->par_pm[c->day_idx] * c2;
-    m->wind_am = ma->wind_am[c->day_idx];
-    m->wind_pm = ma->wind_pm[c->day_idx];
     m->ndep = ma->ndep[c->day_idx];
     m->nfix = ma->nfix[c->day_idx];
     m->pdep = ma->pdep[c->day_idx];

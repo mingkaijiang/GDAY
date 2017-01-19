@@ -487,7 +487,6 @@ typedef struct {
     double *ndep;
     double *nfix;       /* N inputs from biological fixation (t/ha/timestep (d/30min)) */
     double *pdep;
-    double *wind;
 
     /* Day timestep */
     double *prjday; /* should really be renamed to doy for consistancy */
@@ -496,8 +495,6 @@ typedef struct {
     double *tmin;
     double *tmax;
     double *tday;
-    double *wind_am;
-    double *wind_pm;
     double *par_am;
     double *par_pm;
 
@@ -512,7 +509,6 @@ typedef struct {
 typedef struct {
 
     /* sub-daily */
-    double wind;
     double tair;
     double sw_rad;
     double par;
@@ -527,8 +523,6 @@ typedef struct {
     double tair_pm;
     double sw_rad_am;
     double sw_rad_pm;
-    double wind_am;
-    double wind_pm;
     double Tk_am;
     double Tk_pm;
 
