@@ -130,7 +130,6 @@ int main(int argc, char **argv)
 
     free(c);
     free(ma->year);
-    free(ma->tair);
     free(ma->tsoil);
     free(ma->co2);
     free(ma->ndep);
@@ -757,7 +756,6 @@ void unpack_met_data(control *c, fluxes *f, met_arrays *ma, met *m, int hod,
 
     /* unpack met forcing */
     m->Ca = ma->co2[c->day_idx];
-    m->tair = ma->tair[c->day_idx];
     m->par = ma->par_am[c->day_idx] + ma->par_pm[c->day_idx];
     
     /* Conversion factor for PAR to SW rad */

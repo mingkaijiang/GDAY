@@ -481,7 +481,6 @@ typedef struct {
 
     double *year;
     double *par;
-    double *tair;
     double *tsoil;
     double *co2;
     double *ndep;
@@ -504,7 +503,6 @@ typedef struct {
 typedef struct {
 
     /* sub-daily */
-    double tair;
     double sw_rad;
     double par;
     double Ca;
