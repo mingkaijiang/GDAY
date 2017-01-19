@@ -11,7 +11,6 @@ typedef struct {
     char  cfg_fname[STRING_LENGTH];
     char  met_fname[STRING_LENGTH];
     char  out_fname[STRING_LENGTH];
-    char  out_subdaily_fname[STRING_LENGTH];
     char  out_fname_hdr[STRING_LENGTH];
     char  out_param_fname[STRING_LENGTH];
     char  git_hash[STRING_LENGTH];
@@ -20,9 +19,6 @@ typedef struct {
     int   fixed_stem_pc;
     int   fixleafnc;
     int   fixleafpc;
-    int   gs_model;
-    int   model_optroot;
-    int   modeljm;
     int   ncycle;
     int   pcycle;
     int   triose_p;

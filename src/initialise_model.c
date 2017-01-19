@@ -23,9 +23,6 @@ void initialise_control(control *c) {
     c->fixed_stem_pc = TRUE;        /* False=vary stem P:C with foliage, True=fixed stem P:C */
     c->fixleafnc = FALSE;           /* fixed leaf N C ? */
     c->fixleafpc = FALSE;           /* fixed leaf P C ? */
-    c->gs_model = MEDLYN;           /* Stomatal conductance model, currently only this one is implemented */
-    c->model_optroot = FALSE;       /* Ross's optimal root model...not sure if this works yet...0=off, 1=on */
-    c->modeljm = 1;                 /* modeljm=0, Jmax and Vcmax parameters are read in, modeljm=1, parameters are calculated from leaf N & P content, modeljm=2, Vcmax is calculated from leaf N & P content but Jmax is related to Vcmax */
     c->ncycle = TRUE;               /* Nitrogen cycle on or off? */
     c->pcycle = TRUE;               /* Phosphorus cycle on or off? */
     c->triose_p = TRUE;             /* Triose phosphates limitation on photosynthesis on or off? */

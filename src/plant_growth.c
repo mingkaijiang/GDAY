@@ -365,30 +365,6 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     // fprintf(stderr, "nuptake %f\n", f->nuptake);
     // fprintf(stderr, "puptake %f\n", f->puptake);
 
-    /*  Ross's Root Model. */
-    if (c->model_optroot) {
-
-        /* convert t ha-1 day-1 to gN m-2 year-1 */
-        nsupply = (calculate_nuptake(c, p, s) *
-                   TONNES_HA_2_G_M2 * DAYS_IN_YRS);
-
-        /* covnert t ha-1 to kg DM m-2 */
-        rtot = s->root * TONNES_HA_2_KG_M2 / p->cfracts;
-        /*f->nuptake_old = f->nuptake; */
-
-        calc_opt_root_depth(p->d0x, p->r0, p->topsoil_depth * MM_TO_M,
-                            rtot, nsupply, depth_guess, &s->root_depth,
-                            &f->nuptake, &f->rabove);
-
-        /* covert nuptake from gN m-2 year-1  to t ha-1 day-1 */
-        f->nuptake = f->nuptake * G_M2_2_TONNES_HA * YRS_IN_DAYS;
-
-        /* covert from kg DM N m-2 to t ha-1 */
-        f->deadroots = p->rdecay * f->rabove * p->cfracts * KG_M2_2_TONNES_HA;
-        f->deadrootn = s->rootnc * (1.0 - p->rretrans) * f->deadroots;
-
-    }
-
     /* Mineralised nitrogen lost from the system by volatilisation/leaching */
     f->nloss = p->rateloss * s->inorgn;
 

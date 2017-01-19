@@ -194,29 +194,6 @@ int handler(char *section, char *name, char *value, control *c,
             fprintf(stderr, "Unknown fixleafpc option: %s\n", temp);
             exit(EXIT_FAILURE);
         }
-    } else if (MATCH("control", "gs_model")) {
-        if (strcmp(temp, "MEDLYN") == 0||
-            strcmp(temp, "medlyn") == 0)
-            c->gs_model = MEDLYN;
-        else {
-            fprintf(stderr, "Unknown gs model: %s\n", temp);
-            exit(EXIT_FAILURE);
-        }
-    } else if (MATCH("control", "model_optroot")) {
-        if (strcmp(temp, "False") == 0 ||
-            strcmp(temp, "FALSE") == 0 ||
-            strcmp(temp, "false") == 0)
-            c->model_optroot = FALSE;
-        else if (strcmp(temp, "True") == 0 ||
-            strcmp(temp, "TRUE") == 0 ||
-            strcmp(temp, "true") == 0)
-            c->model_optroot = TRUE;
-        else {
-            fprintf(stderr, "Unknown model_optroot option: %s\n", temp);
-            exit(EXIT_FAILURE);
-        }
-    } else if (MATCH("control", "modeljm")) {
-        c->modeljm = atoi(value);
     } else if (MATCH("control", "ncycle")) {
         if (strcmp(temp, "False") == 0 ||
             strcmp(temp, "FALSE") == 0 ||
