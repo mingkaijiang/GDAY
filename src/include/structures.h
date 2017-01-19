@@ -480,7 +480,6 @@ typedef struct {
 typedef struct {
 
     double *year;
-    double *rain;
     double *par;
     double *tair;
     double *tsoil;
@@ -513,7 +512,6 @@ typedef struct {
 typedef struct {
 
     /* sub-daily */
-    double rain;
     double wind;
     double tair;
     double sw_rad;
