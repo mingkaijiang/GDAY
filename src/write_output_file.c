@@ -422,21 +422,6 @@ int ohandler(char *section, char *name, char *value, control *c, params *p,
     } else if (MATCH("state", "age")) {
         fprintf(c->ofp, "age = %.10f\n", s->age);
         *match = TRUE;
-    } else if (MATCH("state", "avg_albranch")) {
-        fprintf(c->ofp, "avg_albranch = %.10f\n", s->avg_albranch);
-        *match = TRUE;
-    } else if (MATCH("state", "avg_alcroot")) {
-        fprintf(c->ofp, "avg_alcroot = %.10f\n", s->avg_alcroot);
-        *match = TRUE;
-    } else if (MATCH("state", "avg_alleaf")) {
-        fprintf(c->ofp, "avg_alleaf = %.10f\n", s->avg_alleaf);
-        *match = TRUE;
-    } else if (MATCH("state", "avg_alroot")) {
-        fprintf(c->ofp, "avg_alroot = %.10f\n", s->avg_alroot);
-        *match = TRUE;
-    } else if (MATCH("state", "avg_alstem")) {
-        fprintf(c->ofp, "avg_alstem = %.10f\n", s->avg_alstem);
-        *match = TRUE;
     } else if (MATCH("state", "branch")) {
         fprintf(c->ofp, "branch = %.10f\n", s->branch);
         *match = TRUE;

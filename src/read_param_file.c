@@ -492,16 +492,6 @@ int handler(char *section, char *name, char *value, control *c,
         s->activesoilp = atof(value);
     } else if (MATCH("state", "age")) {
         s->age = atof(value);
-    } else if (MATCH("state", "avg_albranch")) {
-        s->avg_albranch = atof(value);
-    } else if (MATCH("state", "avg_alcroot")) {
-        s->avg_alcroot = atof(value);
-    } else if (MATCH("state", "avg_alleaf")) {
-        s->avg_alleaf = atof(value);
-    } else if (MATCH("state", "avg_alroot")) {
-        s->avg_alroot = atof(value);
-    } else if (MATCH("state", "avg_alstem")) {
-        s->avg_alstem = atof(value);
     } else if (MATCH("state", "branch")) {
         s->branch = atof(value);
     } else if (MATCH("state", "branchn")) {
@@ -763,16 +753,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->htpower = atof(value);
     } else if (MATCH("params", "intercep_frac")) {
         p->intercep_frac = atof(value);
-    } else if (MATCH("params", "jmax")) {
-        p->jmax = atof(value);
-    } else if (MATCH("params", "jmaxna")) {
-        p->jmaxna = atof(value);
-    } else if (MATCH("params", "jmaxnb")) {
-        p->jmaxnb = atof(value);
-    } else if (MATCH("params", "jmaxpa")) {
-        p->jmaxpa = atof(value);
-    } else if (MATCH("params", "jmaxpb")) {
-        p->jmaxpb = atof(value);
     } else if (MATCH("params", "jv_intercept")) {
         p->jv_intercept = atof(value);
     } else if (MATCH("params", "jv_slope")) {
@@ -1071,16 +1051,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->topsoil_depth = atof(value);
     } else if (MATCH("params", "topsoil_type")) {
         strcpy(p->topsoil_type, value);
-    } else if (MATCH("params", "vcmax")) {
-        p->vcmax = atof(value);
-    } else if (MATCH("params", "vcmaxna")) {
-        p->vcmaxna = atof(value);
-    } else if (MATCH("params", "vcmaxnb")) {
-        p->vcmaxnb = atof(value);
-    } else if (MATCH("params", "vcmaxpa")) {
-      p->vcmaxpa = atof(value);
-    } else if (MATCH("params", "vcmaxpb")) {
-      p->vcmaxpb = atof(value);
     } else if (MATCH("params", "watdecaydry")) {
         p->watdecaydry = atof(value);
     } else if (MATCH("params", "watdecaywet")) {

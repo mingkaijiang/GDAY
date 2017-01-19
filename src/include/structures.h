@@ -71,11 +71,6 @@ typedef struct {
     double activesoiln;                 /* active N som pool (t/ha) */
     double activesoilp;                 /* active P som pool (t/ha) */
     double age;                         /* Current stand age (years) */
-    double avg_albranch;                /* Average branch growing season allocation fractions */
-    double avg_alcroot;                 /* Average coarse root growing season allocation fractions */
-    double avg_alleaf;                  /* Average leaf growing season allocation fractions */
-    double avg_alroot;                  /* Average fine root growing season allocation fractions */
-    double avg_alstem;                  /* Average stem growing season allocation fractions */
     double branch;                      /* branch c (t/ha) */
     double branchn;                     /* branch n (t/ha) */
     double branchp;                     /* branch p (t/ha) */
@@ -286,11 +281,6 @@ typedef struct {
     double heighto;                         /* constant in avg tree height (m) - stem (t C/ha) reln */
     double htpower;                         /* Exponent in avg tree height (m) - stem (t C/ha) reln */
     double intercep_frac;                   /* Maximum intercepted fraction, values in Oishi et al 2008, AFM, 148, 1719-1732 ~13.9% +/- 4.1, so going to assume 15% following Landsberg and Sands 2011, pg. 193. */
-    double jmax;                            /* maximum rate of electron transport (umol m-2 s-1) */
-    double jmaxna;                          /* slope of the reln btween jmax and leaf N content, units = (umol [gN]-1 s-1) # And for Vcmax-N slopes (vcmaxna) see Table 8.2 in CLM4_tech_note, Oleson et al. 2010. */
-    double jmaxnb;                          /* intercept of jmax vs n, units = (umol [gN]-1 s-1) # And for Vcmax-N slopes (vcmaxna) see Table 8.2 in CLM4_tech_note, Oleson et al. 2010. */
-    double jmaxpa;                          /* slope of the reln btween jmax and leaf P content, units = (umol [gP]-1 s-1) */
-    double jmaxpb;                          /* intercept of jmax vs p, units = (umol [gP]-1 s-1)  */
     double jv_intercept;                    /* Jmax to Vcmax intercept */
     double jv_slope;                        /* Jmax to Vcmax slope */
     double kc25;                            /* Base rate for carboxylation by Rubisco at 25degC [mmol mol-1] */
@@ -431,11 +421,6 @@ typedef struct {
     double theta_wp_topsoil;
     double topsoil_depth;                   /* Topsoil depth (mm) */
     char   topsoil_type[STRING_LENGTH];
-    double vcmax;                           /* maximum rate of carboxylation (umol m-2 s-1)  */
-    double vcmaxna;                         /* slope of the reln btween vcmax and leaf N content, units = (umol [gN]-1 s-1) # And for Vcmax-N slopes (vcmaxna) see Table 8.2 in CLM4_tech_note, Oleson et al. 2010. */
-    double vcmaxnb;                         /* intercept of vcmax vs n, units = (umol [gN]-1 s-1) # And for Vcmax-N slopes (vcmaxna) see Table 8.2 in CLM4_tech_note, Oleson et al. 2010. */
-    double vcmaxpa;
-    double vcmaxpb;
     double watdecaydry;                     /* water fractn for dry litterfall rates */
     double watdecaywet;                     /* water fractn for wet litterfall rates */
     double wcapac_root;                     /* Max plant avail soil water -root zone, i.e. total (mm) (smc_sat-smc_wilt) * root_depth (750mm) = [mm (water) / m (soil depth)] */

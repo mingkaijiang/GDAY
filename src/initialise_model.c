@@ -146,11 +146,6 @@ void initialise_params(params *p) {
     p->heighto = 4.826;
     p->htpower = 0.35;
     p->intercep_frac = 0.15;
-    p->jmax = -999.9;
-    p->jmaxna = 67.994;
-    p->jmaxnb = 0.2464;
-    p->jmaxpa = 188.76;       /* power function, tropical data fit, Walker et al. 2014, http://dx.doi.org/10.3334/ORNLDAAC/1224 */
-    p->jmaxpb = 0.4144;       /* power function, tropical data fit, Walker et al. 2014, http://dx.doi.org/10.3334/ORNLDAAC/1224 */
     p->jv_intercept = 0.0;
     p->jv_slope = 1.86;
     p->kc25 = 404.9;      /* MM coefft of Rubisco for CO2 (umol mol-1) */
@@ -290,11 +285,6 @@ void initialise_params(params *p) {
     p->theta_wp_topsoil = -999.9;
     p->topsoil_depth = 350.0;
     strcpy(p->topsoil_type, "clay_loam");
-    p->vcmax = -999.9;
-    p->vcmaxna = 31.933;         /* power function, tropical data fit, Walker et al. 2014, http://dx.doi.org/10.3334/ORNLDAAC/1224 */
-    p->vcmaxnb = 0.3928;         /* power function, tropical data fit, Walker et al. 2014, http://dx.doi.org/10.3334/ORNLDAAC/1224 */
-    p->vcmaxpa = 102.75;         /* power function, tropical data fit, Walker et al. 2014, http://dx.doi.org/10.3334/ORNLDAAC/1224 */
-    p->vcmaxpb = 0.4426;         /* power function, tropical data fit, Walker et al. 2014, http://dx.doi.org/10.3334/ORNLDAAC/1224 */
     p->watdecaydry = 0.0;
     p->watdecaywet = 0.1;
     p->wcapac_root = 96.75;
@@ -572,11 +562,6 @@ void initialise_state(state *s) {
     s->activesoiln = 0.833516379296;
     s->activesoilp = 0.04600192;          /* based on active soil pool C/P ratio of 55 from Parton et al., 1989, Ecology of arable land. */
     s->age = 12.0; 
-    s->avg_albranch = 0.0;
-    s->avg_alcroot = 0.0;
-    s->avg_alleaf = 0.0;
-    s->avg_alroot = 0.0;
-    s->avg_alstem = 0.0;
     s->branch = 14.5137000708;
     s->branchn = 0.0442890661217;
     s->branchp = 0.00580548;

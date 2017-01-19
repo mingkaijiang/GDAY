@@ -308,24 +308,6 @@ void calculate_soil_water_fac(control *c, params *p, state *s) {
 
         s->wtfac_topsoil = exp(b * s->predawn_swp);
         s->wtfac_root = exp(b * s->predawn_swp);
-
-        //s->wtfac_topsoil_ns = (1.0 + exp(sf * psi_f)) / \
-        //                      (1.0 + exp(sf * (psi_f - s->predawn_swp)));
-        //s->wtfac_root_ns = (1.0 + exp(sf * psi_f)) / \
-        //                      (1.0 + exp(sf * (psi_f - s->predawn_swp)));
-
-        /*
-        s->wtfac_topsoil = exp(p->g1_b * s->psi_s_topsoil);
-        s->wtfac_root = exp(p->g1_b * s->psi_s_root);
-
-        ! SW modifier for Vcmax (non-stomatal limitation)
-        s->wtfac_topsoil_ns = (1.0 + exp(p->vcmax_sf * p->vcmax_psi_f)) / \
-                              (1.0 + exp(p->vcmax_sf * \
-                                        (p->vcmax_psi_f - s->psi_s_topsoil)));
-        s->wtfac_root_ns = (1.0 + exp(p->vcmax_sf * p->vcmax_psi_f)) / \
-                            (1.0 + exp(p->vcmax_sf * \
-                                        (p->vcmax_psi_f - s->psi_s_root)));
-        */
     }
     return;
 }
