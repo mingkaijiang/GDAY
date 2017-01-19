@@ -555,8 +555,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->lai_closed = atof(value);
     } else if (MATCH("params", "latitude")) {
         p->latitude = atof(value);
-    } else if (MATCH("params", "layer_thickness")) {
-        p->layer_thickness = atof(value);
     } else if (MATCH("params", "leafsap0")) {
         p->leafsap0 = atof(value);
     } else if (MATCH("params", "leafsap1")) {
@@ -623,12 +621,8 @@ int handler(char *section, char *name, char *value, control *c,
         p->pcwnewz = atof(value);
     } else if (MATCH("params", "nf_min")) {
         p->nf_min = atof(value);
-    } else if (MATCH("params", "pf_crit")) {
-        p->pf_crit = atof(value);
     } else if (MATCH("params", "pf_min")) {
         p->pf_min = atof(value);
-    } else if (MATCH("params", "n_layers")) {
-        p->n_layers = atof(value);
     } else if (MATCH("params", "nmax")) {
         p->nmax = atof(value);
     } else if (MATCH("params", "nmin")) {
@@ -725,20 +719,12 @@ int handler(char *section, char *name, char *value, control *c,
         p->rfmult = atof(value);
     } else if (MATCH("params", "rooting_depth")) {
         p->rooting_depth = atof(value);
-    } else if (MATCH("params", "root_resist")) {
-        p->root_resist = atof(value);
     } else if (MATCH("params", "rootsoil_type")) {
         strcpy(p->rootsoil_type, value);
     } else if (MATCH("params", "soil_order")) {
        strcpy(p->soil_order, value);
     } else if (MATCH("params", "root_exu_CUE")) {
         p->root_exu_CUE = atof(value);
-    } else if (MATCH("params", "root_k")) {
-        p->root_k = atof(value);
-    } else if (MATCH("params", "root_density")) {
-        p->root_density = atof(value);
-    } else if (MATCH("params", "root_radius")) {
-        p->root_radius = atof(value);
     } else if (MATCH("params", "rretrans")) {
         p->rretrans = atof(value);
     } else if (MATCH("params", "sapturnover")) {

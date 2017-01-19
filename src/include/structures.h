@@ -288,7 +288,6 @@ typedef struct {
     double pcwimmz;                         /* P alloc param: Immobile stem P C at zero leaf P C */
     double pcwnew;                          /* P alloc param: New stem ring P:C at critical leaf P:C (mob) */
     double pcwnewz;                         /* P alloc param: New stem ring P:C at zero leaf P:C (mobile) */
-    double pf_crit;                         /* leaf P:C below which P availability limits productivity  */
     double pf_min;                          /* leaf P:C minimum P concentration which allows productivity */
     double phmax;                           /* max pH for determining effect on solubility of secondary P */
     double phmin;                           /* min pH for determining effect on solubility of secondary P */
@@ -365,14 +364,6 @@ typedef struct {
     double prime_z;
     int    return_interval;                 /* years */
     double root_exu_CUE;
-
-    /* hydraulics */
-    double layer_thickness;                 /* Soil layer thickness (m) */
-    int    n_layers;                        /* Number of soil layers */
-    double root_k;                          /* mass of roots for reaching 50% maximum depth (g m-2) */
-    double root_radius;                     /* (m) */
-    double root_density;                    /* g biomass m-3*/
-    double root_resist;
 
     /* not shared via cmd line */
     double *potA;

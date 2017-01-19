@@ -169,7 +169,6 @@ void initialise_params(params *p) {
     p->pcwimmz = 0.0003;
     p->pcwnew = 0.0003;
     p->pcwnewz = 0.0003;
-    p->pf_crit = 0.002;      /* based on P:C ratio of 500, guess value */
     p->pf_min = 0.0002;      /* based on P:C ratio of 5000, guess value */
     p->phmax = 7.6;
     p->phmin = 5.0;
@@ -247,16 +246,6 @@ void initialise_params(params *p) {
     for (i = 0; i < 7; i++) {
         p->decayrate[i] = 0.0;
     }
-
-    /* hydraulics */
-    p->layer_thickness = 0.1; /* soil layer thickness (m) */
-    p->n_layers = 20;         /* number of soil layers */
-    //p->layer_thickness = 0.4; /* soil layer thickness (m) */
-    //p->n_layers = 6;         /* number of soil layers */
-    p->root_k = 100.0;
-    p->root_radius = 0.0005;
-    p->root_density = 0.5e6;
-    p->root_resist = 20; /* Evergreen value: fine root hydraulic resistivity (MPa s g mmol-1 H2O) */
 
     /* Hydraulics stuff - private */
     p->potA = NULL;
@@ -493,8 +482,6 @@ void initialise_fluxes(fluxes *f) {
     return;
 }
 
-
-
 void initialise_state(state *s) {
 
     /*
@@ -572,10 +559,10 @@ void initialise_nrutil(nrutil *nr) {
     nr->kmax = 100;
     nr->N = 1;
     nr->xp = NULL;
-	nr->yp = NULL;
-	nr->yscal = NULL;
-	nr->y = NULL;
-	nr->dydx = NULL;
+  	nr->yp = NULL;
+  	nr->yscal = NULL;
+  	nr->y = NULL;
+	  nr->dydx = NULL;
     nr->ystart = NULL;
 
     nr->ak2 = NULL;
