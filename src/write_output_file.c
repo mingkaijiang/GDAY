@@ -62,10 +62,6 @@ void write_output_header(control *c, FILE **fp) {
     ** FLUXES
     */
 
-    /* water */
-    fprintf(*fp, "et,transpiration,soil_evap,canopy_evap,runoff,");
-    fprintf(*fp, "gs_mol_m2_sec,ga_mol_m2_sec,");
-
     /* litter */
     fprintf(*fp, "deadleaves,deadbranch,deadstems,deadroots,deadcroots,");
     fprintf(*fp, "deadleafn,deadbranchn,deadstemn,deadrootn,deadcrootn,");
@@ -175,12 +171,6 @@ void write_daily_outputs_ascii(control *c, fluxes *f, state *s, int year,
     ** FLUXES
     */
 
-    /* water */
-    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,",
-                    f->et,f->transpiration,f->soil_evap,f->canopy_evap);
-    fprintf(c->ofp, "%.10f,%.10f,%.10f,",
-                    f->runoff,f->gs_mol_m2_sec,f->ga_mol_m2_sec);
-
     /* litter */
     fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,%.10f,",
                     f->deadleaves,f->deadbranch,f->deadstems,f->deadroots,
@@ -270,14 +260,6 @@ void write_daily_outputs_binary(control *c, fluxes *f, state *s, int year,
     fwrite(&(s->branch), sizeof(double), 1, c->ofp);
     fwrite(&(s->stem), sizeof(double), 1, c->ofp);
     fwrite(&(s->root), sizeof(double), 1, c->ofp);
-
-    /* water */
-    fwrite(&(s->wtfac_root), sizeof(double), 1, c->ofp);
-    fwrite(&(s->pawater_root), sizeof(double), 1, c->ofp);
-    fwrite(&(f->transpiration), sizeof(double), 1, c->ofp);
-    fwrite(&(f->soil_evap), sizeof(double), 1, c->ofp);
-    fwrite(&(f->canopy_evap), sizeof(double), 1, c->ofp);
-    fwrite(&(f->runoff), sizeof(double), 1, c->ofp);
 
     /* C fluxes */
     fwrite(&(f->npp), sizeof(double), 1, c->ofp);

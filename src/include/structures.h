@@ -436,21 +436,6 @@ typedef struct {
     double plittrelease;    /* P rel litter = struct + metab */
     double pmineralisation; /* P net mineralised */
 
-
-    /* water fluxes */
-    double wue;
-    double et;
-    double soil_evap;
-    double transpiration;
-    double throughfall;
-    double canopy_evap;
-    double runoff;
-    double gs_mol_m2_sec;
-    double ga_mol_m2_sec;
-    double omega;
-    double day_ppt;
-    double day_wbal;
-
     /* daily C production */
     double cpleaf;
     double cproot;
@@ -640,51 +625,6 @@ typedef struct {
     double ninflow;
 
 } fluxes;
-
-typedef struct {
-    /* 2 member arrays are for the sunlit (0) and shaded (1) components */
-    int    ileaf;           /* sunlit (0) or shaded (1) leaf index */
-    double an_leaf[2];      /* leaf net photosynthesis (umol m-2 s-1) */
-    double rd_leaf[2];      /* leaf respiration in the light (umol m-2 s-1) */
-    double gsc_leaf[2];     /* leaf stomatal conductance to CO2 (mol m-2 s-1) */
-    double apar_leaf[2];    /* leaf abs photosyn. active rad. (umol m-2 s-1) */
-    double trans_leaf[2];   /* leaf transpiration (mol m-2 s-1) */
-    double rnet_leaf[2];    /* leaf net radiation (W m-2) */
-    double lai_leaf[2];     /* sunlit and shaded leaf area (m2 m-2) */
-    double omega_leaf[2];   /* leaf decoupling coefficient (-) */
-    double tleaf[2];        /* leaf temperature (deg C) */
-    double fwsoil_leaf[2];  /* Effective beta */
-    double an_canopy;       /* canopy net photosynthesis (umol m-2 s-1) */
-    double rd_canopy;       /* canopy respiration in the light (umol m-2 s-1) */
-    double gsc_canopy;      /* canopy stomatal conductance to CO2 (mol m-2 s-1) */
-    double apar_canopy;     /* canopy abs photosyn. active rad. (umol m-2 s-1) */
-    double omega_canopy;    /* canopy decoupling coefficient (-) */
-    double trans_canopy;    /* canopy transpiration (mm 30min-1) */
-    double rnet_canopy;     /* canopy net radiation (W m-2) */
-    double N0;              /* top of canopy nitrogen (g N m-2)) */
-    double P0;              /* top of canopy phosphorus (g P m-2)) */
-    double elevation;       /* sun elevation angle in degrees */
-    double cos_zenith;      /* cos(zenith angle of sun) in radians */
-    double diffuse_frac;    /* Fraction of incident rad which is diffuse (-) */
-    double direct_frac;     /* Fraction of incident rad which is beam (-) */
-    double tleaf_new;       /* new leaf temperature (deg C) */
-    double dleaf;           /* leaf VPD (Pa) */
-    double Cs;              /* CO2 conc at the leaf surface (umol mol-1) */
-    double kb;              /* beam radiation ext coeff of canopy */
-    double cscalar[2];      /* scale from single leaf to canopy */
-    double *cz_store;       /* Array to hold coz zenith angles */
-    double *ele_store;      /* Array to hold elevations */
-    double *df_store;       /* Array to hold diffuse fractions */
-
-    // Used in the hydraulics calculations when water is limiting //
-    double ts_Cs;           // Temporary variable to store Cs //
-    double ts_vcmax;        // Temporary variable to store vcmax //
-    double ts_km;           // Temporary variable to store km //
-    double ts_gamma_star;   // Temporary variable to store gamma_star //
-    double ts_rd;           // Temporary variable to store rd //
-    double ts_Vj;           // Temporary variable to store Vj //
-
-} canopy_wk;
 
 
 typedef struct {

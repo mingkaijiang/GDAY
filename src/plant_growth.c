@@ -475,9 +475,6 @@ int cut_back_production(control *c, fluxes *f, params *p, state *s,
         f->npcroot = f->npp * f->alcroot * xccnew;
     }
 
-    /* Save WUE before cut back */
-    f->wue = f->gpp_gCm2 / f->transpiration;
-
     /* Also need to recalculate GPP and thus Ra and return a flag
        so that we know to recalculate the water balance. */
     f->gpp = f->npp / p->cue;

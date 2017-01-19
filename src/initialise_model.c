@@ -280,20 +280,6 @@ void initialise_fluxes(fluxes *f) {
     f->pimmob = 0.0;                /* P immobilisation in SOM */
     f->plittrelease = 0.0;          /* P rel litter = struct + metab */
     f->pmineralisation = 0.0;
-    
-    /* water fluxes */
-    f->wue = 0.0;
-    f->et = 0.0;
-    f->soil_evap = 0.0;
-    f->transpiration = 0.0;
-    f->throughfall = 0.0;
-    f->canopy_evap = 0.0;
-    f->runoff = 0.0;
-    f->gs_mol_m2_sec = 0.0;
-    f->ga_mol_m2_sec = 0.0;
-    f->omega = 0.0;
-    f->day_ppt = 0.0;
-    f->day_wbal = 0.0;
 
     /* daily C production */
     f->cpleaf = 0.0;
