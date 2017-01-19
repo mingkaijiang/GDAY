@@ -293,19 +293,6 @@ int handler(char *section, char *name, char *value, control *c,
             fprintf(stderr, "Unknown gs model: %s\n", temp);
             exit(EXIT_FAILURE);
         }
-    } else if (MATCH("control", "hurricane")) {
-        if (strcmp(temp, "False") == 0 ||
-            strcmp(temp, "FALSE") == 0 ||
-            strcmp(temp, "false") == 0)
-            c->hurricane = FALSE;
-        else if (strcmp(temp, "True") == 0 ||
-            strcmp(temp, "TRUE") == 0 ||
-            strcmp(temp, "true") == 0)
-            c->hurricane = TRUE;
-        else {
-            fprintf(stderr, "Unknown hurricane option: %s\n", temp);
-            exit(EXIT_FAILURE);
-        }
     } else if (MATCH("control", "model_optroot")) {
         if (strcmp(temp, "False") == 0 ||
             strcmp(temp, "FALSE") == 0 ||
@@ -703,14 +690,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->fretrans = atof(value);
     } else if (MATCH("params", "fretransp")) {
         p->fretransp = atof(value);
-    } else if (MATCH("params", "g1")) {
-        p->g1 = atof(value);
-    } else if (MATCH("params", "gamstar25")) {
-        p->gamstar25 = atof(value);
-    } else if (MATCH("params", "growth_efficiency")) {
-        p->growth_efficiency = atof(value);
-    } else if (MATCH("params", "gamstar25")) {
-        p->gamstar25 = atof(value);
     } else if (MATCH("params", "height0")) {
         p->height0 = atof(value);
     } else if (MATCH("params", "height1")) {

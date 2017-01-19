@@ -123,9 +123,6 @@ void initialise_params(params *p) {
     p->fractup_soil = 0.5;
     p->fretrans = 0.5;
     p->fretransp = 0.6;
-    p->g1 = 2.74;
-    p->gamstar25 = 42.75;
-    p->growth_efficiency = 0.7;
     p->height0 = 5.0;
     p->height1 = 30.0;
     p->heighto = 4.826;

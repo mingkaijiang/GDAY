@@ -257,9 +257,6 @@ typedef struct {
     double fractup_soil;                    /* fraction of uptake from top soil layer */
     double fretrans;                        /* foliage n retranslocation fraction - 46-57% in young E. globulus trees - see Corbeels et al 2005 ecological modelling 187, pg 463. Roughly 50% from review Aerts '96 */
     double fretransp;                       /* foliage p retranslocation fraction - 39.5-69 in Southern US FACE site - Finzi et al. 2001 Ecology  */
-    double g1;                              /* stomatal conductance parameter: Slope of reln btw gs and assimilation (fitted by species/pft). */
-    double gamstar25;                       /* Base rate of CO2 compensation point at 25 deg C [umol mol-1] */
-    double growth_efficiency;               /* growth efficiency (yg) - used only in Bewdy */
     double height0;                         /* Height when leaf:sap area ratio = leafsap0 (trees) */
     double height1;                         /* Height when leaf:sap area ratio = leafsap1 (trees) */
     double heighto;                         /* constant in avg tree height (m) - stem (t C/ha) reln */
@@ -416,8 +413,6 @@ typedef struct {
     double prime_y;
     double prime_z;
     int    return_interval;                 /* years */
-    int    hurricane_doy;
-    int    hurricane_yr;
     double root_exu_CUE;
     double leaf_width;
     double leaf_abs;
