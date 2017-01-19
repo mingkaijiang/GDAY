@@ -212,9 +212,6 @@ typedef struct {
     double adapt;
     double ageold;                          /* Plant age when max leaf N C ratio is lowest */
     double ageyoung;                        /* Plant age when max leaf N C ratio is highest */
-    double albedo;
-    double alpha_c4;                        /* quantium efficiency for C4 plants has no Ci and temp dependancy, so if a fixed constant. */
-    double alpha_j;                         /* initial slope of rate of electron transport, used in calculation of quantum yield. Value calculated by Belinda */
     double b_root;
     double b_topsoil;
     double bdecay;                          /* branch and large root turnover rate (1/yr) */
@@ -241,12 +238,7 @@ typedef struct {
     double d0;
     double d0x;                             /* Length scale for exponential decline of Umax(z) */
     double decayrate[7];
-    double d1;
-    double delsj;                           /* Deactivation energy for electron transport (J mol-1 k-1) */
     double density;                         /* sapwood density kg DM m-3 (trees) */
-    double direct_frac;                     /* direct beam fraction of incident radiation - this is only used with the BEWDY model */
-    double displace_ratio;                  /* Value for coniferous forest (0.78) from Jarvis et al 1976, taken from Jones 1992 pg 67. More standard assumption is 2/3 */
-    int    disturbance_doy;
     double dz0v_dh;                         /* Rate of change of vegetation roughness length for momentum with height. Value from Jarvis? for conifer 0.075 */
     double eac;                             /* Activation energy for carboxylation [J mol-1] */
     double eag;                             /* Activation energy at CO2 compensation point [J mol-1] */
@@ -336,7 +328,6 @@ typedef struct {
     double ntheta_root;                     /* Fitted parameter based on Landsberg and Waring */
     double ntheta_topsoil;                  /* Fitted parameter based on Landsberg and Waring */
     double nuptakez;                        /* constant N uptake per year (1/yr) */
-    double oi;                              /* intercellular concentration of O2 [umol mol-1] */
     double p_rate_par_weather;              /* parent P material weathering rate [yr-1] */
     double passivesoilnz;
     double passivesoilpz;
@@ -433,7 +424,6 @@ typedef struct {
     double prime_y;
     double prime_z;
     int    return_interval;                 /* years */
-    int    burn_specific_yr;
     int    hurricane_doy;
     int    hurricane_yr;
     double root_exu_CUE;

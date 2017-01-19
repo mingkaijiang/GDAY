@@ -75,9 +75,6 @@ void initialise_params(params *p) {
     p->actpcmin = 0.0125;
     p->ageold = 10000.0;
     p->ageyoung = 0.0;
-    p->albedo = 0.123;
-    p->alpha_c4 = 0.06;
-    p->alpha_j = 0.26;
     p->b_root = -999.9;
     p->b_topsoil =-999.9;
     p->bdecay = 0.02;
@@ -107,11 +104,7 @@ void initialise_params(params *p) {
     p->cue = 0.5;
     p->d0 = 0.0;
     p->d0x = 0.35;
-    p->d1 = 0.0;
-    p->delsj = 644.4338;
     p->density = 420.0;
-    p->direct_frac = 0.5;
-    p->displace_ratio = 0.78;
     p->dz0v_dh = 0.075;
     p->eac = 79430.0;   /* Temp. response of Kc (J mol-1) */
     p->eag = 37830.0;
@@ -199,7 +192,6 @@ void initialise_params(params *p) {
     p->ntheta_root = 3.0;
     p->ntheta_topsoil = 5.0;
     p->nuptakez = 0.0;
-    p->oi = 210000.0;                 /* oxygen partial pressure (umol mol-1) */
     // p->p_atm_deposition = 0.001;    /* value according to Newman 1995 = 0.00055 */
     p->p_rate_par_weather = 0.001;
     p->passivesoilnz = 1.0;

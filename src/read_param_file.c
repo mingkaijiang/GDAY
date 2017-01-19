@@ -625,12 +625,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->ageold = atof(value);
     } else if (MATCH("params", "ageyoung")) {
         p->ageyoung = atof(value);
-    } else if (MATCH("params", "albedo")) {
-        p->albedo = atof(value);
-    } else if (MATCH("params", "alpha_c4")) {
-        p->alpha_c4 = atof(value);
-    } else if (MATCH("params", "alpha_j")) {
-        p->alpha_j = atof(value);
     } else if (MATCH("params", "b_root")) {
         p->b_root = atof(value);
     } else if (MATCH("params", "b_topsoil")) {
@@ -677,18 +671,8 @@ int handler(char *section, char *name, char *value, control *c,
         p->d0 = atof(value);
     } else if (MATCH("params", "d0x")) {
         p->d0x = atof(value);
-    } else if (MATCH("params", "d1")) {
-        p->d1 = atof(value);
-    } else if (MATCH("params", "delsj")) {
-        p->delsj = atof(value);
     } else if (MATCH("params", "density")) {
         p->density = atof(value);
-    } else if (MATCH("params", "direct_frac")) {
-        p->direct_frac = atof(value);
-    } else if (MATCH("params", "displace_ratio")) {
-        p->displace_ratio = atof(value);
-    } else if (MATCH("params", "disturbance_doy")) {
-        p->disturbance_doy = atoi(value);
     } else if (MATCH("params", "dz0v_dh")) {
         p->dz0v_dh = atof(value);
     } else if (MATCH("params", "eac")) {
@@ -907,8 +891,6 @@ int handler(char *section, char *name, char *value, control *c,
       p->puptakez = atof(value);
     } else if (MATCH("params", "p_rate_par_weather")) {
         p->p_rate_par_weather = atof(value);
-    } else if (MATCH("params", "oi")) {
-        p->oi = atof(value);
     } else if (MATCH("params", "passivesoilz")) {
         p->passivesoilz = atof(value);
     } else if (MATCH("params", "passivesoilnz")) {
