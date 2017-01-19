@@ -33,8 +33,6 @@ typedef struct {
     int   sw_stress_model;
     int   text_effect_p;
     int   use_eff_nc;
-    int   water_stress;
-    int   water_balance;
     int   num_days;
     int   total_num_days;
     char  git_code_ver[STRING_LENGTH];
@@ -178,8 +176,6 @@ typedef struct {
     double crdecay;                         /* coarse roots turnover rate (1/yr) */
     double cretrans;                        /* coarse root n retranslocation fraction */
     double crit_n_cost_of_p;                /* Critical value of N cost of root P uptake above which phosphatase production starts [g N (g P)-1]; Wang et al., 2007, GB1018*/
-    double ctheta_root;                     /* Fitted parameter based on Landsberg and Waring */
-    double ctheta_topsoil;                  /* Fitted parameter based on Landsberg and Waring */
     double cue;                             /* carbon use efficiency, or the ratio of NPP to GPP */
     double d0;
     double d0x;                             /* Length scale for exponential decline of Umax(z) */
@@ -235,8 +231,6 @@ typedef struct {
     double nmin0;                           /* mineral N pool corresponding to Actnc0,etc (g/m2) */
     double nmincrit;                        /* Critical mineral N pool at max soil N:C (g/m2) (Parton et al 1993, McMurtrie et al 2001). */
     double nref;                            /* leaf N:C for saturation of photosynthesis for lue_simplified */
-    double ntheta_root;                     /* Fitted parameter based on Landsberg and Waring */
-    double ntheta_topsoil;                  /* Fitted parameter based on Landsberg and Waring */
     double nuptakez;                        /* constant N uptake per year (1/yr) */
     double p_rate_par_weather;              /* parent P material weathering rate [yr-1] */
     double passivesoilnz;
@@ -283,7 +277,6 @@ typedef struct {
     double rdecay;                          /* root turnover rate (1/yr) */
     double retransmob;                      /* Fraction stem mobile N retranscd (/yr) */
     double rooting_depth;                   /* Rooting depth (mm) */
-    char   rootsoil_type[STRING_LENGTH];
     char   soil_order[STRING_LENGTH];       /* soil order */
     double rretrans;                        /* root n retranslocation fraction */
     double sapturnover;                     /* Sapwood turnover rate: conversion of sapwood to heartwood (1/yr) */
@@ -303,19 +296,6 @@ typedef struct {
     double sorpmx;                          /* maximum P sorption potential for a soil */
     double sorpaf;                          /* slope term which controls the fraction of mineral P that is labile */
     double targ_sens;                       /* sensitivity of allocation (leaf/branch) to track the target, higher values = less responsive. */
-    double theta;                           /* curvature of photosynthetic light response curve */
-    double theta_sp_root;
-    double theta_sp_topsoil;
-    double theta_fc_root;
-    double theta_fc_topsoil;
-    double theta_wp_root;
-    double theta_wp_topsoil;
-    double topsoil_depth;                   /* Topsoil depth (mm) */
-    char   topsoil_type[STRING_LENGTH];
-    double watdecaydry;                     /* water fractn for dry litterfall rates */
-    double watdecaywet;                     /* water fractn for wet litterfall rates */
-    double wcapac_root;                     /* Max plant avail soil water -root zone, i.e. total (mm) (smc_sat-smc_wilt) * root_depth (750mm) = [mm (water) / m (soil depth)] */
-    double wcapac_topsoil;                  /* Max plant avail soil water -top soil (mm) */
     double wdecay;                          /* wood turnover rate (1/yr) */
     double wretrans;                        /* mobile wood N retranslocation fraction */
     double prime_y;

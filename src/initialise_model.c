@@ -35,8 +35,6 @@ void initialise_control(control *c) {
     c->sw_stress_model = 1;         /* JULES type linear stress func, or Landsberg and Waring non-linear func */
     c->text_effect_p = 1;           /* soil texture effect on strongly sorbed P flow to mineral P; = 1 use texture effect; = 0 use pre-defined constant; */ 
     c->use_eff_nc = 0;              /* use constant leaf n:c for  metfrac s */
-    c->water_stress = TRUE;         /* water stress modifier turned on=TRUE (default)...ability to turn off to test things without drought stress = FALSE */
-    c->water_balance = 0;            /* Water calculations: 0=simple 2 layered bucket; 1=SPA-style hydraulics */
     c->spin_up = FALSE;             /* Spin up to a steady state? If False it just runs the model */
 
     /* Internal calculated */
@@ -78,8 +76,6 @@ void initialise_params(params *p) {
     p->crdecay = 0.0;
     p->cretrans = 0.0;
     p->crit_n_cost_of_p = 15.0; 
-    p->ctheta_root = 0.4;
-    p->ctheta_topsoil = 0.5;
     p->cue = 0.5;
     p->d0 = 0.0;
     p->d0x = 0.35;
@@ -133,8 +129,6 @@ void initialise_params(params *p) {
     p->nmin = 0.95;
     p->nmin0 = 0.0;
     p->nmincrit = 2.0;
-    p->ntheta_root = 3.0;
-    p->ntheta_topsoil = 5.0;
     p->nuptakez = 0.0;
     // p->p_atm_deposition = 0.001;    /* value according to Newman 1995 = 0.00055 */
     p->p_rate_par_weather = 0.001;
@@ -182,7 +176,6 @@ void initialise_params(params *p) {
     p->rdecay = 0.33333;
     p->retransmob = 0.0;
     p->rooting_depth = 750.0;
-    strcpy(p->rootsoil_type, "clay");
     strcpy(p->soil_order, "aridsol");
     p->rretrans = 0.0;
     p->sapturnover = 0.1;
@@ -202,19 +195,6 @@ void initialise_params(params *p) {
     p->structcp = 5500.0;
     p->structratp = 0.0;
     p->targ_sens = 0.5;
-    p->theta = 0.7;
-    p->theta_fc_root = -999.9;
-    p->theta_fc_topsoil = -999.9;
-    p->theta_sp_root = -999.9;
-    p->theta_sp_topsoil = -999.9;
-    p->theta_wp_root = -999.9;
-    p->theta_wp_topsoil = -999.9;
-    p->topsoil_depth = 350.0;
-    strcpy(p->topsoil_type, "clay_loam");
-    p->watdecaydry = 0.0;
-    p->watdecaywet = 0.1;
-    p->wcapac_root = 96.75;
-    p->wcapac_topsoil = 25.8;
     p->wdecay = 0.02;
     p->wretrans = 0.0;
     

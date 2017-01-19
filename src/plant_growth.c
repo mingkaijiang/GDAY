@@ -16,7 +16,6 @@
 *
 * =========================================================================== */
 #include "plant_growth.h"
-#include "water_balance.h"
 
 void calc_day_growth(control *c, fluxes *f, met_arrays *ma,
                      met *m, nrutil *nr, params *p, state *s, double day_length,

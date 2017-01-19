@@ -288,29 +288,7 @@ int handler(char *section, char *name, char *value, control *c,
         c->use_eff_nc = atoi(value);
     } else if (MATCH("control", "text_effect_p")) {
         c->text_effect_p = atoi(value);
-    } else if (MATCH("control", "water_balance")) {
-        if (strcmp(temp, "hydraulics") == 0||
-            strcmp(temp, "HYDRAULICS") == 0)
-            c->water_balance = HYDRAULICS;
-        else {
-            c->water_balance = BUCKET;
-        }
-    } else if (MATCH("control", "water_stress")) {
-        if (strcmp(temp, "False") == 0 ||
-            strcmp(temp, "FALSE") == 0 ||
-            strcmp(temp, "false") == 0) {
-            c->water_stress = FALSE;
-            fprintf(stderr, "\nYou have turned off the drought stress??\n");
-        } else if (strcmp(temp, "True") == 0 ||
-                   strcmp(temp, "TRUE") == 0 ||
-                   strcmp(temp, "true") == 0) {
-            c->water_stress = TRUE;
-        } else {
-            fprintf(stderr, "Unknown water stress option: %s\n", temp);
-            exit(EXIT_FAILURE);
-        }
-    }
-
+    } 
 
 
     /*
@@ -467,10 +445,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->crdecay = atof(value);
     } else if (MATCH("params", "cretrans")) {
         p->cretrans = atof(value);
-    } else if (MATCH("params", "ctheta_root")) {
-        p->ctheta_root = atof(value);
-    } else if (MATCH("params", "ctheta_topsoil")) {
-        p->ctheta_topsoil = atof(value);
     } else if (MATCH("params", "cue")) {
         p->cue = atof(value);
     } else if (MATCH("params", "d0")) {
@@ -597,10 +571,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->nmin0 = atof(value);
     } else if (MATCH("params", "nmincrit")) {
         p->nmincrit = atof(value);
-    } else if (MATCH("params", "ntheta_root")) {
-        p->ntheta_root = atof(value);
-    } else if (MATCH("params", "ntheta_topsoil")) {
-        p->ntheta_topsoil = atof(value);
     } else if (MATCH("params", "nuptakez")) {
         p->nuptakez = atof(value);
     } else if (MATCH("params", "p_lab_avail")) {
@@ -671,8 +641,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->retransmob = atof(value);
     } else if (MATCH("params", "rooting_depth")) {
         p->rooting_depth = atof(value);
-    } else if (MATCH("params", "rootsoil_type")) {
-        strcpy(p->rootsoil_type, value);
     } else if (MATCH("params", "soil_order")) {
        strcpy(p->soil_order, value);
     } else if (MATCH("params", "rretrans")) {
@@ -711,32 +679,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->soilph = atof(value);
     } else if (MATCH("params", "targ_sens")) {
         p->targ_sens = atof(value);
-    } else if (MATCH("params", "theta")) {
-        p->theta = atof(value);
-    } else if (MATCH("params", "theta_fc_root")) {
-        p->theta_fc_root = atof(value);
-    } else if (MATCH("params", "theta_fc_topsoil")) {
-        p->theta_fc_topsoil = atof(value);
-    } else if (MATCH("params", "theta_sp_root")) {
-        p->theta_sp_root = atof(value);
-    } else if (MATCH("params", "theta_sp_topsoil")) {
-        p->theta_sp_topsoil = atof(value);
-    } else if (MATCH("params", "theta_wp_root")) {
-        p->theta_wp_root = atof(value);
-    } else if (MATCH("params", "theta_wp_topsoil")) {
-        p->theta_wp_topsoil = atof(value);
-    } else if (MATCH("params", "topsoil_depth")) {
-        p->topsoil_depth = atof(value);
-    } else if (MATCH("params", "topsoil_type")) {
-        strcpy(p->topsoil_type, value);
-    } else if (MATCH("params", "watdecaydry")) {
-        p->watdecaydry = atof(value);
-    } else if (MATCH("params", "watdecaywet")) {
-        p->watdecaywet = atof(value);
-    } else if (MATCH("params", "wcapac_root")) {
-        p->wcapac_root = atof(value);
-    } else if (MATCH("params", "wcapac_topsoil")) {
-        p->wcapac_topsoil = atof(value);
     } else if (MATCH("params", "wdecay")) {
         p->wdecay = atof(value);
     } else if (MATCH("params", "wretrans")) {
