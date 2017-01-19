@@ -6,7 +6,7 @@ void read_daily_met_data(char **argv, control *c, met_arrays *ma)
     char   line[STRING_LENGTH];
     int    file_len = 0;
     int    i = 0;
-    int    nvars = 13;
+    int    nvars = 12;
     int    skipped_lines = 0;
     double current_yr = -999.9;
 
@@ -58,11 +58,6 @@ void read_daily_met_data(char **argv, control *c, met_arrays *ma)
 		exit(EXIT_FAILURE);
     }
 
-    if ((ma->tday = (double *)calloc(file_len, sizeof(double))) == NULL) {
-        fprintf(stderr,"Error allocating space for tday array\n");
-		exit(EXIT_FAILURE);
-    }
-
     if ((ma->co2 = (double *)calloc(file_len, sizeof(double))) == NULL) {
         fprintf(stderr,"Error allocating space for co2 array\n");
 		exit(EXIT_FAILURE);
@@ -111,13 +106,13 @@ void read_daily_met_data(char **argv, control *c, met_arrays *ma)
 
         if (sscanf(line, "%lf,%lf,\
                           %lf,%lf,\
-                          %lf,%lf,%lf,\
+                          %lf,%lf,\
                           %lf,%lf,\
                           %lf,%lf,\
                           %lf,%lf",\
                           &(ma->year[i]), &(ma->prjday[i]), \
                           &(ma->tair[i]), &(ma->tsoil[i]), \
-                          &(ma->tam[i]), &(ma->tpm[i]), &(ma->tday[i]), \
+                          &(ma->tam[i]), &(ma->tpm[i]), \
                           &(ma->co2[i]), &(ma->ndep[i]), \
                           &(ma->nfix[i]),  &(ma->pdep[i]), \
                           &(ma->par_am[i]), &(ma->par_pm[i])) != nvars) {
