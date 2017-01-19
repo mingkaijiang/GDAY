@@ -41,10 +41,6 @@ void write_output_header(control *c, FILE **fp) {
     /*
     ** STATE
     */
-
-    /* water*/
-    fprintf(*fp, "wtfac_root,wtfac_topsoil,pawater_root,");
-
     /* plant */
     fprintf(*fp, "shoot,lai,branch,stem,root,");
     fprintf(*fp, "shootn,branchn,stemn,rootn,");
@@ -130,10 +126,6 @@ void write_daily_outputs_ascii(control *c, fluxes *f, state *s, int year,
     ** STATE
 
     */
-
-    /* water*/
-    fprintf(c->ofp, "%.10f,%.10f,%.10f,",
-            s->wtfac_root,s->wtfac_topsoil,s->pawater_root);
 
     /* plant */
     fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,%.10f,",
@@ -442,12 +434,6 @@ int ohandler(char *section, char *name, char *value, control *c, params *p,
         *match = TRUE;
     } else if (MATCH("state", "passivesoilp")) {
         fprintf(c->ofp, "passivesoilp = %.10f\n", s->passivesoilp);
-        *match = TRUE;
-    } else if (MATCH("state", "pawater_root")) {
-        fprintf(c->ofp, "pawater_root = %.10f\n", s->pawater_root);
-        *match = TRUE;
-    } else if (MATCH("state", "pawater_topsoil")) {
-        fprintf(c->ofp, "pawater_topsoil = %.10f\n", s->pawater_topsoil);
         *match = TRUE;
     } else if (MATCH("state", "prev_sma")) {
         fprintf(c->ofp, "prev_sma = %.10f\n", s->prev_sma);

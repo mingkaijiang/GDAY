@@ -205,9 +205,6 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
     day_end_calculations(c, p, s, -99, TRUE);
 
     initialise_soils_day(c, f, p, s);
-    
-    s->pawater_root = p->wcapac_root;
-    s->pawater_topsoil = p->wcapac_topsoil;
 
     s->lai = MAX(0.01, (p->sla * M2_AS_HA / KG_AS_TONNES /
                           p->cfracts * s->shoot));

@@ -22,15 +22,11 @@ void calc_day_growth(control *c, fluxes *f, met_arrays *ma,
                      met *m, nrutil *nr, params *p, state *s, double day_length,
                      int doy, double fdecay, double rdecay)
 {
-   double previous_topsoil_store, dummy=0.0, previous_rootzone_store;
+   double dummy=0.0;
    double nitfac, pitfac, npitfac;
    double ncbnew, nccnew, ncwimm, ncwnew;
    double pcbnew, pccnew, pcwimm, pcwnew;
    int    recalc_wb;
-
-    /* Store the previous days soil water store */
-    previous_topsoil_store = s->pawater_topsoil;
-    previous_rootzone_store = s->pawater_root;
 
 
     /* calculate daily GPP/NPP, respiration and update water balance */
@@ -129,15 +125,6 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
     else
         s->fipar = 0.0;
     
-    if (c->water_stress) {
-        /* Calculate the soil moisture availability factors [0,1] in the
-           topsoil and the entire root zone */
-        calculate_soil_water_fac(c, p, s);
-    } else {
-        /* really this should only be a debugging option! */
-        s->wtfac_topsoil = 1.0;
-        s->wtfac_root = 1.0;
-    }
     /* Estimate photosynthesis */
     simple_photosynthesis(c, f, m, p, s);
 
@@ -530,7 +517,7 @@ double calculate_growth_stress_limitation(params *p, state *s, control *c) {
      * that have a flexible bucket depth. Minimum constraint is limited to
      * 0.1, following Zaehle et al. 2010 (supp), eqn 18.
      */
-    current_limitation = MAX(0.1, MIN(nlim,s->wtfac_root));
+    current_limitation = MAX(0.1, nlim);
 
     if(c->pcycle == TRUE) {
         /* P limitation based on leaf PC ratio */
@@ -542,7 +529,7 @@ double calculate_growth_stress_limitation(params *p, state *s, control *c) {
             plim = 1.0;
         }
         nutrient_lim = MIN(nlim, plim);
-        current_limitation = MAX(0.1, MIN(nutrient_lim, s->wtfac_root));
+        current_limitation = MAX(0.1,nutrient_lim);
     }
     
     /*fprintf(stderr, "plim %f\n", plim);

@@ -76,8 +76,6 @@ typedef struct {
     double passivesoil;                 /* passive C som pool (t/ha) */
     double passivesoiln;                /* passive N som pool (t/ha) */
     double passivesoilp;                /* passive P som pool (t/ha) */
-    double pawater_root;                /* plant available water - root zone (mm) */
-    double pawater_topsoil;             /* plant available water - top soil(mm) */
     double prev_sma;
     double root;                        /* root c (t/ha) */
     double root_depth;                  /* rooting depth, Dmax (m) */
@@ -109,8 +107,6 @@ typedef struct {
     double shootpc;                     /* shoot pc ratio */
     double rootpc;                      /* root pc ratio */
     double remaining_days[366];
-    double wtfac_root;
-    double wtfac_topsoil;
     double delta_sw_store;
     double leaf_out_days[366];
     double growing_days[366];

@@ -78,11 +78,10 @@ void calculate_decay_rates(fluxes *f, params *p, state *s) {
     Knorr et al. (2005) Nature, 433, 298-301.
     Connell et al. (1995) Biol. Fert. Soils, 20, 213-220.
     */
-    double adfac, soil_text, lignin_cont_leaf, lignin_cont_root;
+    double soil_text, lignin_cont_leaf, lignin_cont_root;
 
     /* abiotic decomposition factor - impact of soil moisture
        and soil temperature on microbial activity */
-    adfac = s->wtfac_root * f->tfac_soil_decomp;
 
     /*  Effect of soil texture (silt + clay content) on active SOM turnover
         -> higher turnover for sandy soils */
@@ -93,25 +92,25 @@ void calculate_decay_rates(fluxes *f, params *p, state *s) {
     lignin_cont_root = exp(-3.0 * p->ligroot);
 
     /* decay rate of surface structural pool */
-    p->decayrate[0] = p->kdec1 * lignin_cont_leaf * adfac;
+    p->decayrate[0] = p->kdec1 * lignin_cont_leaf;
 
     /* decay rate of surface metabolic pool */
-    p->decayrate[1] = p->kdec2 * adfac;
+    p->decayrate[1] = p->kdec2;
 
     /* decay rate of soil structural pool */
-    p->decayrate[2] = p->kdec3 * lignin_cont_root * adfac;
+    p->decayrate[2] = p->kdec3 * lignin_cont_root;
 
     /* decay rate of soil metabolic pool */
-    p->decayrate[3] = p->kdec4 * adfac;
+    p->decayrate[3] = p->kdec4;
 
     /* decay rate of active pool */
-    p->decayrate[4] = p->kdec5 * soil_text * adfac;
+    p->decayrate[4] = p->kdec5 * soil_text;
 
     /* decay rate of slow pool */
-    p->decayrate[5] = p->kdec6 * adfac;
+    p->decayrate[5] = p->kdec6;
 
     /* decay rate of passive pool */
-    p->decayrate[6] = p->kdec7 * adfac;
+    p->decayrate[6] = p->kdec7;
 
     return;
 }

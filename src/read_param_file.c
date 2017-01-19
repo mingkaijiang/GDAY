@@ -368,10 +368,6 @@ int handler(char *section, char *name, char *value, control *c,
         s->passivesoiln = atof(value);
     } else if (MATCH("state", "passivesoilp")) {
         s->passivesoilp = atof(value);
-    } else if (MATCH("state", "pawater_root")) {
-        s->pawater_root = atof(value);
-    } else if (MATCH("state", "pawater_topsoil")) {
-        s->pawater_topsoil = atof(value);
     } else if (MATCH("state", "prev_sma")) {
         s->prev_sma = atof(value);
     } else if (MATCH("state", "root")) {

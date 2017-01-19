@@ -434,8 +434,6 @@ void initialise_state(state *s) {
     s->passivesoil = 59.5304597863;
     s->passivesoiln = 8.0134056319;
     s->passivesoilp = 0.541186;         /* based on passive SOM pool C/P ratio of 110 from Parton et al., 1989, Ecology of arable land. */
-    s->pawater_root = 94.0415606424;
-    s->pawater_topsoil = 24.7780118747;
     s->prev_sma = -999.9;
     s->root = 3.92887790342;
     s->root_depth = -9999.9;
@@ -463,11 +461,6 @@ void initialise_state(state *s) {
     s->structsurfn = 0.0473710799214;
     s->structsurfp = 0.01421132;        /* based on structural pool C/P ratio of 500 from Parton et al., 1989, Ecology of arable land. */
     s->canopy_store = 0.0;
-
-    s->wtfac_root = 1.0;
-
-    /* Hydraulics stuff */
-    s->predawn_swp = 0.0;
 
     return;
 }
