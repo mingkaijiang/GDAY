@@ -208,17 +208,12 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
     
     s->pawater_root = p->wcapac_root;
     s->pawater_topsoil = p->wcapac_topsoil;
+
+    s->lai = MAX(0.01, (p->sla * M2_AS_HA / KG_AS_TONNES /
+                          p->cfracts * s->shoot));
     
-    if (c->fixed_lai) {
-        s->lai = p->fix_lai;
-    } else {
-        s->lai = MAX(0.01, (p->sla * M2_AS_HA / KG_AS_TONNES /
-                            p->cfracts * s->shoot));
-      
-      // fprintf(stderr, "shoot %f\n", s->shoot);
-      // fprintf(stderr, "lai 1 %f\n", s->lai);
-      
-    }
+    // fprintf(stderr, "shoot %f\n", s->shoot);
+    // fprintf(stderr, "lai 1 %f\n", s->lai);
 
     /* ====================== **
     **   Y E A R    L O O P   **

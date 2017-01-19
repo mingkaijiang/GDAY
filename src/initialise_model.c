@@ -105,13 +105,6 @@ void initialise_params(params *p) {
     p->d0 = 0.0;
     p->d0x = 0.35;
     p->density = 420.0;
-    p->dz0v_dh = 0.075;
-    p->eac = 79430.0;   /* Temp. response of Kc (J mol-1) */
-    p->eag = 37830.0;
-    p->eaj = 43790.0;
-    p->eao = 36380.0;   /* Temp. response of Ko (J mol-1) */
-    p->eav = 51560.0;
-    p->edj = 200000.0;
     p->faecescn = 25.0;
     p->faecesn = 0.0;
     p->faecescp = 300.0;
@@ -119,7 +112,6 @@ void initialise_params(params *p) {
     p->fdecay = 0.59988;
     p->fdecaydry = 0.59988;
     p->fhw = 0.8;      
-    p->fix_lai = -999.9;
     p->finesoil = 0.51;
     p->fmleaf = 0.0;
     p->fmroot = 0.0;

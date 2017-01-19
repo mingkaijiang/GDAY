@@ -673,20 +673,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->d0x = atof(value);
     } else if (MATCH("params", "density")) {
         p->density = atof(value);
-    } else if (MATCH("params", "dz0v_dh")) {
-        p->dz0v_dh = atof(value);
-    } else if (MATCH("params", "eac")) {
-        p->eac = atof(value);
-    } else if (MATCH("params", "eag")) {
-        p->eag = atof(value);
-    } else if (MATCH("params", "eaj")) {
-        p->eaj = atof(value);
-    } else if (MATCH("params", "eao")) {
-        p->eao = atof(value);
-    } else if (MATCH("params", "eav")) {
-        p->eav = atof(value);
-    } else if (MATCH("params", "edj")) {
-        p->edj = atof(value);
     } else if (MATCH("params", "faecescn")) {
         p->faecescn = atof(value);
     } else if (MATCH("params", "faecesn")) {
@@ -703,8 +689,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->fhw = atof(value);
     } else if (MATCH("params", "finesoil")) {
         p->finesoil = atof(value);
-    } else if (MATCH("params", "fix_lai")) {
-        p->fix_lai = atof(value);
     } else if (MATCH("params", "fracfaeces")) {
         p->fracfaeces = atof(value);
     } else if (MATCH("params", "fracteaten")) {

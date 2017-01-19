@@ -239,13 +239,6 @@ typedef struct {
     double d0x;                             /* Length scale for exponential decline of Umax(z) */
     double decayrate[7];
     double density;                         /* sapwood density kg DM m-3 (trees) */
-    double dz0v_dh;                         /* Rate of change of vegetation roughness length for momentum with height. Value from Jarvis? for conifer 0.075 */
-    double eac;                             /* Activation energy for carboxylation [J mol-1] */
-    double eag;                             /* Activation energy at CO2 compensation point [J mol-1] */
-    double eaj;                             /* Activation energy for electron transport (J mol-1) */
-    double eao;                             /* Activation energy for oxygenation [J mol-1] */
-    double eav;                             /* Activation energy for Rubisco (J mol-1) */
-    double edj;                             /* Deactivation energy for electron transport (J mol-1) */
     double faecescn;                        /* Faeces C:N ratio */
     double faecesn;                         /* Faeces N content */
     double faecescp;                        /* Faeces C:P ratio */
@@ -257,7 +250,6 @@ typedef struct {
     double fmleaf;
     double fmroot;
     double fmfaeces;
-    double fix_lai;                         /* value to fix LAI to, control fixed_lai flag must be set */
     double fracfaeces;                      /* Fractn of grazd C that ends up in faeces (0..1) */
     double fracteaten;                      /* Fractn of leaf production eaten by grazers */
     double fractosoil;                      /* Fractn of grazed N recycled to soil:faeces+urine */

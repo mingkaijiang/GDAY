@@ -860,10 +860,6 @@ void carbon_allocation(control *c, fluxes *f, params *p, state *s,
         (f->deadleaves + f->ceaten) * s->lai / s->shoot);
     }
 
-    if (c->fixed_lai) {
-        s->lai = p->fix_lai;
-    }
-
     //fprintf(stderr, "lai %f\n", s->lai);
 
     return;
