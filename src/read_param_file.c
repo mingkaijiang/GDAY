@@ -445,10 +445,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->ageold = atof(value);
     } else if (MATCH("params", "ageyoung")) {
         p->ageyoung = atof(value);
-    } else if (MATCH("params", "b_root")) {
-        p->b_root = atof(value);
-    } else if (MATCH("params", "b_topsoil")) {
-        p->b_topsoil = atof(value);
     } else if (MATCH("params", "bdecay")) {
         p->bdecay = atof(value);
     } else if (MATCH("params", "branch0")) {
@@ -655,10 +651,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->prescribed_leaf_NC = atof(value);
     } else if (MATCH("params", "prescribed_leaf_PC")) {
         p->prescribed_leaf_PC = atof(value);
-    } else if (MATCH("params", "psi_sat_root")) {
-        p->psi_sat_root = atof(value);
-    } else if (MATCH("params", "psi_sat_topsoil")) {
-        p->psi_sat_topsoil = atof(value);
     } else if (MATCH("params", "prime_y")) {
         p->prime_y = atof(value);
     } else if (MATCH("params", "prime_z")) {

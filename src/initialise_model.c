@@ -63,8 +63,6 @@ void initialise_params(params *p) {
     p->actpcmin = 0.0125;
     p->ageold = 10000.0;
     p->ageyoung = 0.0;
-    p->b_root = -999.9;
-    p->b_topsoil =-999.9;
     p->bdecay = 0.02;
     p->biochemical_p_constant = 150.0;
     p->branch0 = 5.61;
@@ -176,8 +174,6 @@ void initialise_params(params *p) {
     p->prescribed_leaf_NC = 0.03;
     p->prescribed_leaf_PC = 0.00249;   /*Crous et al. 2015, C:P ratio of 400, Figure 3, Plant Soil */
     p->psecmnp = 0.000022;
-    p->psi_sat_root = -999.9;
-    p->psi_sat_topsoil = -999.9;
     p->puptakez = 0.0255;             /* calculated based on prateuptake 0.5 and inorglabp 0.051 */
     p->qs = 1.0;                      /* exponent in water stress modifier, =1.0 JULES type representation, the smaller the values the more curved the depletion. */
     p->rate_ssorb_occ = 0.000012;      

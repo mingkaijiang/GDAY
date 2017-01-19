@@ -174,8 +174,6 @@ typedef struct {
     double adapt;
     double ageold;                          /* Plant age when max leaf N C ratio is lowest */
     double ageyoung;                        /* Plant age when max leaf N C ratio is highest */
-    double b_root;
-    double b_topsoil;
     double bdecay;                          /* branch and large root turnover rate (1/yr) */
     double biochemical_p_constant;          /* Michaelis-Menton constant for biochemical P mineralisation [g N (g P)-1]; Wang et al., 2007, GB1018*/
     double branch0;                         /* constant in branch-stem allometry (trees) */
@@ -288,10 +286,6 @@ typedef struct {
     double prescribed_leaf_NC;              /* If the N-Cycle is switched off this needs to be set, e.g. 0.03 */
     double prescribed_leaf_PC;              /* If the P-Cycle is switched off this needs to be set, e.g. 0.00249 */
     double psecmnp;                         /* controls the flow from secondary to mineral P, used when text_effect_p set to 0 */
-    double psi_sat_root;                    /* MPa */
-    double psi_sat_topsoil;                 /* MPa */
-    double psie_topsoil;                    /* Soil water potential at saturation (m) */
-    double psie_root;                       /* Soil water potential at saturation (m) */
     double puptakez;                        /* constant P uptake per year (1/yr) */
     double qs;                              /* exponent in water stress modifier, =1.0 JULES type representation, the smaller the values the more curved the depletion.  */
     double rate_ssorb_occ;                  /* Rate constant of the transfer of P from strongly sorbed pool to occluded pool, m-1 Yang et al. 2014, Biogeosciences */

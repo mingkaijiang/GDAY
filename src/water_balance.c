@@ -216,9 +216,7 @@ void calculate_soil_water_fac(control *c, params *p, state *s) {
         // De Kauwe et al. 2015, Biogeosciences
         b = 0.82;
         sf = 1.9;
-        psi_f = -1.85;
-
-        s->wtfac_topsoil = exp(b * s->predawn_swp);
+         s->wtfac_topsoil = exp(b * s->predawn_swp);
         s->wtfac_root = exp(b * s->predawn_swp);
     }
     return;
