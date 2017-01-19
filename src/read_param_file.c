@@ -696,12 +696,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->liteffnc = atof(value);
     } else if (MATCH("params", "longitude")) {
         p->longitude = atof(value);
-    } else if (MATCH("params", "max_depth")) {
-        p->max_depth = atof(value);
-    } else if (MATCH("params", "measurement_temp")) {
-        p->measurement_temp = atof(value);
-    } else if (MATCH("params", "min_lwp")) {
-        p->min_lwp = atof(value);
     } else if (MATCH("params", "ncbnew")) {
         p->ncbnew = atof(value);
     } else if (MATCH("params", "ncbnewz")) {

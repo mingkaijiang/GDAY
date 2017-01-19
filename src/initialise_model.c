@@ -137,7 +137,6 @@ void initialise_params(params *p) {
     p->ligshoot = 0.24;
     p->liteffnc = 0.0;     
     p->max_p_biochemical = 0.001;  /* converted from 0.1 g P m-2 yr-1 to t/ha/yr */
-    p->measurement_temp = 25.0;
     p->ncbnew = 0.003;
     p->ncbnewz = 0.003;
     p->nccnew = 0.003;
@@ -269,9 +268,7 @@ void initialise_params(params *p) {
     p->root_k = 100.0;
     p->root_radius = 0.0005;
     p->root_density = 0.5e6;
-    p->max_depth = 2.0;
     p->root_resist = 20; /* Evergreen value: fine root hydraulic resistivity (MPa s g mmol-1 H2O) */
-    p->min_lwp = -2.0;        /* minimum leaf water potential (MPa) */
 
     /* Hydraulics stuff - private */
     p->potA = NULL;
@@ -586,7 +583,6 @@ void initialise_state(state *s) {
     s->dry_thick = 0.1;
     s->rooted_layers = 0;
     s->predawn_swp = 0.0;
-    s->midday_lwp = 0.0;
 
     return;
 }

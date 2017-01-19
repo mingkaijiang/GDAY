@@ -110,9 +110,6 @@ void write_output_header(control *c, FILE **fp) {
     /* Misc */
     fprintf(*fp, "leafretransn,");
     fprintf(*fp, "leafretransp\n");
-    //fprintf(*fp, "predawn_swp,");
-    //fprintf(*fp, "midday_lwp,");
-    //fprintf(*fp, "leafretransn\n");
 
 
     if (c->output_ascii == FALSE) {

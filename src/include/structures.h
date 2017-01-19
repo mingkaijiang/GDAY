@@ -192,8 +192,6 @@ typedef struct {
     double dry_thick;   /* Thickness of dry soil layer above water table (m)*/
     int    rooted_layers;
     double predawn_swp;     /* MPa */
-    double midday_lwp;     /* MPa */
-    double lwp;
 
 } state;
 
@@ -274,7 +272,6 @@ typedef struct {
     double liteffnc;
     double lue0;                            /* maximum LUE in kg C GJ-1 */
     double max_p_biochemical;               /* max rate of biochemical P mineralisation [g P m-2 y-1]; Wang et al., 2007, GB1018*/
-    double measurement_temp;                /* temperature Vcmax/Jmax are measured at, typical 25.0 (celsius)  */
     double ncbnew;                          /* N alloc param: new branch N C at critical leaf N C */
     double ncbnewz;                         /* N alloc param: new branch N C at zero leaf N C */
     double nccnew;                          /* N alloc param: new coarse root N C at critical leaf N C */
@@ -401,9 +398,7 @@ typedef struct {
     double root_k;                          /* mass of roots for reaching 50% maximum depth (g m-2) */
     double root_radius;                     /* (m) */
     double root_density;                    /* g biomass m-3*/
-    double max_depth;                       /* (m) */
     double root_resist;
-    double min_lwp;                         /* minimum leaf water potential (MPa) */
 
     /* not shared via cmd line */
     double *potA;
@@ -720,7 +715,6 @@ typedef struct {
     double lai_leaf[2];     /* sunlit and shaded leaf area (m2 m-2) */
     double omega_leaf[2];   /* leaf decoupling coefficient (-) */
     double tleaf[2];        /* leaf temperature (deg C) */
-    double lwp_leaf[2];     /* leaf water potential (MPa) */
     double fwsoil_leaf[2];  /* Effective beta */
     double an_canopy;       /* canopy net photosynthesis (umol m-2 s-1) */
     double rd_canopy;       /* canopy respiration in the light (umol m-2 s-1) */
@@ -729,7 +723,6 @@ typedef struct {
     double omega_canopy;    /* canopy decoupling coefficient (-) */
     double trans_canopy;    /* canopy transpiration (mm 30min-1) */
     double rnet_canopy;     /* canopy net radiation (W m-2) */
-    double lwp_canopy;      /* Leaf water potential for the canopy(MPa) */
     double N0;              /* top of canopy nitrogen (g N m-2)) */
     double P0;              /* top of canopy phosphorus (g P m-2)) */
     double elevation;       /* sun elevation angle in degrees */
