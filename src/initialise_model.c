@@ -45,7 +45,6 @@ void initialise_control(control *c) {
     c->total_num_days = 0;          /* Total number of days  */
     c->PRINT_GIT = FALSE;           /* print the git hash to the cmd line and exit? Called from cmd line parsar */
 
-    c->num_hlf_hrs = 48;
     c->pdebug = FALSE;              /* Use to debug a specific day */
     return;
 }

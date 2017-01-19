@@ -40,8 +40,6 @@ typedef struct {
     char  git_code_ver[STRING_LENGTH];
     int   spin_up;
     int   PRINT_GIT;
-    int   num_hlf_hrs;
-    long  hour_idx;
     long  day_idx;
     int   pdebug;
 
@@ -114,12 +112,6 @@ typedef struct {
     double wtfac_root;
     double wtfac_topsoil;
     double delta_sw_store;
-    double b_root;
-    double theta_sat_root;
-    double theta_sat_topsoil;
-    double psi_sat_root;
-    double psi_sat_topsoil;
-    double b_topsoil;
     double leaf_out_days[366];
     double growing_days[366];
     double c_to_alloc_shoot;

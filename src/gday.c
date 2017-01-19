@@ -219,7 +219,6 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
     **   Y E A R    L O O P   **
     ** ====================== */
     c->day_idx = 0;
-    c->hour_idx = 0;
 
     for (nyr = 0; nyr < c->num_years; nyr++) {
 
