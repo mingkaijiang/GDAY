@@ -549,7 +549,6 @@ void initialise_state(state *s) {
     s->croot = 0.0;
     s->crootn = 0.0;
     s->crootp = 0.0;
-    s->cstore = 0.01;
     s->inorgn = 0.0274523714275;
     s->inorgp = 0.0205;
     s->inorgavlp = 0.096;               /* lab p + sorb p */

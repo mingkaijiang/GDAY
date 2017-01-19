@@ -76,7 +76,6 @@ typedef struct {
     double croot;                       /* coarse root c (t/ha) */
     double crootn;                      /* coarse root n (t/ha) */
     double crootp;                      /* coarse root p (t/ha) */
-    double cstore;                      /* C store for deciduous model (t/ha) annual ? */
     double inorgn;                      /* Inorganic soil N pool - dynamic (t/ha) */
     double inorgp;                      /* Inorganic soil P pool - dynamic (t/ha) */
     double inorgavlp;                   /* Inorganic soil P pool - available mineral P = lab + sorbed (t/ha) */

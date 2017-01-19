@@ -658,9 +658,6 @@ void zero_stuff(control *c, state *s) {
     s->shootnc = 0.0;
     s->shootpc = 0.0;
     s->lai = 0.0;
-    s->cstore = 0.0;
-    s->nstore = 0.0;
-    s->pstore = 0.0;
     s->anpp = 0.0;
 
     return;

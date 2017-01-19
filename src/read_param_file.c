@@ -465,8 +465,6 @@ int handler(char *section, char *name, char *value, control *c,
         s->crootn = atof(value);
     } else if (MATCH("state", "crootp")) {
         s->crootp = atof(value);
-    } else if (MATCH("state", "cstore")) {
-        s->cstore = atof(value);
     } else if (MATCH("state", "inorgn")) {
         s->inorgn = atof(value);
     } else if (MATCH("state", "inorgp")) {

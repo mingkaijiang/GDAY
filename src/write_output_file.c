@@ -49,7 +49,6 @@ void write_output_header(control *c, FILE **fp) {
     fprintf(*fp, "shoot,lai,branch,stem,root,croot,");
     fprintf(*fp, "shootn,branchn,stemn,rootn,crootn,");
     fprintf(*fp, "shootp,branchp,stemp,rootp,crootp,");
-    fprintf(*fp, "cstore,nstore,pstore,");
 
     /* belowground */
     fprintf(*fp, "soilc,soiln,soilp,inorgn,");
@@ -154,9 +153,6 @@ void write_daily_outputs_ascii(control *c, fluxes *f, state *s, int year,
 
     fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,%.10f,",
                     s->shootp,s->branchp,s->stemp,s->rootp,s->crootp);
-
-    fprintf(c->ofp, "%.10f,%.10f,%.10f,",
-                    s->cstore,s->nstore,s->pstore);
 
     /* belowground */
     fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,",
@@ -442,9 +438,6 @@ int ohandler(char *section, char *name, char *value, control *c, params *p,
         *match = TRUE;
     } else if (MATCH("state", "crootp")) {
         fprintf(c->ofp, "crootp = %.10f\n", s->crootp);
-        *match = TRUE;
-    } else if (MATCH("state", "cstore")) {
-        fprintf(c->ofp, "cstore = %.10f\n", s->cstore);
         *match = TRUE;
     } else if (MATCH("state", "inorgn")) {
         fprintf(c->ofp, "inorgn = %.10f\n", s->inorgn);
