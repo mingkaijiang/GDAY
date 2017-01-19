@@ -137,7 +137,6 @@ int main(int argc, char **argv)
     free(ma->ndep);
     free(ma->pdep);
     free(ma->wind);
-    free(ma->press);
     free(ma->par);
 
     free(ma->prjday);
@@ -784,7 +783,6 @@ void unpack_met_data(control *c, fluxes *f, met_arrays *ma, met *m, int hod,
     m->vpd_pm = ma->vpd_pm[c->day_idx] * KPA_2_PA;
     m->wind_am = ma->wind_am[c->day_idx];
     m->wind_pm = ma->wind_pm[c->day_idx];
-    m->press = ma->press[c->day_idx] * KPA_2_PA;
     m->ndep = ma->ndep[c->day_idx];
     m->nfix = ma->nfix[c->day_idx];
     m->pdep = ma->pdep[c->day_idx];

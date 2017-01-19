@@ -7,7 +7,6 @@
 
 void    initialise_soils_day(control *, fluxes *, params *, state *);
 
-double  calc_sat_water_vapour_press(double);
 double  calc_sw_modifier(double, double, double);
 
 double *get_soil_fracs(char *);

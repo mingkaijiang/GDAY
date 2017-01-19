@@ -57,17 +57,6 @@ void initialise_soils_day(control *c, fluxes *f, params *p, state *s) {
 }
 
 
-double calc_sat_water_vapour_press(double tac) {
-    /*
-        Calculate saturated water vapour pressure (Pa) at
-        temperature TAC (Celsius). From Jones 1992 p 110 (note error in
-        a - wrong units)
-    */
-    return (613.75 * exp(17.502 * tac / (240.97 + tac)));
-}
-
-
-
 double *get_soil_fracs(char *soil_type) {
     /*
      * Based on Table 2 in Cosby et al 1984, page 2.
