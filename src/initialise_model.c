@@ -131,10 +131,8 @@ void initialise_params(params *p) {
     p->ks = 0.5;          /* used intermediately weatherred soil value of 0.3 [g P m-2] in Yang et al. 2016 */
     p->lai_closed = 0.5;
     p->latitude = 35.9;
-    p->leaf_width = 0.01;
     p->leafsap0 = 8000.0;
     p->leafsap1 = 3060.0;
-    p->ligfaeces = 0.25;
     p->ligroot = 0.22;
     p->ligshoot = 0.24;
     p->liteffnc = 0.0;     
@@ -262,8 +260,6 @@ void initialise_params(params *p) {
     for (i = 0; i < 7; i++) {
         p->decayrate[i] = 0.0;
     }
-    /* absorptance of solar radiation (0-1), typically 0.4-0.6 */
-    p->leaf_abs = 0.5;
 
     /* hydraulics */
     p->layer_thickness = 0.1; /* soil layer thickness (m) */

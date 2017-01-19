@@ -269,7 +269,6 @@ typedef struct {
     double longitude;                       /* longitude (degrees, negative for west) */
     double leafsap0;                        /* leaf area  to sapwood cross sectional area ratio when Height = Height0 (mm^2/mm^2) */
     double leafsap1;                        /* leaf to sap area ratio when Height = Height1 (mm^2/mm^2) */
-    double ligfaeces;                       /* Faeces lignin as fraction of biomass */
     double ligroot;                         /* lignin-to-biomass ratio in root litter; Values from White et al. = 0.22  - Value in Smith et al. 2013 = 0.16, note subtly difference in eqn C9. */
     double ligshoot;                        /* lignin-to-biomass ratio in leaf litter; Values from White et al. DBF = 0.18; ENF = 0.24l; GRASS = 0.09; Shrub = 0.15 - Value in smith et al. 2013 = 0.2, note subtly difference in eqn C9. */
     double liteffnc;
@@ -395,8 +394,6 @@ typedef struct {
     double prime_z;
     int    return_interval;                 /* years */
     double root_exu_CUE;
-    double leaf_width;
-    double leaf_abs;
 
     /* hydraulics */
     double layer_thickness;                 /* Soil layer thickness (m) */

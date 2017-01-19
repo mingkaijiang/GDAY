@@ -688,8 +688,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->leafsap0 = atof(value);
     } else if (MATCH("params", "leafsap1")) {
         p->leafsap1 = atof(value);
-    } else if (MATCH("params", "ligfaeces")) {
-        p->ligfaeces = atof(value);
     } else if (MATCH("params", "ligroot")) {
         p->ligroot = atof(value);
     } else if (MATCH("params", "ligshoot")) {
