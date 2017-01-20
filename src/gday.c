@@ -449,8 +449,6 @@ void correct_rate_constants(params *p, int output) {
         p->kdec7 *= NDAYS_IN_YR;
         p->nuptakez *= NDAYS_IN_YR;
         p->puptakez *= NDAYS_IN_YR;
-        p->nmax *= NDAYS_IN_YR;
-        p->pmax *= NDAYS_IN_YR;
         p->p_rate_par_weather *= NDAYS_IN_YR;
         p->max_p_biochemical *= NDAYS_IN_YR;
     } else {
@@ -477,8 +475,6 @@ void correct_rate_constants(params *p, int output) {
         p->kdec7 /= NDAYS_IN_YR;
         p->nuptakez /= NDAYS_IN_YR;
         p->puptakez /= NDAYS_IN_YR;
-        p->nmax /= NDAYS_IN_YR;
-        p->pmax /= NDAYS_IN_YR;
         p->p_rate_par_weather /= NDAYS_IN_YR;
         p->max_p_biochemical /= NDAYS_IN_YR;
     }

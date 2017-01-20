@@ -453,16 +453,12 @@ int handler(char *section, char *name, char *value, control *c,
         p->pccnew = atof(value);
     } else if (MATCH("params", "pcnnewz")) {
         p->pccnewz = atof(value);
-    } else if (MATCH("params", "ncmaxfold")) {
-        p->ncmaxfold = atof(value);
-    } else if (MATCH("params", "ncmaxfyoung")) {
-        p->ncmaxfyoung = atof(value);
+    } else if (MATCH("params", "ncmaxf")) {
+        p->ncmaxf = atof(value);
     } else if (MATCH("params", "ncmaxr")) {
         p->ncmaxr = atof(value);
-    } else if (MATCH("params", "pcmaxfold")) {
-        p->pcmaxfold = atof(value);
-    } else if (MATCH("params", "pcmaxfyoung")) {
-        p->pcmaxfyoung = atof(value);
+    } else if (MATCH("params", "pcmaxf")) {
+        p->pcmaxf = atof(value);
     } else if (MATCH("params", "pcmaxr")) {
         p->pcmaxr = atof(value);
     } else if (MATCH("params", "ncrfac")) {
@@ -489,20 +485,12 @@ int handler(char *section, char *name, char *value, control *c,
         p->nf_min = atof(value);
     } else if (MATCH("params", "pf_min")) {
         p->pf_min = atof(value);
-    } else if (MATCH("params", "nmax")) {
-        p->nmax = atof(value);
-    } else if (MATCH("params", "nmin")) {
-        p->nmin = atof(value);
     } else if (MATCH("params", "nmin0")) {
         p->nmin0 = atof(value);
     } else if (MATCH("params", "nmincrit")) {
         p->nmincrit = atof(value);
     } else if (MATCH("params", "nuptakez")) {
         p->nuptakez = atof(value);
-    } else if (MATCH("params", "pmax")) {
-        p->pmax = atof(value);
-    } else if (MATCH("params", "pmin")) {
-        p->pmin = atof(value);
     } else if (MATCH("params", "pmin0")) {
         p->pmin0 = atof(value);
     } else if (MATCH("params", "pmincrit")) {
@@ -533,8 +521,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->prime_y = atof(value);
     } else if (MATCH("params", "prime_z")) {
         p->prime_z = atof(value);
-    } else if (MATCH("params", "qs")) {
-        p->qs = atof(value);
     } else if (MATCH("params", "rateloss")) {
         p->rateloss = atof(value);
     } else if (MATCH("params", "prateloss")) {

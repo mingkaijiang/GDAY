@@ -97,8 +97,7 @@ void initialise_params(params *p) {
     p->nccnewz = 0.003;
     p->nref = 0.004;              /* leaf N:C for saturation of photosynthesis for lue_simplified */
     p->lue0 = 1.4;                /* maximum LUE in kg C GJ-1 */
-    p->ncmaxfold = 0.04;
-    p->ncmaxfyoung = 0.04;
+    p->ncmaxf = 0.04;
     p->ncmaxr = 0.03;
     p->ncrfac = 0.8;
     p->ncwimm = 0.003;
@@ -106,8 +105,6 @@ void initialise_params(params *p) {
     p->ncwnew = 0.003;
     p->ncwnewz = 0.003;
     p->nf_min = 0.005;
-    p->nmax = 0.24;
-    p->nmin = 0.95;
     p->nmin0 = 0.0;
     p->nmincrit = 2.0;
     p->nuptakez = 0.0;
@@ -123,8 +120,7 @@ void initialise_params(params *p) {
     p->pcbnewz = 0.0003;
     p->pccnew = 0.0003;
     p->pccnewz = 0.0003;
-    p->pcmaxfold = 0.004;    /* guess value */
-    p->pcmaxfyoung = 0.004;  /* guess value */
+    p->pcmaxf = 0.004;    /* guess value */
     p->pcmaxr = 0.004;       /* guess value */
     p->pcrfac = 0.8;
     p->pcwimm = 0.0003;
@@ -132,8 +128,6 @@ void initialise_params(params *p) {
     p->pcwnew = 0.0003;
     p->pcwnewz = 0.0003;
     p->pf_min = 0.0002;      /* based on P:C ratio of 5000, guess value */
-    p->pmax = 0.002;         /* guess value */
-    p->pmin = 0.01;          /* guess value */
     p->pmin0 = 0.0;
     p->pmincrit = 2.0;       /* Based on CENTURY VARAT1(2,3) = 2 value */
     p->prateloss = 0.005;    
@@ -141,7 +135,6 @@ void initialise_params(params *p) {
     p->prescribed_leaf_NC = 0.03;
     p->prescribed_leaf_PC = 0.00249;   /*Crous et al. 2015, C:P ratio of 400, Figure 3, Plant Soil */
     p->puptakez = 0.0255;             /* calculated based on prateuptake 0.5 and inorglabp 0.051 */
-    p->qs = 1.0;                      /* exponent in water stress modifier, =1.0 JULES type representation, the smaller the values the more curved the depletion. */
     p->rateloss = 0.5;                /* value = 0.05 in Wang et al., 2007 GB1018 */
     p->rateuptake = 2.7;
     p->rdecay = 0.33333;

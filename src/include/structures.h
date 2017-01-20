@@ -181,8 +181,7 @@ typedef struct {
     double ncbnewz;                         /* N alloc param: new branch N C at zero leaf N C */
     double nccnew;                          /* N alloc param: new coarse root N C at critical leaf N C */
     double nccnewz;                         /* N alloc param: new coarse root N C at zero leaf N C */
-    double ncmaxfold;                       /* max N:C ratio of foliage in old stand, if the same as young=no effect */
-    double ncmaxfyoung;                     /* max N:C ratio of foliage in young stand, if the same as old=no effect */
+    double ncmaxf;                          /* max N:C ratio of foliage in old stand, if the same as young=no effect */
     double ncmaxr;                          /* max N:C ratio of roots */
     double ncrfac;                          /* N:C of fine root prodn / N:C of leaf prodn */
     double ncwimm;                          /* N alloc param: Immobile stem N C at critical leaf N C */
@@ -190,8 +189,6 @@ typedef struct {
     double ncwnew;                          /* N alloc param: New stem ring N:C at critical leaf N:C (mob) */
     double ncwnewz;                         /* N alloc param: New stem ring N:C at zero leaf N:C (mobile) */
     double nf_min;                          /* leaf N:C minimum N concentration which allows productivity */
-    double nmax;
-    double nmin;                            /* (bewdy) minimum leaf n for +ve p/s (g/m2) */
     double nmin0;                           /* mineral N pool corresponding to Actnc0,etc (g/m2) */
     double nmincrit;                        /* Critical mineral N pool at max soil N:C (g/m2) (Parton et al 1993, McMurtrie et al 2001). */
     double nref;                            /* leaf N:C for saturation of photosynthesis for lue_simplified */
@@ -208,8 +205,7 @@ typedef struct {
     double pcbnewz;                         /* P alloc param: new branch P C at zero leaf P C */
     double pccnew;                          /* P alloc param: new coarse root P C at critical leaf P C */
     double pccnewz;                         /* P alloc param: new coarse root P C at zero leaf P C */
-    double pcmaxfold;                       /* max P:C ratio of foliage in old stand, if the same as young=no effect */
-    double pcmaxfyoung;                     /* max P:C ratio of foliage in young stand, if the same as old=no effect */
+    double pcmaxf;                          /* max P:C ratio of foliage in old stand, if the same as young=no effect */
     double pcmaxr;                          /* max P:C ratio of roots */
     double pcrfac;                          /* P:C of fine root prodp / P:C c of leaf prodp */
     double pcwimm;                          /* P alloc param: Immobile stem P C at critical leaf P C */
@@ -217,8 +213,6 @@ typedef struct {
     double pcwnew;                          /* P alloc param: New stem ring P:C at critical leaf P:C (mob) */
     double pcwnewz;                         /* P alloc param: New stem ring P:C at zero leaf P:C (mobile) */
     double pf_min;                          /* leaf P:C minimum P concentration which allows productivity */
-    double pmax;
-    double pmin;                            /* (bewdy) minimum leaf p for +ve p/s (g/m2) */
     double pmin0;                           /* mineral P pool corresponding to Actpc0,etc (g/m2) */
     double pmincrit;                        /* Critical mineral P pool at max soil P:C (g/m2) */
     double prateloss;                       /* Rate of P loss from mineral P pool (/yr), Ref Wang et al., 2007, GB1018 */
@@ -226,7 +220,6 @@ typedef struct {
     double prescribed_leaf_NC;              /* If the N-Cycle is switched off this needs to be set, e.g. 0.03 */
     double prescribed_leaf_PC;              /* If the P-Cycle is switched off this needs to be set, e.g. 0.00249 */
     double puptakez;                        /* constant P uptake per year (1/yr) */
-    double qs;                              /* exponent in water stress modifier, =1.0 JULES type representation, the smaller the values the more curved the depletion.  */
     double rateloss;                        /* Rate of N loss from mineral N pool (/yr) */
     double rateuptake;                      /* Rate of N uptake from mineral N pool (/yr) from here? http://face.ornl.gov/Finzi-PNAS.pdf Seems to correspond to very low NPP values */
     double rdecay;                          /* root turnover rate (1/yr) */

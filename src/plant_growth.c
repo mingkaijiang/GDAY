@@ -33,8 +33,8 @@ void calc_day_growth(control *c, fluxes *f, met_arrays *ma,
 
     // leaf N:C as a fraction of Ncmaxyoung, i.e. the max N:C ratio of
     //foliage in young stand, and leaf P:C as a fraction of Pcmaxyoung
-    nitfac = MIN(1.0, s->shootnc / p->ncmaxfyoung);
-    pitfac = MIN(1.0, s->shootpc / p->pcmaxfyoung);
+    nitfac = MIN(1.0, s->shootnc / p->ncmaxf);
+    pitfac = MIN(1.0, s->shootpc / p->pcmaxf);
     
     // fprintf(stderr, "shootnc %f\n", s->shootnc);
     // fprintf(stderr, "shootpc %f\n", s->shootpc);
@@ -545,8 +545,8 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
     Parameters:
     -----------
     npitfac : float
-        the smallest value of leaf N:C as a fraction of 'Ncmaxfyoung' (max 1.0) &
-        leaf P:C as a fraction of "Pcmaxfyoung" (max 1.0)
+        the smallest value of leaf N:C as a fraction of 'Ncmaxf' (max 1.0) &
+        leaf P:C as a fraction of "Pcmaxf" (max 1.0)
 
     Returns:
     --------
@@ -591,7 +591,7 @@ void carbon_allocation(control *c, fluxes *f, params *p, state *s,
     Parameters:
     -----------
     npitfac : float
-        leaf N:C as a fraction of 'Ncmaxfyoung' (max 1.0)
+        leaf N:C as a fraction of 'Ncmaxf' (max 1.0)
     */
     double days_left;
     f->cpleaf = f->npp * f->alleaf;
@@ -697,25 +697,12 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s,
     /* If foliage or root N/C exceeds its max, then N uptake is cut back
     Similarly, of foliage or root P/C exceeds max, then P uptake is cut back */
     
-    /* maximum leaf n:c and p:c ratios is function of stand age
-    - switch off age effect by setting ncmaxfyoung = ncmaxfold
-    - switch off age effect by setting pcmaxfyoung = pcmaxfold*/
-    ncmaxf = p->ncmaxfyoung;
-    pcmaxf = p->pcmaxfyoung;
-    
-    if (ncmaxf < p->ncmaxfold)
-      ncmaxf = p->ncmaxfold;
-    
-    if (ncmaxf > p->ncmaxfyoung)
-      ncmaxf = p->ncmaxfyoung;
-    
-    if (pcmaxf < p->pcmaxfold)
-      pcmaxf = p->pcmaxfold;
-    
-    if (pcmaxf > p->pcmaxfyoung)
-      pcmaxf = p->pcmaxfyoung;
+    /* maximum leaf n:c and p:c ratios is function of stand age*/
+    ncmaxf = p->ncmaxf;
+    pcmaxf = p->pcmaxf;
     
     extrasn = 0.0;
+    
     if (s->lai > 0.0) {
       
       if (s->shootn > (s->shoot * ncmaxf)) {
