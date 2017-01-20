@@ -32,7 +32,6 @@ void initialise_control(control *c) {
     c->print_options = DAILY;       /* DAILY=every timestep, END=end of run */
     c->strfloat = 0;                /* Structural pool input N:C varies=1, fixed=0 */
     c->strpfloat = 0;               /* Structural pool input P:C varies=1, fixed=0 */
-    c->sw_stress_model = 1;         /* JULES type linear stress func, or Landsberg and Waring non-linear func */
     c->text_effect_p = 1;           /* soil texture effect on strongly sorbed P flow to mineral P; = 1 use texture effect; = 0 use pre-defined constant; */ 
     c->use_eff_nc = 0;              /* use constant leaf n:c for  metfrac s */
     c->spin_up = FALSE;             /* Spin up to a steady state? If False it just runs the model */
@@ -56,8 +55,6 @@ void initialise_params(params *p) {
     p->actncmin = 0.066667;
     p->actpcmax = 0.033333;
     p->actpcmin = 0.0125;
-    p->ageold = 10000.0;
-    p->ageyoung = 0.0;
     p->bdecay = 0.02;
     p->biochemical_p_constant = 150.0;
     p->branch0 = 5.61;

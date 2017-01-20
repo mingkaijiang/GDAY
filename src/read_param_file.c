@@ -282,8 +282,6 @@ int handler(char *section, char *name, char *value, control *c,
         c->strfloat = atoi(value);
     } else if (MATCH("control", "strpfloat")) {
         c->strpfloat = atoi(value);
-    } else if (MATCH("control", "sw_stress_model")) {
-        c->sw_stress_model = atoi(value);
     } else if (MATCH("control", "use_eff_nc")) {
         c->use_eff_nc = atoi(value);
     } else if (MATCH("control", "text_effect_p")) {
@@ -407,10 +405,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->actpcmax = atof(value);
     } else if (MATCH("params", "actpcmin")) {
         p->actpcmin = atof(value);
-    } else if (MATCH("params", "ageold")) {
-        p->ageold = atof(value);
-    } else if (MATCH("params", "ageyoung")) {
-        p->ageyoung = atof(value);
     } else if (MATCH("params", "bdecay")) {
         p->bdecay = atof(value);
     } else if (MATCH("params", "branch0")) {

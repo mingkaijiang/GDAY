@@ -30,7 +30,6 @@ typedef struct {
     int   print_options;
     int   strfloat;
     int   strpfloat;
-    int   sw_stress_model;
     int   text_effect_p;
     int   use_eff_nc;
     int   num_days;
@@ -144,8 +143,6 @@ typedef struct {
     double actncmin;                        /* Active pool (=1/15) N:C of new SOM - when Nmin=Nmin0 [units: gN/gC]. Based on forest version of CENTURY (Parton et al. 1993), see Appendix, McMurtrie 2001, Tree Physiology. */
     double actpcmax;                        /* Active pool (=1/30) P:C ratio of new SOM - maximum [units: gP/gC]. Based on forest version of CENTURY (Parton et al. 1993) */
     double actpcmin;                        /* Active pool (=1/80) P:C of new SOM - when Pmin=Pmin0 [units: gP/gC]. Based on forest version of CENTURY (Parton et al. 1993) */
-    double ageold;                          /* Plant age when max leaf N C ratio is lowest */
-    double ageyoung;                        /* Plant age when max leaf N C ratio is highest */
     double bdecay;                          /* branch and large root turnover rate (1/yr) */
     double biochemical_p_constant;          /* Michaelis-Menton constant for biochemical P mineralisation [g N (g P)-1]; Wang et al., 2007, GB1018*/
     double branch0;                         /* constant in branch-stem allometry (trees) */

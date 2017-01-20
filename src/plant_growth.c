@@ -703,8 +703,6 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s,
         fine root decay rate
 
     */
-
-    double age_effect;
     double ncmaxf, ncmaxr;
     double extrasn, extrarn;   /* extra_s_n and extra_r_n - extra shoot/root n uptake */
     double pcmaxf, pcmaxr;
@@ -771,9 +769,8 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s,
     /* maximum leaf n:c and p:c ratios is function of stand age
     - switch off age effect by setting ncmaxfyoung = ncmaxfold
     - switch off age effect by setting pcmaxfyoung = pcmaxfold*/
-    age_effect = (s->age - p->ageyoung) / (p->ageold - p->ageyoung);
-    ncmaxf = p->ncmaxfyoung - (p->ncmaxfyoung - p->ncmaxfold) * age_effect;
-    pcmaxf = p->pcmaxfyoung - (p->pcmaxfyoung - p->pcmaxfold) * age_effect;
+    ncmaxf = p->ncmaxfyoung;
+    pcmaxf = p->pcmaxfyoung;
     
     if (ncmaxf < p->ncmaxfold)
       ncmaxf = p->ncmaxfold;
