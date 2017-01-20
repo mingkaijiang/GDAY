@@ -57,16 +57,11 @@ void initialise_params(params *p) {
     p->actpcmin = 0.0125;
     p->bdecay = 0.02;
     p->biochemical_p_constant = 150.0;
-    p->branch0 = 5.61;
-    p->branch1 = 0.346;
     p->bretrans = 0.0;
-    p->c_alloc_bmax = 0.1;       
-    p->c_alloc_bmin = 0.1;
-    p->c_alloc_cmax = 0.0;        
-    p->c_alloc_fmax = 0.35;       
-    p->c_alloc_fmin = 0.15;
-    p->c_alloc_rmax = 0.35;       
-    p->c_alloc_rmin = 0.05;
+    p->c_alloc_b = 0.1;       
+    p->c_alloc_f = 0.2;       
+    p->c_alloc_r = 0.2;       
+    p->c_alloc_s = 0.5;
     p->cfracts = 0.5;
     p->crdecay = 0.0;
     p->cretrans = 0.0;
@@ -74,7 +69,6 @@ void initialise_params(params *p) {
     p->cue = 0.5;
     p->d0 = 0.0;
     p->d0x = 0.35;
-    p->density = 420.0;
     p->fdecay = 0.59988;
     p->fhw = 0.8;      
     p->finesoil = 0.51;
@@ -82,10 +76,6 @@ void initialise_params(params *p) {
     p->fmroot = 0.0;
     p->fretrans = 0.5;
     p->fretransp = 0.6;
-    p->height0 = 5.0;
-    p->height1 = 30.0;
-    p->heighto = 4.826;
-    p->htpower = 0.35;
     p->kdec1 = 3.965571;
     p->kdec2 = 14.61;
     p->kdec3 = 4.904786;
@@ -99,8 +89,6 @@ void initialise_params(params *p) {
     p->ks = 0.5;          /* used intermediately weatherred soil value of 0.3 [g P m-2] in Yang et al. 2016 */
     p->lai_closed = 0.5;
     p->latitude = 35.9;
-    p->leafsap0 = 8000.0;
-    p->leafsap1 = 3060.0;
     p->ligroot = 0.22;
     p->ligshoot = 0.24;
     p->liteffnc = 0.0;     
@@ -125,7 +113,6 @@ void initialise_params(params *p) {
     p->nmin0 = 0.0;
     p->nmincrit = 2.0;
     p->nuptakez = 0.0;
-    // p->p_atm_deposition = 0.001;    /* value according to Newman 1995 = 0.00055 */
     p->p_rate_par_weather = 0.001;
     p->passivesoilnz = 1.0;
     p->passivesoilpz = 1.0;
@@ -188,7 +175,6 @@ void initialise_params(params *p) {
     p->structrat = 0.0;
     p->structcp = 5500.0;
     p->structratp = 0.0;
-    p->targ_sens = 0.5;
     p->wdecay = 0.02;
     p->wretrans = 0.0;
     

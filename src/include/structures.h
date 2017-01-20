@@ -145,16 +145,11 @@ typedef struct {
     double actpcmin;                        /* Active pool (=1/80) P:C of new SOM - when Pmin=Pmin0 [units: gP/gC]. Based on forest version of CENTURY (Parton et al. 1993) */
     double bdecay;                          /* branch and large root turnover rate (1/yr) */
     double biochemical_p_constant;          /* Michaelis-Menton constant for biochemical P mineralisation [g N (g P)-1]; Wang et al., 2007, GB1018*/
-    double branch0;                         /* constant in branch-stem allometry (trees) */
-    double branch1;                         /* exponent in branch-stem allometry */
     double bretrans;                        /* branch n retranslocation fraction */
-    double c_alloc_bmax;                    /* allocation to branches at branch n_crit and p_crit. If using allometric model this is the max alloc to branches */
-    double c_alloc_bmin;                    /* allocation to branches at zero branch n/c and p/c. If using allometric model this is the min alloc to branches */
-    double c_alloc_cmax;                    /* allocation to coarse roots at n_crit and p_crit. If using allometric model this is the max alloc to coarse roots */
-    double c_alloc_fmax;                    /* allocation to leaves at leaf n_crit and p_crit. If using allometric model this is the max alloc to leaves */
-    double c_alloc_fmin;                    /* allocation to leaves at zero leaf n/c and p/c. If using allometric model this is the min alloc to leaves */
-    double c_alloc_rmax;                    /* allocation to roots at root n_crit and p_crit. If using allometric model this is the max alloc to fine roots */
-    double c_alloc_rmin;                    /* allocation to roots at zero root n/c and p/c. If using allometric model this is the min alloc to fine roots */
+    double c_alloc_b;                       /* allocation to branches at branch n_crit and p_crit. */
+    double c_alloc_f;                       /* allocation to leaves at leaf n_crit and p_crit. */
+    double c_alloc_r;                       /* allocation to roots at root n_crit and p_crit. */
+    double c_alloc_s;                       /* allocation to stem at zero stem n/c and p/c. */
     double cfracts;                         /* carbon fraction of dry biomass */
     double crdecay;                         /* coarse roots turnover rate (1/yr) */
     double cretrans;                        /* coarse root n retranslocation fraction */
@@ -163,7 +158,6 @@ typedef struct {
     double d0;
     double d0x;                             /* Length scale for exponential decline of Umax(z) */
     double decayrate[7];
-    double density;                         /* sapwood density kg DM m-3 (trees) */
     double fdecay;                          /* foliage turnover rate (1/yr) */
     double fhw;                             /* n:c ratio of stemwood - immobile pool and new ring */
     double finesoil;                        /* clay+silt fraction */
@@ -171,10 +165,6 @@ typedef struct {
     double fmroot;
     double fretrans;                        /* foliage n retranslocation fraction - 46-57% in young E. globulus trees - see Corbeels et al 2005 ecological modelling 187, pg 463. Roughly 50% from review Aerts '96 */
     double fretransp;                       /* foliage p retranslocation fraction - 39.5-69 in Southern US FACE site - Finzi et al. 2001 Ecology  */
-    double height0;                         /* Height when leaf:sap area ratio = leafsap0 (trees) */
-    double height1;                         /* Height when leaf:sap area ratio = leafsap1 (trees) */
-    double heighto;                         /* constant in avg tree height (m) - stem (t C/ha) reln */
-    double htpower;                         /* Exponent in avg tree height (m) - stem (t C/ha) reln */
     double kdec1;                           /* surface structural decay rate (1/yr) */
     double kdec2;                           /* surface metabolic decay rate (1/yr) */
     double kdec3;                           /* soil structural decay rate (1/yr) */
@@ -189,8 +179,6 @@ typedef struct {
     double lai_closed;                      /* LAI of closed canopy (max cover fraction is reached (m2 (leaf) m-2 (ground) ~ 2.5) */
     double latitude;                        /* latitude (degrees, negative for south) */
     double longitude;                       /* longitude (degrees, negative for west) */
-    double leafsap0;                        /* leaf area  to sapwood cross sectional area ratio when Height = Height0 (mm^2/mm^2) */
-    double leafsap1;                        /* leaf to sap area ratio when Height = Height1 (mm^2/mm^2) */
     double ligroot;                         /* lignin-to-biomass ratio in root litter; Values from White et al. = 0.22  - Value in Smith et al. 2013 = 0.16, note subtly difference in eqn C9. */
     double ligshoot;                        /* lignin-to-biomass ratio in leaf litter; Values from White et al. DBF = 0.18; ENF = 0.24l; GRASS = 0.09; Shrub = 0.15 - Value in smith et al. 2013 = 0.2, note subtly difference in eqn C9. */
     double liteffnc;
@@ -277,7 +265,6 @@ typedef struct {
     double soilph;                          /* soil pH value */
     double sorpmx;                          /* maximum P sorption potential for a soil */
     double sorpaf;                          /* slope term which controls the fraction of mineral P that is labile */
-    double targ_sens;                       /* sensitivity of allocation (leaf/branch) to track the target, higher values = less responsive. */
     double wdecay;                          /* wood turnover rate (1/yr) */
     double wretrans;                        /* mobile wood N retranslocation fraction */
     double prime_y;

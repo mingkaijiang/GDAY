@@ -18,7 +18,6 @@ void    calc_day_growth(control *, fluxes *, met_arrays *ma, met *,
 void    carbon_allocation(control *, fluxes *, params *, state *, double, int);
 void    calc_carbon_allocation_fracs(control *c, fluxes *, params *, state *,
                                      double);
-double  alloc_goal_seek(double, double, double, double);
 void    update_plant_state(control *, fluxes *, params *, state *,
                            double, double, int);
 void    precision_control(fluxes *, state *);

@@ -567,66 +567,15 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
     Corbeels, M. et al (2005) Ecological Modelling, 187, 449-474.
     McMurtrie, R. E. et al (2000) Plant and Soil, 224, 135-152.
     */
-    double min_leaf_alloc, adj, arg1, arg2, arg3, arg4, leaf2sa_target,
-           sap_cross_sec_area, lr_max, stress, mis_match, orig_ar,
-           reduction, target_branch, coarse_root_target, left_over,
-           total_alloc, leaf2sap, spare;
+    double total_alloc;
 
-    /* this is obviously arbitary */
-    double min_stem_alloc = 0.01;
+    f->alleaf = p->c_alloc_f;
+    
+    f->albranch = p->c_alloc_b;
 
-
-    /* Calculate tree height: allometric reln using the power function
-     (Causton, 1985) */
-    s->canht = p->heighto * pow(s->stem, p->htpower);
+    f->alroot = p->c_alloc_r;
     
-    /* LAI to stem sapwood cross-sectional area (As m-2 m-2)
-    (dimensionless)
-    Assume it varies between LS0 and LS1 as a linear function of tree
-    height (m) */
-    arg1 = s->sapwood * TONNES_AS_KG * M2_AS_HA;
-    arg2 = s->canht * p->density * p->cfracts;
-    sap_cross_sec_area = arg1 / arg2;
-    leaf2sap = s->lai / sap_cross_sec_area;
-    
-    /* Allocation to leaves dependant on height. Modification of pipe
-    theory, leaf-to-sapwood ratio is not constant above a certain
-    height, due to hydraulic constraints (Magnani et al 2000; Deckmyn
-    et al. 2006). */
-    
-    if (s->canht < p->height0) {
-      leaf2sa_target = p->leafsap0;
-    } else if (float_eq(s->canht, p->height1)) {
-      leaf2sa_target = p->leafsap1;
-    } else if (s->canht > p->height1) {
-      leaf2sa_target = p->leafsap1;
-    } else {
-      arg1 = p->leafsap0;
-      arg2 = p->leafsap1 - p->leafsap0;
-      arg3 = s->canht - p->height0;
-      arg4 = p->height1 - p->height0;
-      leaf2sa_target = arg1 + (arg2 * arg3 / arg4);
-    }
-    f->alleaf = alloc_goal_seek(leaf2sap, leaf2sa_target, p->c_alloc_fmax,
-                                p->targ_sens);
-    
-    /* Allocation to branch dependent on relationship between the stem
-     and branch */
-    target_branch = p->branch0 * pow(s->stem, p->branch1);
-    f->albranch = alloc_goal_seek(s->branch, target_branch, p->c_alloc_bmax,
-                                  p->targ_sens);
-    
-    /* figure out root allocation given available water & nutrients
-     hyperbola shape to allocation, this is adjusted below as we aim
-     to maintain a functional balance */
-    
-    f->alroot = (p->c_alloc_rmax * p->c_alloc_rmin /
-                   (p->c_alloc_rmin + (p->c_alloc_rmax - p->c_alloc_rmin) *
-                     s->prev_sma));
-    
-    f->alstem = 1.0 - f->alroot - f->albranch - f->alleaf;
-    
-
+    f->alstem = p->c_alloc_s;
     
     /* Total allocation should be one, if not print warning */
     total_alloc = f->alroot + f->alleaf + f->albranch + f->alstem;
@@ -636,19 +585,6 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
     }
 
     return;
-}
-
-
-double alloc_goal_seek(double simulated, double target, double alloc_max,
-                       double sensitivity) {
-
-    /* Sensitivity parameter characterises how allocation fraction respond
-       when the leaf:sapwood area ratio departs from the target value
-       If sensitivity close to 0 then the simulated leaf:sapwood area ratio
-       will closely track the target value */
-    double frac = 0.5 + 0.5 * (1.0 - simulated / target) / sensitivity;
-
-    return MAX(0.0, alloc_max * MIN(1.0, frac));
 }
 
 void carbon_allocation(control *c, fluxes *f, params *p, state *s,
