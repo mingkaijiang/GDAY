@@ -162,6 +162,9 @@ typedef struct {
     double fmroot;
     double fretrans;                        /* foliage n retranslocation fraction - 46-57% in young E. globulus trees - see Corbeels et al 2005 ecological modelling 187, pg 463. Roughly 50% from review Aerts '96 */
     double fretransp;                       /* foliage p retranslocation fraction - 39.5-69 in Southern US FACE site - Finzi et al. 2001 Ecology  */
+    double k1;                              /* P transfer rate coefficient from labile to secondary inorganic P pool */
+    double k2;                              /* P transfer rate coefficient from secondary inorganic P to labile P */
+    double k3;                              /* P transfer rate coefficient from secondary inorganic to occluded P pool */
     double kdec1;                           /* surface structural decay rate (1/yr) */
     double kdec2;                           /* surface metabolic decay rate (1/yr) */
     double kdec3;                           /* soil structural decay rate (1/yr) */
@@ -221,11 +224,6 @@ typedef struct {
     double pcwnew;                          /* P alloc param: New stem ring P:C at critical leaf P:C (mob) */
     double pcwnewz;                         /* P alloc param: New stem ring P:C at zero leaf P:C (mobile) */
     double pf_min;                          /* leaf P:C minimum P concentration which allows productivity */
-    double phmax;                           /* max pH for determining effect on solubility of secondary P */
-    double phmin;                           /* min pH for determining effect on solubility of secondary P */
-    double phtextmin;                       /* the solubility of secondary P corresponding to min pH (/yr) */
-    double phtextmax;                       /* the solubility of secondary P corresponding to max pH (/yr) */
-    double phtextslope;                     /* slope controlling effect of sand on secondary P flow to mineral P */
     double p_lab_avail;                     /* Fraction of labile P available for plant uptake */
     double pmax;
     double pmin;                            /* (bewdy) minimum leaf p for +ve p/s (g/m2) */
@@ -235,11 +233,8 @@ typedef struct {
     double prateuptake;                     /* Rate of P uptake from mineral P pool (/yr), guess value */
     double prescribed_leaf_NC;              /* If the N-Cycle is switched off this needs to be set, e.g. 0.03 */
     double prescribed_leaf_PC;              /* If the P-Cycle is switched off this needs to be set, e.g. 0.00249 */
-    double psecmnp;                         /* controls the flow from secondary to mineral P, used when text_effect_p set to 0 */
     double puptakez;                        /* constant P uptake per year (1/yr) */
     double qs;                              /* exponent in water stress modifier, =1.0 JULES type representation, the smaller the values the more curved the depletion.  */
-    double rate_ssorb_occ;                  /* Rate constant of the transfer of P from strongly sorbed pool to occluded pool, m-1 Yang et al. 2014, Biogeosciences */
-    double rate_sorb_ssorb;                 /* Rate constant of the transfer of P from sorbed pool to strongly sorbed pool, m-1 Yang et al. 2014, Biogeosciences */
     double rateloss;                        /* Rate of N loss from mineral N pool (/yr) */
     double rateuptake;                      /* Rate of N uptake from mineral N pool (/yr) from here? http://face.ornl.gov/Finzi-PNAS.pdf Seems to correspond to very low NPP values */
     double rdecay;                          /* root turnover rate (1/yr) */
@@ -259,7 +254,6 @@ typedef struct {
     double structrat;                       /* structural input n:c as fraction of metab */
     double structcp;                        /* C:P ratio of structural bit of litter input, Ref Attiwill 1980, Aus. J. Bot. 28, 199-222 Table 9 sum of branch, stem, sap and heartwood; */
     double structratp;                      /* structural input p:c as fraction of metab */
-    double soilph;                          /* soil pH value */
     double sorpmx;                          /* maximum P sorption potential for a soil */
     double sorpaf;                          /* slope term which controls the fraction of mineral P that is labile */
     double wdecay;                          /* wood turnover rate (1/yr) */

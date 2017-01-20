@@ -1559,71 +1559,30 @@ void calculate_p_min_fluxes(fluxes *f, params *p, state *s) {
 
 }
 
+
+void calculate_p_sorb_to_ssorb(state *s, fluxes *f, params *p) {
+  
+  /* P flux from sorbed pool to strongly sorbed P pool */
+  if (s->inorgsorbp > 0.0) {
+    f->p_min_to_ssorb = p->k1 * s->inorgsorbp;
+  } else {
+    f->p_min_to_ssorb = 0.0;
+  }
+  
+  return;
+}
+
 void calculate_p_ssorb_to_sorb(state *s, fluxes *f, params *p, control *c) {
     /*
         calculate P transfer from strongly sorbed P pool to
         sorbed P pool;
 
-        Parameters
-        ----------
-        phtextint: float
-            intercept for the texture equation of strongly sorbed P depends upon
-            pH input;
-
-        phtextslope: float
-            slope value used in determining effect of sand content on ssorb P
-            flow to mineral P;
-
-        psecmn: float
-            controls the flow from secondary to mineral P;
-
-        Returns:
-        ----------
-        p_ssorb_to_min: float
-            flux rate of p strongly sorbed pool to p sorbed pool;
-
     */
-    double phtextint;
-    double dely, delx, xslope, yint;
-    int    cntrl_text_p = c->text_effect_p;
-
-    if (cntrl_text_p == 1) {
-
-        dely = p->phtextmax - p->phtextmin;
-        delx = p->phmax - p->phmin;
-
-        xslope = dely/delx;
-        yint = p->phtextmin - xslope * p->phmin;
-
-        if (p->soilph < p->phmin) {
-            phtextint = p->phtextmin;
-        } else if (p->soilph > p->phmax) {
-            phtextint = p->phtextmax;
-        } else {
-            phtextint = xslope * p->soilph + yint;
-        }
-
-        f->p_ssorb_to_min = MAX(0.0, (phtextint + p->phtextslope *
-                                     (1.0 - p->finesoil)) * s->inorgssorbp);
-
+    
+    if (s->inorgssorbp > 0.0) {
+        f->p_ssorb_to_min = p->k2 * s->inorgssorbp;
     } else {
-        if (s->inorgssorbp > 0.0) {
-            f->p_ssorb_to_min = p->psecmnp * s->inorgssorbp;
-        } else {
-            f->p_ssorb_to_min = 0.0;
-        }
-
-    }
-    return;
-}
-
-void calculate_p_sorb_to_ssorb(state *s, fluxes *f, params *p) {
-
-    /* P flux from sorbed pool to strongly sorbed P pool */
-    if (s->inorgsorbp > 0.0) {
-        f->p_min_to_ssorb = p->rate_sorb_ssorb * s->inorgsorbp;
-    } else {
-        f->p_min_to_ssorb = 0.0;
+        f->p_ssorb_to_min = 0.0;
     }
 
     return;
@@ -1633,7 +1592,7 @@ void calculate_p_ssorb_to_occ(state *s, fluxes *f, params *p) {
 
     /* P flux from strongly sorbed pool to occluded P pool */
     if (s->inorgssorbp > 0.0) {
-        f->p_ssorb_to_occ = p->rate_ssorb_occ * s->inorgssorbp;
+        f->p_ssorb_to_occ = p->k3 * s->inorgssorbp;
     } else {
         f->p_ssorb_to_occ = 0.0;
     }

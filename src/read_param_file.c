@@ -420,6 +420,12 @@ int handler(char *section, char *name, char *value, control *c,
         p->fretrans = atof(value);
     } else if (MATCH("params", "fretransp")) {
         p->fretransp = atof(value);
+    } else if (MATCH("params", "k1")) {
+      p->k1 = atof(value);
+    } else if (MATCH("params", "k2")) {
+      p->k2 = atof(value);
+    } else if (MATCH("params", "k3")) {
+      p->k3 = atof(value);
     } else if (MATCH("params", "kdec1")) {
         p->kdec1 = atof(value);
     } else if (MATCH("params", "kdec2")) {
@@ -546,18 +552,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->passpcmax = atof(value);
     } else if (MATCH("params", "passpcmin")) {
         p->passpcmin = atof(value);
-    } else if (MATCH("params", "phmax")) {
-        p->phmax = atof(value);
-    } else if (MATCH("params", "phmin")) {
-        p->phmin = atof(value);
-    } else if (MATCH("params", "phtextmax")) {
-        p->phtextmax = atof(value);
-    } else if (MATCH("params", "phtextmin")) {
-        p->phtextmin = atof(value);
-    } else if (MATCH("params", "phtextslope")) {
-        p->phtextslope = atof(value);
-    } else if (MATCH("params", "psecmnp")) {
-        p->psecmnp = atof(value);
     } else if (MATCH("params", "prescribed_leaf_NC")) {
         p->prescribed_leaf_NC = atof(value);
     } else if (MATCH("params", "prescribed_leaf_PC")) {
@@ -568,10 +562,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->prime_z = atof(value);
     } else if (MATCH("params", "qs")) {
         p->qs = atof(value);
-    } else if (MATCH("params", "rate_ssorb_occ")) {
-        p->rate_ssorb_occ = atof(value);
-    } else if (MATCH("params", "rate_sorb_ssorb")) {
-        p->rate_sorb_ssorb = atof(value);
     } else if (MATCH("params", "rateloss")) {
         p->rateloss = atof(value);
     } else if (MATCH("params", "prateloss")) {
@@ -618,8 +608,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->sorpmx = atof(value);
     } else if (MATCH("params", "sorpaf")) {
         p->sorpaf = atof(value);
-    } else if (MATCH("params", "soilph")) {
-        p->soilph = atof(value);
     } else if (MATCH("params", "wdecay")) {
         p->wdecay = atof(value);
     } else if (MATCH("params", "wretrans")) {

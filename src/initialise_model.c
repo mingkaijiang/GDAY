@@ -73,6 +73,9 @@ void initialise_params(params *p) {
     p->fmroot = 0.0;
     p->fretrans = 0.5;
     p->fretransp = 0.6;
+    p->k1 = 0.048;
+    p->k2 = 0.001;
+    p->k3 = 0.000012;
     p->kdec1 = 3.965571;
     p->kdec2 = 14.61;
     p->kdec3 = 4.904786;
@@ -131,11 +134,6 @@ void initialise_params(params *p) {
     p->pcwnew = 0.0003;
     p->pcwnewz = 0.0003;
     p->pf_min = 0.0002;      /* based on P:C ratio of 5000, guess value */
-    p->phmax = 7.6;
-    p->phmin = 5.0;
-    p->phtextmin = 0.000008;
-    p->phtextmax = 0.00015;
-    p->phtextslope = 0.00004;/* CENTURY */
     p->p_lab_avail = 0.0;
     p->pmax = 0.002;         /* guess value */
     p->pmin = 0.01;          /* guess value */
@@ -145,11 +143,8 @@ void initialise_params(params *p) {
     p->prateuptake = 365.0;
     p->prescribed_leaf_NC = 0.03;
     p->prescribed_leaf_PC = 0.00249;   /*Crous et al. 2015, C:P ratio of 400, Figure 3, Plant Soil */
-    p->psecmnp = 0.000022;
     p->puptakez = 0.0255;             /* calculated based on prateuptake 0.5 and inorglabp 0.051 */
     p->qs = 1.0;                      /* exponent in water stress modifier, =1.0 JULES type representation, the smaller the values the more curved the depletion. */
-    p->rate_ssorb_occ = 0.000012;      
-    p->rate_sorb_ssorb = 0.048;
     p->rateloss = 0.5;                /* value = 0.05 in Wang et al., 2007 GB1018 */
     p->rateuptake = 2.7;
     p->rdecay = 0.33333;
@@ -165,7 +160,6 @@ void initialise_params(params *p) {
     p->slowpcmax = 0.011111;
     p->slowpcmin = 0.005;
     p->smax = 700.0;                 /* used intermediately weather soils value of 700 [g P m-2] in Yang et al. 2016 */
-    p->soilph = 6.7;               /* pft-specific parameter, century value */
     p->sorpmx = 5.0;                 /* pft-specific parameter, check CENTURY for values */
     p->sorpaf = 1.0;
     p->structcn = 150.0;

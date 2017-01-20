@@ -437,6 +437,9 @@ void correct_rate_constants(params *p, int output) {
         p->bdecay *= NDAYS_IN_YR;
         p->wdecay *= NDAYS_IN_YR;
         p->sapturnover *= NDAYS_IN_YR;
+        p->k1 *= NDAYS_IN_YR;
+        p->k2 *= NDAYS_IN_YR;
+        p->k3 *= NDAYS_IN_YR;
         p->kdec1 *= NDAYS_IN_YR;
         p->kdec2 *= NDAYS_IN_YR;
         p->kdec3 *= NDAYS_IN_YR;
@@ -450,8 +453,6 @@ void correct_rate_constants(params *p, int output) {
         p->pmax *= NDAYS_IN_YR;
         p->p_rate_par_weather *= NDAYS_IN_YR;
         p->max_p_biochemical *= NDAYS_IN_YR;
-        p->rate_sorb_ssorb *= NDAYS_IN_YR;
-        p->rate_ssorb_occ *= NDAYS_IN_YR;
     } else {
         p->rateuptake /= NDAYS_IN_YR;
         p->prateuptake /= NDAYS_IN_YR;
@@ -464,6 +465,9 @@ void correct_rate_constants(params *p, int output) {
         p->bdecay /= NDAYS_IN_YR;
         p->wdecay /= NDAYS_IN_YR;
         p->sapturnover /= NDAYS_IN_YR;
+        p->k1 /= NDAYS_IN_YR;
+        p->k2 /= NDAYS_IN_YR;
+        p->k3 /= NDAYS_IN_YR;
         p->kdec1 /= NDAYS_IN_YR;
         p->kdec2 /= NDAYS_IN_YR;
         p->kdec3 /= NDAYS_IN_YR;
@@ -477,8 +481,6 @@ void correct_rate_constants(params *p, int output) {
         p->pmax /= NDAYS_IN_YR;
         p->p_rate_par_weather /= NDAYS_IN_YR;
         p->max_p_biochemical /= NDAYS_IN_YR;
-        p->rate_sorb_ssorb /= NDAYS_IN_YR;
-        p->rate_ssorb_occ /= NDAYS_IN_YR;
     }
 
     return;
