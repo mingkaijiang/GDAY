@@ -346,11 +346,8 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     f->nloss = p->rateloss * s->inorgn;
 
     /* Mineralised P lost from the system by leaching */
-    if (s->inorgsorbp > 0.0) {
-        f->ploss = p->prateloss * s->inorglabp;
-    } else {
-        f->ploss = 0.0;
-    }
+    f->ploss = p->prateloss * s->inorgavlp;
+
     
     // fprintf(stderr, "nloss %f\n", f->nloss);
     // fprintf(stderr, "ploss %f\n", f->ploss);
@@ -993,18 +990,13 @@ double calculate_puptake(control *c, params *p, state *s, fluxes *f) {
     } else if (c->puptake_model == 1) {
         // evaluate puptake : proportional to lab P pool that is
         // available to plant uptake
-        puptake = p->prateuptake * s->inorglabp * p->p_lab_avail;
+        puptake = p->prateuptake * s->inorgavlp;
     } else if (c->puptake_model == 2) {
         /* P uptake is a saturating function on root biomass, as N */
 
         /* supply rate of available mineral P */
-        if (s->inorgsorbp > 0.0) {
-            U0 = p->prateuptake * s->inorglabp * p->p_lab_avail;
-        } else {
-            U0 = MIN((f->p_par_to_min + f->pmineralisation +
-                      f->p_slow_biochemical),
-                     (p->prateuptake * s->inorglabp * p->p_lab_avail));
-        }
+        U0 = p->prateuptake * s->inorgavlp;
+
 
         Kr = p->krp;
         puptake = MAX(U0 * s->root / (s->root + Kr), 0.0);

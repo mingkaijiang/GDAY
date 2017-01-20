@@ -1129,10 +1129,6 @@ void calculate_psoil_flows(control *c, fluxes *f, params *p, state *s,
     calculate_p_ssorb_to_occ(s, f, p);
     calculate_p_sorb_to_ssorb(s, f, p);
 
-    /* calculate P lab and sorb fluxes from gross P flux */
-    calculate_p_min_fluxes(f, p, s);
-
-
     /* Update model soil P pools */
     calculate_ppools(c, f, p, s, active_pc_slope, slow_pc_slope,
                      passive_pc_slope);
@@ -1393,7 +1389,7 @@ void calculate_p_immobilisation(fluxes *f, params *p, state *s, double *pimmob,
     denom = arg1 + arg2 + arg3;
 
     /* evaluate P immobilisation in new SOM */
-    *pimmob = numer1 + denom * s->inorglabp;
+    *pimmob = numer1 + denom * s->inorgavlp;
     if (*pimmob > numer2)
         *pimmob = numer2;
 
@@ -1510,64 +1506,10 @@ void calculate_p_biochemical_mineralisation(fluxes *f, params *p, state *s) {
   return;
 }
 
-void calculate_p_min_fluxes(fluxes *f, params *p, state *s) {
-    /* Calculate the mineral P fluxes (in and out) */
-    double numer, denom1, denom2;
-    double min_frac_p_available_to_plant = 0.4;
-    double max_frac_p_available_to_plant = 0.8;
-    double mineral_n_with_max_p = 0.02;              /* Unit [t N ha-1] */
-    double tot_in, tot_out;
-
-    // Note: pmineralisation can be negative, and therefore, during spinup,
-    // when sorbp stock is low, the current approach resulted in negative sorbp
-    // in some cases, but it does not affect the final equilibrated state, so
-    // leave as is until better method is found
-    tot_in = f->p_par_to_min + f->pmineralisation +
-             f->p_slow_biochemical +
-             f->p_ssorb_to_min;
-
-    if (s->inorglabp > 0) {
-        tot_out = f->puptake + f->ploss + f->p_min_to_ssorb;
-    } else {
-        f->puptake = 0.0;
-        f->ploss = 0.0;
-        f->p_min_to_ssorb = 0.0;
-        tot_out = f->puptake + f->ploss + f->p_min_to_ssorb;
-    }
-
-    /* Use soil order to obtain smax and ks values */
-    soil_sorption_parameters(p->soil_order, p);
-
-    /* Calculate lab P dynamics */
-    numer = p->smax * p->ks;
-    denom1 = (s->inorglabp + p->ks) * (s->inorglabp + p->ks);
-    f->p_lab_in = tot_in / (1.0 + numer / denom1);
-    f->p_lab_out = tot_out / (1.0 + numer / denom1);
-
-    /* calculate sorb P dynamics */
-    denom2 = (s->inorglabp + p->ks) * (s->inorglabp + p->ks) + numer;
-    f->p_sorb_in = tot_in * (numer / denom2);
-    f->p_sorb_out = tot_out * (numer / denom2);
-
-    /* calculating fraction of labile P available for plant uptake */
-    p->p_lab_avail = MAX(min_frac_p_available_to_plant,
-                     MIN(min_frac_p_available_to_plant + s->inorgn *
-                    (max_frac_p_available_to_plant - min_frac_p_available_to_plant) /
-                     mineral_n_with_max_p, max_frac_p_available_to_plant));
-
-    return;
-
-}
-
-
 void calculate_p_sorb_to_ssorb(state *s, fluxes *f, params *p) {
   
   /* P flux from sorbed pool to strongly sorbed P pool */
-  if (s->inorgsorbp > 0.0) {
-    f->p_min_to_ssorb = p->k1 * s->inorgsorbp;
-  } else {
-    f->p_min_to_ssorb = 0.0;
-  }
+    f->p_min_to_ssorb = p->k1 * s->inorgavlp;
   
   return;
 }
@@ -1622,7 +1564,7 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
            p_into_passive, p_out_of_passive, arg, active_pc, fixp, slow_pc,
            pass_pc;
 
-    double net_parent;
+    double tot_avl_in, tot_avl_out, net_parent;
 
     /*
         net P release implied by separation of litter into structural
@@ -1682,7 +1624,7 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
 
     // P:C of the SOM pools increases linearly btw prescribed min and max
     // values as the Pconc of the soil increases.
-    arg = s->inorglabp - p->pmin0 / M2_AS_HA * G_AS_TONNES;
+    arg = s->inorgavlp - p->pmin0 / M2_AS_HA * G_AS_TONNES;
 
     /* active */
     active_pc = p->actpcmin + active_pc_slope * arg;
@@ -1714,12 +1656,19 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
     fixp = pc_flux(f->c_into_passive, p_into_passive, pass_pc);
     s->passivesoilp += p_into_passive + fixp - p_out_of_passive;
 
-    /* Daily increment of soil inorganic labile and sorbed P pool */
-    s->inorglabp += f->p_lab_in - f->p_lab_out;
-    s->inorgsorbp += f->p_sorb_in - f->p_sorb_out;
-
     /* Daily increment of soil inorganic available P pool (lab + sorb) */
-    s->inorgavlp = s->inorglabp + s->inorgsorbp;
+    tot_avl_in = f->p_par_to_min + f->pmineralisation + f->p_slow_biochemical + f->p_ssorb_to_min;
+    
+    if (s->inorgavlp > 0) {
+      tot_avl_out = f->puptake + f->ploss + f->p_min_to_ssorb;
+    } else {
+      f->puptake = 0.0;
+      f->ploss = 0.0;
+      f->p_min_to_ssorb = 0.0;
+      tot_avl_out = f->puptake + f->ploss + f->p_min_to_ssorb;
+    }
+    
+    s->inorgavlp += tot_avl_in - tot_avl_out;
 
     /* Daily increment of soil inorganic secondary P pool (strongly sorbed) */
     s->inorgssorbp += f->p_min_to_ssorb - f->p_ssorb_to_occ - f->p_ssorb_to_min;
@@ -1732,8 +1681,6 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
     
    // s->inorgparp += f->p_atm_dep * 365.25 - f->p_par_to_min;
     
-    //fprintf(stderr, "inorglabp %f\n", s->inorglabp);
-    //fprintf(stderr, "inorgsorbp %f\n", s->inorgsorbp);
     //fprintf(stderr, "inorgssorbp %f\n", s->inorgssorbp);
     //fprintf(stderr, "inorgoccp %f\n", s->inorgoccp);
     //fprintf(stderr, "inorgparp %f\n", s->inorgparp);
@@ -1747,7 +1694,7 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
 double pc_limit(fluxes *f, double cpool, double ppool, double pcmin,
                 double pcmax) {
     /*
-        Release P to 'Inorglabp' pool or fix P from 'Inorglabp', in order to keep
+        Release P to 'Inorgavlp' pool or fix P from 'Inorgavlp', in order to keep
         the  P:C ratio of a litter pool within the range 'pcmin' to 'pcmax'.
 
         Parameters:

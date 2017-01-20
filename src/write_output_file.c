@@ -48,7 +48,7 @@ void write_output_header(control *c, FILE **fp) {
 
     /* belowground */
     fprintf(*fp, "soilc,soiln,soilp,inorgn,");
-    fprintf(*fp, "inorgp,inorgavlp,inorglabp,inorgsorbp,inorgssorbp,inorgoccp,inorgparp,");
+    fprintf(*fp, "inorgp,inorgavlp,inorgssorbp,inorgoccp,inorgparp,");
     fprintf(*fp, "litterc,littercag,littercbg,litternag,litternbg,");
     fprintf(*fp, "litterpag,litterpbg,");
     fprintf(*fp, "activesoil,slowsoil,passivesoil,");
@@ -139,8 +139,8 @@ void write_daily_outputs_ascii(control *c, fluxes *f, state *s, int year,
     fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,",
                     s->soilc,s->soiln,s->soilp,s->inorgn);
 
-    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,",
-                    s->inorgp,s->inorgavlp,s->inorglabp,s->inorgsorbp,s->inorgssorbp,
+    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,%.10f,",
+                    s->inorgp,s->inorgavlp,s->inorgssorbp,
                     s->inorgoccp,s->inorgparp);
 
     fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,%.10f,",
@@ -385,12 +385,6 @@ int ohandler(char *section, char *name, char *value, control *c, params *p,
         *match = TRUE;
     } else if (MATCH("state", "inorgavlp")) {
         fprintf(c->ofp, "inorgavlp = %.10f\n", s->inorgavlp);
-        *match = TRUE;
-    } else if (MATCH("state", "inorglabp")) {
-        fprintf(c->ofp, "inorglabp = %.10f\n", s->inorglabp);
-        *match = TRUE;
-    } else if (MATCH("state", "inorgsorbp")) {
-        fprintf(c->ofp, "inorgsorbp = %.10f\n", s->inorgsorbp);
         *match = TRUE;
     } else if (MATCH("state", "inorgssorbp")) {
         fprintf(c->ofp, "inorgssorbp = %.10f\n", s->inorgssorbp);

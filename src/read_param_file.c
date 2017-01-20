@@ -301,10 +301,6 @@ int handler(char *section, char *name, char *value, control *c,
         s->inorgp = atof(value);
     } else if (MATCH("state", "inorgavlp")) {
         s->inorgavlp = atof(value);
-    } else if (MATCH("state", "inorglabp")) {
-        s->inorglabp = atof(value);
-    } else if (MATCH("state", "inorgsorbp")) {
-        s->inorgsorbp = atof(value);
     } else if (MATCH("state", "inorgssorbp")) {
         s->inorgssorbp = atof(value);
     } else if (MATCH("state", "inorgoccp")) {

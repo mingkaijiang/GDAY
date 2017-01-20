@@ -56,8 +56,6 @@ typedef struct {
     double inorgn;                      /* Inorganic soil N pool - dynamic (t/ha) */
     double inorgp;                      /* Inorganic soil P pool - dynamic (t/ha) */
     double inorgavlp;                   /* Inorganic soil P pool - available mineral P = lab + sorbed (t/ha) */
-    double inorglabp;                   /* Inorganic soil P pool - labile P (t/ha) */
-    double inorgsorbp;                  /* Inorganic soil P pool - sorbed P (t/ha) */
     double inorgssorbp;                 /* Inorganic soil P pool - strongly sorbed P (t/ha) */
     double inorgoccp;                   /* Inorganic soil P pool - occluded P (t/ha) */
     double inorgparp;                   /* Inorganic soil P pool - parent P (t/ha) */
