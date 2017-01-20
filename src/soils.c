@@ -517,51 +517,10 @@ void calculate_nsoil_flows(control *c, fluxes *f, params *p, state *s,
 
     /* calculate N net mineralisation */
     calc_n_net_mineralisation(f);
-
-    if (c->adjust_rtslow) {
-        adjust_residence_time_of_slow_pool(f, p);
-    } else {
-        /* Need to correct units of rate constant */
-        f->rtslow = 1.0 / (p->kdec6 * NDAYS_IN_YR);    // commented out for annual version;
-        // f->rtslow = 1.0 / (p->kdec6); 
-    }
-
+    
     /* Update model soil N pools */
     calculate_npools(c, f, p, s, active_nc_slope, slow_nc_slope,
                      passive_nc_slope);
-
-    return;
-}
-
-void adjust_residence_time_of_slow_pool(fluxes *f, params *p) {
-    /* Priming simulations the residence time of the slow pool is flexible,
-    as the flux out of the active pool (factive) increases the residence
-    time of the slow pool decreases.
-    */
-    double rt_slow_pool;
-
-    /* total flux out of the factive pool */
-    f->factive = (f->active_to_slow + f->active_to_passive + \
-                  f->co2_to_air[4]);
-
-    if (float_eq(f->factive, 0.0)) {
-        /* Need to correct units of rate constant */
-        rt_slow_pool = 1.0 / (p->kdec6 * NDAYS_IN_YR);   // commented out for annual version;
-        // rt_slow_pool = 1.0 / (p->kdec6);
-    } else {
-        rt_slow_pool = (1.0 / p->prime_y) / \
-                        MAX(0.3, (f->factive / (f->factive + p->prime_z)));
-
-        /* GDAY uses decay rates rather than residence times... */
-        p->kdec6 = 1.0 / rt_slow_pool;
-
-        /* rate constant needs to be per day inside GDAY */
-        p->kdec6 /= NDAYS_IN_YR;   // commented out for annual version;
-
-    }
-
-    /* Save for outputting purposes only */
-    f->rtslow = rt_slow_pool;
 
     return;
 }

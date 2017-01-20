@@ -629,18 +629,6 @@ void reset_all_p_pools_and_fluxes(fluxes *f, state *s) {
     return;
 }
 
-void zero_stuff(control *c, state *s) {
-    s->shoot = 0.0;
-    s->shootn = 0.0;
-    s->shootp = 0.0;
-    s->shootnc = 0.0;
-    s->shootpc = 0.0;
-    s->lai = 0.0;
-    s->anpp = 0.0;
-
-    return;
-}
-
 void day_end_calculations(control *c, params *p, state *s, int days_in_year,
                           int init) {
     /* Calculate derived values from state variables.

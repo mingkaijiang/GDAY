@@ -25,7 +25,6 @@ void   calculate_cpools(fluxes *, state *);
 void   precision_control_soil_c(fluxes *, state *);
 
 
-
 /* N stuff */
 void   calculate_nsoil_flows(control *, fluxes *, params *, state *, int);
 void   n_inputs_from_plant_litter(fluxes *, params *, double *, double *);
@@ -70,8 +69,5 @@ void   calculate_ppools(control *c, fluxes *, params *, state *, double,
 double pc_limit(fluxes *, double, double, double, double);
 double pc_flux(double, double, double);
 void   precision_control_soil_p(fluxes *, state *);
-
-/* priming/exudation */
-void adjust_residence_time_of_slow_pool(fluxes *, params *);
 
 #endif /* SOILS_H */

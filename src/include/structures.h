@@ -14,7 +14,6 @@ typedef struct {
     char  out_fname_hdr[STRING_LENGTH];
     char  out_param_fname[STRING_LENGTH];
     char  git_hash[STRING_LENGTH];
-    int   adjust_rtslow;
     int   fixed_stem_nc;
     int   fixed_stem_pc;
     int   fixleafnc;
@@ -465,10 +464,6 @@ typedef struct {
     double co2_rel_from_active_pool;
     double co2_rel_from_slow_pool;
     double co2_rel_from_passive_pool;
-
-    /* priming/exudation */
-    double factive;
-    double rtslow;
 
     double ninflow;
 
