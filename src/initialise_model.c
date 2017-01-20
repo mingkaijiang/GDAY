@@ -24,7 +24,6 @@ void initialise_control(control *c) {
     c->fixleafpc = FALSE;           /* fixed leaf P C ? */
     c->ncycle = TRUE;               /* Nitrogen cycle on or off? */
     c->pcycle = TRUE;               /* Phosphorus cycle on or off? */
-    c->triose_p = TRUE;             /* Triose phosphates limitation on photosynthesis on or off? */
     c->nuptake_model = 1;           /* 0=constant uptake, 1=func of N inorgn, 2=depends on rate of soil N availability */
     c->puptake_model = 1;           /* 0=constant uptake, 1=func of P inorgp, 2=depends on rate of soil P availability */
     c->output_ascii = TRUE;         /* If this is false you get a binary file as an output. */
@@ -67,8 +66,6 @@ void initialise_params(params *p) {
     p->cretrans = 0.0;
     p->crit_n_cost_of_p = 15.0; 
     p->cue = 0.5;
-    p->d0 = 0.0;
-    p->d0x = 0.35;
     p->fdecay = 0.59988;
     p->fhw = 0.8;      
     p->finesoil = 0.51;

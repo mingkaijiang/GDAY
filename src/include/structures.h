@@ -21,7 +21,6 @@ typedef struct {
     int   fixleafpc;
     int   ncycle;
     int   pcycle;
-    int   triose_p;
     int   num_years;
     int   nuptake_model;
     int   puptake_model;
@@ -155,8 +154,6 @@ typedef struct {
     double cretrans;                        /* coarse root n retranslocation fraction */
     double crit_n_cost_of_p;                /* Critical value of N cost of root P uptake above which phosphatase production starts [g N (g P)-1]; Wang et al., 2007, GB1018*/
     double cue;                             /* carbon use efficiency, or the ratio of NPP to GPP */
-    double d0;
-    double d0x;                             /* Length scale for exponential decline of Umax(z) */
     double decayrate[7];
     double fdecay;                          /* foliage turnover rate (1/yr) */
     double fhw;                             /* n:c ratio of stemwood - immobile pool and new ring */

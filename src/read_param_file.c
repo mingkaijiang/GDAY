@@ -218,19 +218,6 @@ int handler(char *section, char *name, char *value, control *c,
             fprintf(stderr, "Unknown pcycle option: %s\n", temp);
             exit(EXIT_FAILURE);
         }
-    } else if (MATCH("control", "triose_p")) {
-        if (strcmp(temp, "False") == 0 ||
-            strcmp(temp, "FALSE") == 0 ||
-            strcmp(temp, "false") == 0)
-            c->triose_p = FALSE;
-        else if (strcmp(temp, "True") == 0 ||
-                 strcmp(temp, "TRUE") == 0 ||
-                 strcmp(temp, "true") == 0)
-                 c->triose_p = TRUE;
-        else {
-            fprintf(stderr, "Unknown triose_p option: %s\n", temp);
-            exit(EXIT_FAILURE);
-        }
     } else if (MATCH("control", "nuptake_model")) {
         c->nuptake_model = atoi(value);
     } else if (MATCH("control", "puptake_model")) {
@@ -423,10 +410,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->cretrans = atof(value);
     } else if (MATCH("params", "cue")) {
         p->cue = atof(value);
-    } else if (MATCH("params", "d0")) {
-        p->d0 = atof(value);
-    } else if (MATCH("params", "d0x")) {
-        p->d0x = atof(value);
     } else if (MATCH("params", "fdecay")) {
         p->fdecay = atof(value);
     } else if (MATCH("params", "fhw")) {
