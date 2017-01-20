@@ -489,10 +489,8 @@ typedef struct {
     double co2_rel_from_passive_pool;
 
     /* priming/exudation */
-    double co2_released_exud;
     double factive;
     double rtslow;
-    double rexc_cue;
 
     double ninflow;
 

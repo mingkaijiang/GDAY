@@ -542,7 +542,7 @@ void adjust_residence_time_of_slow_pool(fluxes *f, params *p) {
 
     /* total flux out of the factive pool */
     f->factive = (f->active_to_slow + f->active_to_passive + \
-                  f->co2_to_air[4] + f->co2_released_exud);
+                  f->co2_to_air[4]);
 
     if (float_eq(f->factive, 0.0)) {
         /* Need to correct units of rate constant */
