@@ -59,8 +59,8 @@ void   calculate_p_parent_fluxes(fluxes *, params *, state *);
 void   calculate_p_mineralisation(fluxes *);
 void   calculate_p_immobilisation(fluxes *, params *, state *, double *,
                                   double *, double *, double *);
-void   calculate_p_ssorb_to_sorb(state *, fluxes *, params *, control *);
-void   calculate_p_sorb_to_ssorb(state *, fluxes *, params *);
+void   calculate_p_ssorb_to_avl(state *, fluxes *, params *, control *);
+void   calculate_p_avl_to_ssorb(state *, fluxes *, params *);
 void   calculate_p_ssorb_to_occ(state *, fluxes *, params *);
 void   calc_p_net_mineralisation(fluxes *);
 double calculate_pc_slope(params *, double, double);
@@ -70,7 +70,6 @@ void   calculate_ppools(control *c, fluxes *, params *, state *, double,
 double pc_limit(fluxes *, double, double, double, double);
 double pc_flux(double, double, double);
 void   precision_control_soil_p(fluxes *, state *);
-void   soil_sorption_parameters(char *, params *);
 
 /* priming/exudation */
 void adjust_residence_time_of_slow_pool(fluxes *, params *);

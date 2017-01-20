@@ -271,9 +271,7 @@ int handler(char *section, char *name, char *value, control *c,
         c->strpfloat = atoi(value);
     } else if (MATCH("control", "use_eff_nc")) {
         c->use_eff_nc = atoi(value);
-    } else if (MATCH("control", "text_effect_p")) {
-        c->text_effect_p = atoi(value);
-    } 
+    }
 
 
     /*
@@ -440,8 +438,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->kr = atof(value);
     } else if (MATCH("params", "krp")) {
         p->krp = atof(value);
-    } else if (MATCH("params", "ks")) {
-        p->ks = atof(value);
     } else if (MATCH("params", "lai_closed")) {
         p->lai_closed = atof(value);
     } else if (MATCH("params", "latitude")) {
@@ -520,8 +516,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->nmincrit = atof(value);
     } else if (MATCH("params", "nuptakez")) {
         p->nuptakez = atof(value);
-    } else if (MATCH("params", "p_lab_avail")) {
-        p->p_lab_avail = atof(value);
     } else if (MATCH("params", "pmax")) {
         p->pmax = atof(value);
     } else if (MATCH("params", "pmin")) {
@@ -570,8 +564,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->rdecay = atof(value);
     } else if (MATCH("params", "retransmob")) {
         p->retransmob = atof(value);
-    } else if (MATCH("params", "soil_order")) {
-       strcpy(p->soil_order, value);
     } else if (MATCH("params", "rretrans")) {
         p->rretrans = atof(value);
     } else if (MATCH("params", "sapturnover")) {
@@ -590,8 +582,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->slowpcmax = atof(value);
     } else if (MATCH("params", "slowpcmin")) {
         p->slowpcmin = atof(value);
-    } else if (MATCH("params", "smax")) {
-        p->smax = atof(value);
     } else if (MATCH("params", "structcn")) {
         p->structcn = atof(value);
     } else if (MATCH("params", "structrat")) {
@@ -600,10 +590,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->structcp = atof(value);
     } else if (MATCH("params", "structratp")) {
         p->structratp = atof(value);
-    } else if (MATCH("params", "sorpmx")) {
-        p->sorpmx = atof(value);
-    } else if (MATCH("params", "sorpaf")) {
-        p->sorpaf = atof(value);
     } else if (MATCH("params", "wdecay")) {
         p->wdecay = atof(value);
     } else if (MATCH("params", "wretrans")) {

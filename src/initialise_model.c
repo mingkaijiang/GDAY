@@ -31,7 +31,6 @@ void initialise_control(control *c) {
     c->print_options = DAILY;       /* DAILY=every timestep, END=end of run */
     c->strfloat = 0;                /* Structural pool input N:C varies=1, fixed=0 */
     c->strpfloat = 0;               /* Structural pool input P:C varies=1, fixed=0 */
-    c->text_effect_p = 1;           /* soil texture effect on strongly sorbed P flow to mineral P; = 1 use texture effect; = 0 use pre-defined constant; */ 
     c->use_eff_nc = 0;              /* use constant leaf n:c for  metfrac s */
     c->spin_up = FALSE;             /* Spin up to a steady state? If False it just runs the model */
 
@@ -86,7 +85,6 @@ void initialise_params(params *p) {
     p->kext = 0.5;
     p->kr = 0.5;          /* this value is 1.0 in Wang et al. 2007 Global Biogeochemical Cycles, Kn Michaelis-Menten constant for plant N uptake [g P m-2] */
     p->krp = 0.01;        /* Wang et al. 2007 Global Biogeochemical Cycles, Kp Michaelis-Menten constant for plant P uptake [g P m-2] */
-    p->ks = 0.5;          /* used intermediately weatherred soil value of 0.3 [g P m-2] in Yang et al. 2016 */
     p->lai_closed = 0.5;
     p->latitude = 35.9;
     p->ligroot = 0.22;
@@ -134,7 +132,6 @@ void initialise_params(params *p) {
     p->pcwnew = 0.0003;
     p->pcwnewz = 0.0003;
     p->pf_min = 0.0002;      /* based on P:C ratio of 5000, guess value */
-    p->p_lab_avail = 0.0;
     p->pmax = 0.002;         /* guess value */
     p->pmin = 0.01;          /* guess value */
     p->pmin0 = 0.0;
@@ -149,7 +146,6 @@ void initialise_params(params *p) {
     p->rateuptake = 2.7;
     p->rdecay = 0.33333;
     p->retransmob = 0.0;
-    strcpy(p->soil_order, "aridsol");
     p->rretrans = 0.0;
     p->sapturnover = 0.1;
     p->sla = 4.4;
@@ -159,9 +155,6 @@ void initialise_params(params *p) {
     p->slowncmin = 0.025;
     p->slowpcmax = 0.011111;
     p->slowpcmin = 0.005;
-    p->smax = 700.0;                 /* used intermediately weather soils value of 700 [g P m-2] in Yang et al. 2016 */
-    p->sorpmx = 5.0;                 /* pft-specific parameter, check CENTURY for values */
-    p->sorpaf = 1.0;
     p->structcn = 150.0;
     p->structrat = 0.0;
     p->structcp = 5500.0;
@@ -320,14 +313,10 @@ void initialise_fluxes(fluxes *f) {
     f->c_into_passive = 0.0;
 
     /* inorganic P flux exchanges */
-    f->p_lab_in = 0.0;
-    f->p_lab_out = 0.0;
-    f->p_sorb_in = 0.0;
-    f->p_sorb_out = 0.0;
-    f->p_min_to_ssorb = 0.0;
-    f->p_ssorb_to_min = 0.0;
+    f->p_avl_to_ssorb = 0.0;
+    f->p_ssorb_to_avl = 0.0;
     f->p_ssorb_to_occ = 0.0;
-    f->p_par_to_min = 0.0;
+    f->p_par_to_avl = 0.0;
 
     /* CO2 flows to the air */
     /* C flows to the air */

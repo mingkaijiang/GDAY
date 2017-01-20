@@ -1051,45 +1051,6 @@ void precision_control_soil_n(fluxes *f, state *s) {
     return;
 }
 
-void soil_sorption_parameters(char *soil_order, params *p) {
-    //
-    // Parameterize Smax and Ks parameters based on soil order;
-    // Ref. Yang et al., 2016, GRL, Table S2
-    //
-
-    if (strcmp(soil_order, "andisol") == 0) {
-        p->smax = 10;
-    } else if (strcmp(soil_order, "gelisol") == 0) {
-        p->smax = 5;
-    } else if (strcmp(soil_order, "histosol") == 0) {
-        p->smax = 5;
-    } else if (strcmp(soil_order, "entisol") == 0) {
-        p->smax = 5;
-    } else if (strcmp(soil_order, "inceptisol") == 0) {
-        p->smax = 5;
-    } else if (strcmp(soil_order, "aridsol") == 0) {
-        p->smax = 7;
-    } else if (strcmp(soil_order, "vertisol") == 0) {
-        p->smax = 7;
-    } else if (strcmp(soil_order, "mollisol") == 0) {
-        p->smax = 7;
-    } else if (strcmp(soil_order, "alfisol") == 0) {
-        p->smax = 7;
-    } else if (strcmp(soil_order, "spodosol") == 0) {
-        p->smax = 9;
-    } else if (strcmp(soil_order, "ultisol") == 0) {
-        p->smax = 9;
-    } else if (strcmp(soil_order, "oxisol") == 0) {
-        p->smax = 9;
-    } else {
-      prog_error("Could not understand soil order", __LINE__);
-        exit(EXIT_FAILURE);
-    }
-
-    return;
-}
-
-
 void calculate_psoil_flows(control *c, fluxes *f, params *p, state *s,
                            int doy) {
 
@@ -1125,9 +1086,9 @@ void calculate_psoil_flows(control *c, fluxes *f, params *p, state *s,
     calculate_p_biochemical_mineralisation(f, p, s);
 
     /* SIM phosphorus dynamics */
-    calculate_p_ssorb_to_sorb(s, f, p, c);
+    calculate_p_ssorb_to_avl(s, f, p, c);
     calculate_p_ssorb_to_occ(s, f, p);
-    calculate_p_sorb_to_ssorb(s, f, p);
+    calculate_p_avl_to_ssorb(s, f, p);
 
     /* Update model soil P pools */
     calculate_ppools(c, f, p, s, active_pc_slope, slow_pc_slope,
@@ -1305,7 +1266,7 @@ void calculate_p_parent_fluxes(fluxes *f, params *p, state *s) {
     */
 
     /* parent material weathering */
-    f->p_par_to_min = p->p_rate_par_weather * s->inorgparp;
+    f->p_par_to_avl = p->p_rate_par_weather * s->inorgparp;
 
     return;
 }
@@ -1398,8 +1359,7 @@ void calculate_p_immobilisation(fluxes *f, params *p, state *s, double *pimmob,
 
 void calc_p_net_mineralisation(fluxes *f) {
     /*
-        P Net mineralisation from microbial activity,
-        excluding the (- f->p_sorb_to_ssorb + f->p_ssorb_to_sorb activity)
+        P Net mineralisation from microbial activity
     */
     f->pmineralisation = f->pgross - f->pimmob + f->plittrelease;
 
@@ -1506,15 +1466,15 @@ void calculate_p_biochemical_mineralisation(fluxes *f, params *p, state *s) {
   return;
 }
 
-void calculate_p_sorb_to_ssorb(state *s, fluxes *f, params *p) {
+void calculate_p_avl_to_ssorb(state *s, fluxes *f, params *p) {
   
   /* P flux from sorbed pool to strongly sorbed P pool */
-    f->p_min_to_ssorb = p->k1 * s->inorgavlp;
+    f->p_avl_to_ssorb = p->k1 * s->inorgavlp;
   
   return;
 }
 
-void calculate_p_ssorb_to_sorb(state *s, fluxes *f, params *p, control *c) {
+void calculate_p_ssorb_to_avl(state *s, fluxes *f, params *p, control *c) {
     /*
         calculate P transfer from strongly sorbed P pool to
         sorbed P pool;
@@ -1522,9 +1482,9 @@ void calculate_p_ssorb_to_sorb(state *s, fluxes *f, params *p, control *c) {
     */
     
     if (s->inorgssorbp > 0.0) {
-        f->p_ssorb_to_min = p->k2 * s->inorgssorbp;
+        f->p_ssorb_to_avl = p->k2 * s->inorgssorbp;
     } else {
-        f->p_ssorb_to_min = 0.0;
+        f->p_ssorb_to_avl = 0.0;
     }
 
     return;
@@ -1657,35 +1617,27 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
     s->passivesoilp += p_into_passive + fixp - p_out_of_passive;
 
     /* Daily increment of soil inorganic available P pool (lab + sorb) */
-    tot_avl_in = f->p_par_to_min + f->pmineralisation + f->p_slow_biochemical + f->p_ssorb_to_min;
+    tot_avl_in = f->p_par_to_avl + f->pmineralisation + f->p_slow_biochemical + f->p_ssorb_to_avl;
     
     if (s->inorgavlp > 0) {
-      tot_avl_out = f->puptake + f->ploss + f->p_min_to_ssorb;
+      tot_avl_out = f->puptake + f->ploss + f->p_avl_to_ssorb;
     } else {
       f->puptake = 0.0;
       f->ploss = 0.0;
-      f->p_min_to_ssorb = 0.0;
-      tot_avl_out = f->puptake + f->ploss + f->p_min_to_ssorb;
+      f->p_avl_to_ssorb = 0.0;
+      tot_avl_out = f->puptake + f->ploss + f->p_avl_to_ssorb;
     }
     
     s->inorgavlp += tot_avl_in - tot_avl_out;
 
     /* Daily increment of soil inorganic secondary P pool (strongly sorbed) */
-    s->inorgssorbp += f->p_min_to_ssorb - f->p_ssorb_to_occ - f->p_ssorb_to_min;
+    s->inorgssorbp += f->p_avl_to_ssorb - f->p_ssorb_to_occ - f->p_ssorb_to_avl;
 
     /* Daily increment of soil inorganic occluded P pool */
     s->inorgoccp += f->p_ssorb_to_occ;
 
     /* Daily increment of soil inorganic parent P pool */
-    s->inorgparp += f->p_atm_dep - f->p_par_to_min;   //commented out for annual version;
-    
-   // s->inorgparp += f->p_atm_dep * 365.25 - f->p_par_to_min;
-    
-    //fprintf(stderr, "inorgssorbp %f\n", s->inorgssorbp);
-    //fprintf(stderr, "inorgoccp %f\n", s->inorgoccp);
-    //fprintf(stderr, "inorgparp %f\n", s->inorgparp);
-    //fprintf(stderr, "p_atm_dep %f\n", f->p_atm_dep);
-    //fprintf(stderr, "p_par_to_min %f\n", f->p_par_to_min);
+    s->inorgparp += f->p_atm_dep - f->p_par_to_avl;   
     
     return;
 }

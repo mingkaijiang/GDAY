@@ -29,7 +29,6 @@ typedef struct {
     int   print_options;
     int   strfloat;
     int   strpfloat;
-    int   text_effect_p;
     int   use_eff_nc;
     int   num_days;
     int   total_num_days;
@@ -173,7 +172,6 @@ typedef struct {
     double kext;                            /* extinction coefficient for light  */
     double kr;                              /* N uptake coefficent (0.05 kg C m-2 to 0.5 tonnes/ha) see Silvia's PhD, Dewar and McM, 96. */
     double krp;                             /* P uptake coefficent */
-    double ks;                              /* an empirical constant [t P ha-1] - sorption capacity increased with the age of the substrate */
     double lai_closed;                      /* LAI of closed canopy (max cover fraction is reached (m2 (leaf) m-2 (ground) ~ 2.5) */
     double latitude;                        /* latitude (degrees, negative for south) */
     double longitude;                       /* longitude (degrees, negative for west) */
@@ -222,7 +220,6 @@ typedef struct {
     double pcwnew;                          /* P alloc param: New stem ring P:C at critical leaf P:C (mob) */
     double pcwnewz;                         /* P alloc param: New stem ring P:C at zero leaf P:C (mobile) */
     double pf_min;                          /* leaf P:C minimum P concentration which allows productivity */
-    double p_lab_avail;                     /* Fraction of labile P available for plant uptake */
     double pmax;
     double pmin;                            /* (bewdy) minimum leaf p for +ve p/s (g/m2) */
     double pmin0;                           /* mineral P pool corresponding to Actpc0,etc (g/m2) */
@@ -237,7 +234,6 @@ typedef struct {
     double rateuptake;                      /* Rate of N uptake from mineral N pool (/yr) from here? http://face.ornl.gov/Finzi-PNAS.pdf Seems to correspond to very low NPP values */
     double rdecay;                          /* root turnover rate (1/yr) */
     double retransmob;                      /* Fraction stem mobile N retranscd (/yr) */
-    char   soil_order[STRING_LENGTH];       /* soil order */
     double rretrans;                        /* root n retranslocation fraction */
     double sapturnover;                     /* Sapwood turnover rate: conversion of sapwood to heartwood (1/yr) */
     double sla;                             /* specific leaf area (m2 one-sided/kg DW) */
@@ -247,13 +243,10 @@ typedef struct {
     double slowncmin;                       /* Slow pool (=1/40) N:C of new SOM - when Nmin=Nmin0" [units: gN/gC]. Based on forest version of CENTURY (Parton et al. 1993), see Appendix, McMurtrie 2001, Tree Physiology. */
     double slowpcmax;                       /* Slow pool (=1/90) P:C ratio of new SOM - maximum [units: gP/gC]. */
     double slowpcmin;                       /* Slow pool (=1/200) P:C of new SOM - when Pmin=Pmin0" [units: gP/gC]. */
-    double smax;                            /* Maximum amount of sorbed P in the soil [tt P ha-1] */
     double structcn;                        /* C:N ratio of structural bit of litter input */
     double structrat;                       /* structural input n:c as fraction of metab */
     double structcp;                        /* C:P ratio of structural bit of litter input, Ref Attiwill 1980, Aus. J. Bot. 28, 199-222 Table 9 sum of branch, stem, sap and heartwood; */
     double structratp;                      /* structural input p:c as fraction of metab */
-    double sorpmx;                          /* maximum P sorption potential for a soil */
-    double sorpaf;                          /* slope term which controls the fraction of mineral P that is labile */
     double wdecay;                          /* wood turnover rate (1/yr) */
     double wretrans;                        /* mobile wood N retranslocation fraction */
     double prime_y;
@@ -447,14 +440,10 @@ typedef struct {
     double c_into_passive;
 
     /* inorganic P flux exchanges */
-    double p_lab_in;
-    double p_lab_out;
-    double p_sorb_in;
-    double p_sorb_out;
-    double p_min_to_ssorb;
-    double p_ssorb_to_min;
+    double p_avl_to_ssorb;
+    double p_ssorb_to_avl;
     double p_ssorb_to_occ;
-    double p_par_to_min;
+    double p_par_to_avl;
     double p_atm_dep;
 
 
