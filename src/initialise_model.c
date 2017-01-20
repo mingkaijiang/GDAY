@@ -352,11 +352,9 @@ void initialise_state(state *s) {
     s->activesoil = 2.53010543182;
     s->activesoiln = 0.833516379296;
     s->activesoilp = 0.04600192;          /* based on active soil pool C/P ratio of 55 from Parton et al., 1989, Ecology of arable land. */
-    s->age = 12.0; 
     s->branch = 14.5137000708;
     s->branchn = 0.0442890661217;
     s->branchp = 0.00580548;
-    s->canht = 23.0964973582;
     s->inorgn = 0.0274523714275;
     s->inorgp = 0.0205;
     s->inorgavlp = 0.096;               /* lab p + sorb p */

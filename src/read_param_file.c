@@ -270,16 +270,12 @@ int handler(char *section, char *name, char *value, control *c,
         s->activesoiln = atof(value);
     } else if (MATCH("state", "activesoilp")) {
         s->activesoilp = atof(value);
-    } else if (MATCH("state", "age")) {
-        s->age = atof(value);
     } else if (MATCH("state", "branch")) {
         s->branch = atof(value);
     } else if (MATCH("state", "branchn")) {
         s->branchn = atof(value);
     } else if (MATCH("state", "branchp")) {
         s->branchp = atof(value);
-    } else if (MATCH("state", "canht")) {
-        s->canht = atof(value);
     } else if (MATCH("state", "inorgn")) {
         s->inorgn = atof(value);
     } else if (MATCH("state", "inorgp")) {

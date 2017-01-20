@@ -46,11 +46,9 @@ typedef struct {
     double activesoil;                  /* active C som pool (t/ha) */
     double activesoiln;                 /* active N som pool (t/ha) */
     double activesoilp;                 /* active P som pool (t/ha) */
-    double age;                         /* Current stand age (years) */
     double branch;                      /* branch c (t/ha) */
     double branchn;                     /* branch n (t/ha) */
     double branchp;                     /* branch p (t/ha) */
-    double canht;                       /* canopy height (m) */
     double inorgn;                      /* Inorganic soil N pool - dynamic (t/ha) */
     double inorgp;                      /* Inorganic soil P pool - dynamic (t/ha) */
     double inorgavlp;                   /* Inorganic soil P pool - available mineral P = lab + sorbed (t/ha) */

@@ -354,9 +354,6 @@ int ohandler(char *section, char *name, char *value, control *c, params *p,
     } else if (MATCH("state", "activesoilp")) {
         fprintf(c->ofp, "activesoilp = %.10f\n", s->activesoilp);
         *match = TRUE;
-    } else if (MATCH("state", "age")) {
-        fprintf(c->ofp, "age = %.10f\n", s->age);
-        *match = TRUE;
     } else if (MATCH("state", "branch")) {
         fprintf(c->ofp, "branch = %.10f\n", s->branch);
         *match = TRUE;
@@ -365,9 +362,6 @@ int ohandler(char *section, char *name, char *value, control *c, params *p,
         *match = TRUE;
     } else if (MATCH("state", "branchp")) {
         fprintf(c->ofp, "branchp = %.10f\n", s->branchp);
-        *match = TRUE;
-    } else if (MATCH("state", "canht")) {
-        fprintf(c->ofp, "canht = %.10f\n", s->canht);
         *match = TRUE;
     } else if (MATCH("state", "inorgn")) {
         fprintf(c->ofp, "inorgn = %.10f\n", s->inorgn);

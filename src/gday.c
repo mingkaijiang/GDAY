@@ -697,10 +697,6 @@ void day_end_calculations(control *c, params *p, state *s, int days_in_year,
         s->passivesoiln = p->passivesoilnz;
         s->passivesoilp = p->passivesoilpz;
     }
-
-    if (init == FALSE)
-        /* Required so max leaf & root N:C can depend on Age */
-        s->age += 1.0 / days_in_year;
     
     return;
 }
