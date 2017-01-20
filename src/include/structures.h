@@ -103,10 +103,6 @@ typedef struct {
     double rootnc;                      /* root pn ratio */
     double shootpc;                     /* shoot pc ratio */
     double rootpc;                      /* root pc ratio */
-    double remaining_days[366];
-    double delta_sw_store;
-    double leaf_out_days[366];
-    double growing_days[366];
     double c_to_alloc_shoot;
     double n_to_alloc_shoot;
     double p_to_alloc_shoot;
@@ -140,23 +136,14 @@ typedef struct {
     double soilc;                   /* Soil C */
     double soiln;                   /* soil N */
     double soilp;                   /* soil P */
-    double canopy_store;
-    double psi_s_topsoil;
-    double psi_s_root;
-
-    /* hydraulics */
-    double predawn_swp;     /* MPa */
 
 } state;
 
 typedef struct {
-    double a0rhizo;                         /* minimum allocation to rhizodeposition [0.0-0.1] */
-    double a1rhizo;                         /* slope of allocation to rhizodeposition [0.2-1] */
     double actncmax;                        /* Active pool (=1/3) N:C ratio of new SOM - maximum [units: gN/gC]. Based on forest version of CENTURY (Parton et al. 1993), see Appendix, McMurtrie 2001, Tree Physiology. */
     double actncmin;                        /* Active pool (=1/15) N:C of new SOM - when Nmin=Nmin0 [units: gN/gC]. Based on forest version of CENTURY (Parton et al. 1993), see Appendix, McMurtrie 2001, Tree Physiology. */
     double actpcmax;                        /* Active pool (=1/30) P:C ratio of new SOM - maximum [units: gP/gC]. Based on forest version of CENTURY (Parton et al. 1993) */
     double actpcmin;                        /* Active pool (=1/80) P:C of new SOM - when Pmin=Pmin0 [units: gP/gC]. Based on forest version of CENTURY (Parton et al. 1993) */
-    double adapt;
     double ageold;                          /* Plant age when max leaf N C ratio is lowest */
     double ageyoung;                        /* Plant age when max leaf N C ratio is highest */
     double bdecay;                          /* branch and large root turnover rate (1/yr) */

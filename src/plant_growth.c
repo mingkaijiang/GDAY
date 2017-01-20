@@ -43,7 +43,6 @@ void calc_day_growth(control *c, fluxes *f, met_arrays *ma,
     // fprintf(stderr, "shootp %f\n", s->shootp);
 
     
-
     /* checking for pcycle control parameter */
     if (c->pcycle == TRUE) {
         npitfac = MIN(nitfac, pitfac);
@@ -62,11 +61,11 @@ void calc_day_growth(control *c, fluxes *f, met_arrays *ma,
                               &ncbnew, &nccnew, &ncwimm,
                               &ncwnew, &pcbnew, &pccnew, &pcwimm,
                               &pcwnew);
-
+                              
     recalc_wb = np_allocation(c, f, p, s, ncbnew, nccnew, ncwimm, ncwnew,
                               pcbnew, pccnew, pcwimm, pcwnew,
                               fdecay, rdecay, doy);
-
+    
     update_plant_state(c, f, p, s, fdecay, rdecay, doy);
 
     precision_control(f, s);
@@ -374,7 +373,7 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     f->ppstemimm = f->npp * f->alstem * pcwimm;
     f->ppstemmob = f->npp * f->alstem * (pcwnew - pcwimm);
     f->ppbranch = f->npp * f->albranch * pcbnew;
-
+    
     /* If we have allocated more N than we have avail, cut back C prodn */
     arg = f->npstemimm + f->npstemmob + f->npbranch;
     if (arg > ntot && c->fixleafnc == FALSE && c->ncycle) {
@@ -481,7 +480,6 @@ int cut_back_production(control *c, fluxes *f, params *p, state *s,
         (KG_AS_TONNES * p->cfracts)) -
         f->deadleaves * s->lai / s->shoot);
     }
-    
 
     return (recalc_wb);
 }

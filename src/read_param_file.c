@@ -407,12 +407,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->actpcmax = atof(value);
     } else if (MATCH("params", "actpcmin")) {
         p->actpcmin = atof(value);
-    } else if (MATCH("params", "a0rhizo")) {
-        p->a0rhizo = atof(value);
-    } else if (MATCH("params", "a1rhizo")) {
-        p->a1rhizo = atof(value);
-    } else if (MATCH("params", "adapt")) {
-        p->adapt = atof(value);
     } else if (MATCH("params", "ageold")) {
         p->ageold = atof(value);
     } else if (MATCH("params", "ageyoung")) {

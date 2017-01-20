@@ -52,8 +52,6 @@ void initialise_params(params *p) {
     *** Default values for params structure.
     */
     int i;
-    p->a0rhizo = 0.05;
-    p->a1rhizo = 0.6;
     p->actncmax = 0.333333;
     p->actncmin = 0.066667;
     p->actpcmax = 0.033333;
@@ -438,7 +436,6 @@ void initialise_state(state *s) {
     s->structsurf = 7.10566198821;
     s->structsurfn = 0.0473710799214;
     s->structsurfp = 0.01421132;        /* based on structural pool C/P ratio of 500 from Parton et al., 1989, Ecology of arable land. */
-    s->canopy_store = 0.0;
 
     return;
 }
