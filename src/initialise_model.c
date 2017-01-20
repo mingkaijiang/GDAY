@@ -61,8 +61,6 @@ void initialise_params(params *p) {
     p->c_alloc_r = 0.2;       
     p->c_alloc_s = 0.5;
     p->cfracts = 0.5;
-    p->crdecay = 0.0;
-    p->cretrans = 0.0;
     p->crit_n_cost_of_p = 15.0; 
     p->cue = 0.5;
     p->fdecay = 0.59988;

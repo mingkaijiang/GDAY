@@ -381,10 +381,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->c_alloc_s = atof(value);
     } else if (MATCH("params", "cfracts")) {
         p->cfracts = atof(value);
-    } else if (MATCH("params", "crdecay")) {
-        p->crdecay = atof(value);
-    } else if (MATCH("params", "cretrans")) {
-        p->cretrans = atof(value);
     } else if (MATCH("params", "cue")) {
         p->cue = atof(value);
     } else if (MATCH("params", "fdecay")) {

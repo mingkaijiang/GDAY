@@ -274,7 +274,6 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
             /* calculate C:N ratios and increment annual flux sum */
             day_end_calculations(c, p, s, c->num_days, FALSE);
             
-
             if (c->print_options == DAILY && c->spin_up == FALSE) {
                 if(c->output_ascii)
                     write_daily_outputs_ascii(c, f, s, year, doy+1);
@@ -432,7 +431,6 @@ void correct_rate_constants(params *p, int output) {
         p->prateloss *= NDAYS_IN_YR;
         p->retransmob *= NDAYS_IN_YR;
         p->fdecay *= NDAYS_IN_YR;
-        p->crdecay *= NDAYS_IN_YR;
         p->rdecay *= NDAYS_IN_YR;
         p->bdecay *= NDAYS_IN_YR;
         p->wdecay *= NDAYS_IN_YR;
@@ -458,7 +456,6 @@ void correct_rate_constants(params *p, int output) {
         p->prateloss /= NDAYS_IN_YR;
         p->retransmob /= NDAYS_IN_YR;
         p->fdecay /= NDAYS_IN_YR;
-        p->crdecay /= NDAYS_IN_YR;
         p->rdecay /= NDAYS_IN_YR;
         p->bdecay /= NDAYS_IN_YR;
         p->wdecay /= NDAYS_IN_YR;

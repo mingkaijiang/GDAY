@@ -144,8 +144,6 @@ typedef struct {
     double c_alloc_r;                       /* allocation to roots at root n_crit and p_crit. */
     double c_alloc_s;                       /* allocation to stem at zero stem n/c and p/c. */
     double cfracts;                         /* carbon fraction of dry biomass */
-    double crdecay;                         /* coarse roots turnover rate (1/yr) */
-    double cretrans;                        /* coarse root n retranslocation fraction */
     double crit_n_cost_of_p;                /* Critical value of N cost of root P uptake above which phosphatase production starts [g N (g P)-1]; Wang et al., 2007, GB1018*/
     double cue;                             /* carbon use efficiency, or the ratio of NPP to GPP */
     double decayrate[7];
