@@ -118,7 +118,7 @@ void initialise_params(params *p) {
     p->pcbnewz = 0.0003;
     p->pccnew = 0.0003;
     p->pccnewz = 0.0003;
-    p->pcmaxf = 0.004;    /* guess value */
+    p->pcmaxf = 0.004;       /* guess value */
     p->pcmaxr = 0.004;       /* guess value */
     p->pcrfac = 0.8;
     p->pcwimm = 0.0003;

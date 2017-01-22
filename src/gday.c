@@ -114,6 +114,7 @@ int main(int argc, char **argv)
     read_daily_met_data(argv, c, ma);
   
     /* model runs */
+    
     if (c->spin_up) {
         spin_up_pools(c, f, ma, m, p, s, nr);
     } else {
