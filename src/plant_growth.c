@@ -23,10 +23,9 @@ void calc_day_growth(control *c, fluxes *f, met_arrays *ma,
 {
    double dummy=0.0;
    double nitfac, pitfac, npitfac;
-   double ncbnew, nccnew, ncwimm, ncwnew;
-   double pcbnew, pccnew, pcwimm, pcwnew;
+   double ncbnew, ncwimm, ncwnew;
+   double pcbnew, pcwimm, pcwnew;
    int    recalc_wb;
-
 
     /* calculate daily GPP/NPP, respiration and update water balance */
     carbon_daily_production(c, f, m, p, s, day_length);
@@ -35,13 +34,6 @@ void calc_day_growth(control *c, fluxes *f, met_arrays *ma,
     //foliage in young stand, and leaf P:C as a fraction of Pcmaxyoung
     nitfac = MIN(1.0, s->shootnc / p->ncmaxf);
     pitfac = MIN(1.0, s->shootpc / p->pcmaxf);
-    
-    // fprintf(stderr, "shootnc %f\n", s->shootnc);
-    // fprintf(stderr, "shootpc %f\n", s->shootpc);
-    // fprintf(stderr, "shootc %f\n", s->shoot);
-    // fprintf(stderr, "shootn %f\n", s->shootn);
-    // fprintf(stderr, "shootp %f\n", s->shootp);
-
     
     /* checking for pcycle control parameter */
     if (c->pcycle == TRUE) {
@@ -58,18 +50,24 @@ void calc_day_growth(control *c, fluxes *f, met_arrays *ma,
     carbon_allocation(c, f, p, s, npitfac, doy);
 
     calculate_cnp_wood_ratios(c, p, s, npitfac, nitfac, pitfac,
-                              &ncbnew, &nccnew, &ncwimm,
-                              &ncwnew, &pcbnew, &pccnew, &pcwimm,
+                              &ncbnew, &ncwimm,
+                              &ncwnew, &pcbnew, &pcwimm,
                               &pcwnew);
                               
-    recalc_wb = np_allocation(c, f, p, s, ncbnew, nccnew, ncwimm, ncwnew,
-                              pcbnew, pccnew, pcwimm, pcwnew,
+    recalc_wb = np_allocation(c, f, p, s, ncbnew, ncwimm, ncwnew,
+                              pcbnew, pcwimm, pcwnew,
                               fdecay, rdecay, doy);
     
     update_plant_state(c, f, p, s, fdecay, rdecay, doy);
 
     precision_control(f, s);
-
+    
+    /*
+    fprintf(stderr, "ncbnew 2 %f\n", ncbnew);
+    fprintf(stderr, "nccnew 2 %f\n", nccnew);
+    fprintf(stderr, "ncwimm 2 %f\n", ncwimm);
+    fprintf(stderr, "ncwnew 2 %f\n", ncwnew);
+    */
     return;
 }
 
@@ -106,14 +104,7 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
         pcontent = 0.0;
     }
 
-    /* When canopy is not closed, canopy light interception is reduced
-        - calculate the fractional ground cover */
-    if (s->lai < p->lai_closed) {
-        /* discontinuous canopies */
-        fc = s->lai / p->lai_closed;
-    } else {
-        fc = 1.0;
-    }
+    fc = 1.0;
 
     /* fIPAR - the fraction of intercepted PAR = IPAR/PAR incident at the
        top of the canopy, accounting for partial closure based on Jackson
@@ -139,9 +130,9 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
 
 void calculate_cnp_wood_ratios(control *c, params *p, state *s,
                                double npitfac, double nitfac, double pitfac,
-                               double *ncbnew, double *nccnew,
+                               double *ncbnew, 
                                double *ncwimm, double *ncwnew,
-                               double *pcbnew, double *pccnew,
+                               double *pcbnew, 
                                double *pcwimm, double *pcwnew) {
     /* Estimate the N:C and P:C ratio in the branch and stem. Option to vary
     the N:C and P:C ratio of the stem following Jeffreys (1999) or keep it a fixed
@@ -187,8 +178,6 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
         /* n:c ratio of new branch wood*/
         *ncbnew = p->ncbnew + nitfac * (p->ncbnew - p->ncbnewz);
 
-        /* n:c ratio of coarse root */
-        *nccnew = p->nccnew + nitfac * (p->nccnew - p->nccnewz);
 
         /* fixed N:C in the stemwood */
         if (c->fixed_stem_nc) {
@@ -211,9 +200,6 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
     } else {
         /* n:c ratio of new branch wood*/
         *ncbnew = p->ncbnew + npitfac * (p->ncbnew - p->ncbnewz);
-
-        /* n:c ratio of coarse root */
-        *nccnew = p->nccnew + npitfac * (p->nccnew - p->nccnewz);
 
         /* fixed N:C in the stemwood */
         if (c->fixed_stem_nc) {
@@ -240,9 +226,6 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
         /* p:c ratio of new branch wood*/
         *pcbnew = p->pcbnew + pitfac * (p->pcbnew - p->pcbnewz);
 
-        /* p:c ratio of coarse root */
-        *pccnew = p->pccnew + pitfac * (p->pccnew - p->pccnewz);
-
         /* fixed P:C in the stemwood */
         if (c->fixed_stem_pc) {
             /* p:c ratio of stemwood - immobile pool and new ring */
@@ -263,9 +246,6 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
     } else {
         /* p:c ratio of new branch wood*/
         *pcbnew = p->pcbnew + npitfac * (p->pcbnew - p->pcbnewz);
-
-        /* p:c ratio of coarse root */
-        *pccnew = p->pccnew + npitfac * (p->pccnew - p->pccnewz);
 
         /* fixed P:C in the stemwood */
         if (c->fixed_stem_pc) {
@@ -290,8 +270,8 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
 }
 
 int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
-                  double nccnew, double ncwimm, double ncwnew, double pcbnew,
-                  double pccnew, double pcwimm, double pcwnew,double fdecay,
+                  double ncwimm, double ncwnew, double pcbnew,
+                  double pcwimm, double pcwnew,double fdecay,
                   double rdecay, int doy) {
     /*
         Nitrogen and phosphorus distribution - allocate available N and
@@ -374,14 +354,14 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     /* If we have allocated more N than we have avail, cut back C prodn */
     arg = f->npstemimm + f->npstemmob + f->npbranch;
     if (arg > ntot && c->fixleafnc == FALSE && c->ncycle) {
-      recalc_wb = cut_back_production(c, f, p, s, ntot, ncbnew, nccnew,
+      recalc_wb = cut_back_production(c, f, p, s, ntot, ncbnew,
                                       ncwimm, ncwnew, doy);
     }
     
     /* If we have allocated more P than we have avail, cut back C prodn */
     arg = f->ppstemimm + f->ppstemmob + f->ppbranch;
     if (arg > ptot && c->fixleafpc == FALSE && c->pcycle) {
-      recalc_wb = cut_back_production(c, f, p, s, ptot, pcbnew, pccnew,
+      recalc_wb = cut_back_production(c, f, p, s, ptot, pcbnew, 
                                       pcwimm, pcwnew, doy);
     }
     
@@ -409,11 +389,11 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
 
 
 int cut_back_production(control *c, fluxes *f, params *p, state *s,
-                        double tot, double xcbnew, double xccnew,
+                        double tot, double xcbnew, 
                         double xcwimm, double xcwnew, int doy) {
 
     double lai_inc, conv;
-    double pcbnew, pccnew, pcwimm, pcwnew;
+    double pcbnew, pcwimm, pcwnew;
     /* default is we don't need to recalculate the water balance,
        however if we cut back on NPP due to available N and P below then we do
        need to do this */

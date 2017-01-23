@@ -25,14 +25,14 @@ void    carbon_daily_production(control *, fluxes *, met *m, params *, state *,
                                 double);
 
 void    calculate_cnp_wood_ratios(control *c, params *, state *, double, double,
-                                  double, double *, double *, double *,
+                                  double, double *, 
                                   double *, double *,double *, double *,
                                   double *);
 
 /* N stuff */
 int    np_allocation(control *c, fluxes *, params *, state *, double,
                      double, double, double, double,
-                     double, double, double, double, double, int);
+                     double, double, double, int);
 double calculate_nuptake(control *, params *, state *);
 
 double nitrogen_retrans(control *, fluxes *, params *, state *,
@@ -46,6 +46,6 @@ double phosphorus_retrans(control *, fluxes *, params *, state *,
                           double, double, int);
 
 int cut_back_production(control *, fluxes *, params *, state *, double,
-                        double, double, double, double, int);
+                        double, double, double, int);
 
 #endif /* PLANT_GROWTH */
