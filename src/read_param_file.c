@@ -312,8 +312,6 @@ int handler(char *section, char *name, char *value, control *c,
         s->rootn = atof(value);
     } else if (MATCH("state", "rootp")) {
         s->rootp = atof(value);
-    } else if (MATCH("state", "sapwood")) {
-        s->sapwood = atof(value);
     } else if (MATCH("state", "shoot")) {
         s->shoot = atof(value);
     } else if (MATCH("state", "shootn")) {
@@ -521,8 +519,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->prateuptake = atof(value);
     } else if (MATCH("params", "rdecay")) {
         p->rdecay = atof(value);
-    } else if (MATCH("params", "sapturnover")) {
-        p->sapturnover = atof(value);
     } else if (MATCH("params", "sla")) {
         p->sla = atof(value);
     } else if (MATCH("params", "slowncmax")) {

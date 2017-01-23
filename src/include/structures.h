@@ -68,7 +68,6 @@ typedef struct {
     double root;                        /* root c (t/ha) */
     double rootn;                       /* root n (t/ha) */
     double rootp;                       /* root p (t/ha) */
-    double sapwood;
     double shoot;                       /* shoot c (t/ha) */
     double shootn;                      /* shoot n (t/ha) */
     double shootp;                      /* shoot p (t/ha) */
@@ -217,7 +216,6 @@ typedef struct {
     double rateloss;                        /* Rate of N loss from mineral N pool (/yr) */
     double rateuptake;                      /* Rate of N uptake from mineral N pool (/yr) from here? http://face.ornl.gov/Finzi-PNAS.pdf Seems to correspond to very low NPP values */
     double rdecay;                          /* root turnover rate (1/yr) */
-    double sapturnover;                     /* Sapwood turnover rate: conversion of sapwood to heartwood (1/yr) */
     double sla;                             /* specific leaf area (m2 one-sided/kg DW) */
     double slowncmax;                       /* Slow pool (=1/15) N:C ratio of new SOM - maximum [units: gN/gC]. Based on forest version of CENTURY (Parton et al. 1993), see Appendix, McMurtrie 2001, Tree Physiology. */
     double slowncmin;                       /* Slow pool (=1/40) N:C of new SOM - when Nmin=Nmin0" [units: gN/gC]. Based on forest version of CENTURY (Parton et al. 1993), see Appendix, McMurtrie 2001, Tree Physiology. */
@@ -341,7 +339,6 @@ typedef struct {
     double deadrootp;       /* Root litter P production (t/ha/yr) */
     double deadbranchp;     /* Branch litter P production (t/ha/yr) */
     double deadstemp;       /* Stem litter P production (t/ha/yr) */
-    double deadsapwood;
 
     /* grazing stuff */
     double leafretransn;    /* N retranslocation leaf */

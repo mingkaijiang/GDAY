@@ -620,19 +620,6 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s,
     //fprintf(stderr, "cproot %f\n", f->cproot);
     //fprintf(stderr, "deadroots %f\n", f->deadroots);
 
-    /* annoying but can't see an easier way with the code as it is.
-       If we are modelling grases, i.e. no stem them without this
-       the sapwood will end up being reduced to a silly number as
-       deadsapwood will keep being removed from the pool, even though there
-       is no wood. */
-    if (float_eq(s->stem, 0.01)) {
-        s->sapwood = 0.01;
-    } else if (s->stem < 0.01) {
-        s->sapwood = 0.01;
-    } else {
-        s->sapwood += f->cpstem - f->deadsapwood;
-    }
-
 
     /*
     ** Nitrogen and Phosphorus pools

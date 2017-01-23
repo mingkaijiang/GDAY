@@ -432,7 +432,6 @@ void correct_rate_constants(params *p, int output) {
         p->rdecay *= NDAYS_IN_YR;
         p->bdecay *= NDAYS_IN_YR;
         p->wdecay *= NDAYS_IN_YR;
-        p->sapturnover *= NDAYS_IN_YR;
         p->k1 *= NDAYS_IN_YR;
         p->k2 *= NDAYS_IN_YR;
         p->k3 *= NDAYS_IN_YR;
@@ -456,7 +455,6 @@ void correct_rate_constants(params *p, int output) {
         p->rdecay /= NDAYS_IN_YR;
         p->bdecay /= NDAYS_IN_YR;
         p->wdecay /= NDAYS_IN_YR;
-        p->sapturnover /= NDAYS_IN_YR;
         p->k1 /= NDAYS_IN_YR;
         p->k2 /= NDAYS_IN_YR;
         p->k3 /= NDAYS_IN_YR;

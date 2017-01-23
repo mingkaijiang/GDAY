@@ -132,7 +132,6 @@ void initialise_params(params *p) {
     p->rateloss = 0.5;                /* value = 0.05 in Wang et al., 2007 GB1018 */
     p->rateuptake = 2.7;
     p->rdecay = 0.33333;
-    p->sapturnover = 0.1;
     p->sla = 4.4;
     p->slowncmax = 0.066666;
     p->slowncmin = 0.025;
@@ -219,7 +218,6 @@ void initialise_fluxes(fluxes *f) {
     f->deadrootp = 0.0;    /* Root litter P production (t/ha/yr) */
     f->deadbranchp = 0.0;  /* Branch litter P production (t/ha/yr) */
     f->deadstemp = 0.0;    /* Stem litter P production (t/ha/yr) */
-    f->deadsapwood = 0.0;
 
     /* grazing stuff */
     f->leafretransn = 0.0;
@@ -354,7 +352,6 @@ void initialise_state(state *s) {
     s->root = 3.92887790342;
     s->rootn = 0.076296932914;
     s->rootp = 0.00392888;              /* Yang et al. 2016, Biogeosciences, Table S1, fine root C:P = 1000 */
-    s->sapwood = 51.2600270003;
     s->shoot = 4.37991243755;
     s->shootn = 0.0978837857406; 
     s->shootp = 0.008759825;            /* Based on leaf C:P ratio of 500 from Crous et al., 2015, Plant Soil */

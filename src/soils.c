@@ -514,7 +514,7 @@ void calculate_nsoil_flows(control *c, fluxes *f, params *p, state *s,
     /* calculate N immobilisation */
     calculate_n_immobilisation(f, p, s, &(f->nimmob), &active_nc_slope,
                                &slow_nc_slope, &passive_nc_slope);
-
+    
     /* calculate N net mineralisation */
     calc_n_net_mineralisation(f);
     

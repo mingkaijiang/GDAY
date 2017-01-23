@@ -423,9 +423,6 @@ int ohandler(char *section, char *name, char *value, control *c, params *p,
     } else if (MATCH("state", "rootp")) {
         fprintf(c->ofp, "rootp = %.10f\n", s->rootp);
         *match = TRUE;
-    } else if (MATCH("state", "sapwood")) {
-        fprintf(c->ofp, "sapwood = %.10f\n", s->sapwood);
-        *match = TRUE;
     } else if (MATCH("state", "shoot")) {
         fprintf(c->ofp, "shoot = %.10f\n", s->shoot);
         *match = TRUE;

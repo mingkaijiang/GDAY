@@ -34,8 +34,7 @@ void calculate_litterfall(control *c, fluxes *f, params *p, state *s,
     f->deadroots = *rdecay * s->root;
     f->deadstems = p->wdecay * s->stem;
     f->deadbranch = p->bdecay * s->branch;
-    f->deadsapwood = (p->wdecay + p->sapturnover) * s->sapwood;
-    
+
     // fprintf(stderr, "f->deadroots %f\n", f->deadroots);
     // fprintf(stderr, "rdecay %f\n", *rdecay);
     // fprintf(stderr, "s->root %f\n", s->root);
