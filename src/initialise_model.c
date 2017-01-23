@@ -60,6 +60,7 @@ void initialise_params(params *p) {
     p->cfracts = 0.5;
     p->crit_n_cost_of_p = 15.0; 
     p->cue = 0.5;
+    p->co2_in = 350.0;
     p->fdecay = 0.59988;
     p->fhw = 0.8;      
     p->finesoil = 0.51;
@@ -67,6 +68,7 @@ void initialise_params(params *p) {
     p->fmroot = 0.0;
     p->fretrans = 0.5;
     p->fretransp = 0.6;
+    p->I0 = 3000.0;
     p->k1 = 0.048;
     p->k2 = 0.001;
     p->k3 = 0.000012;
@@ -89,6 +91,8 @@ void initialise_params(params *p) {
     p->ncbnewz = 0.003;
     p->nccnew = 0.003;
     p->nccnewz = 0.003;
+    p->ndep_in = 0.001;
+    p->nfix_in = 0.001;
     p->nref = 0.004;              /* leaf N:C for saturation of photosynthesis for lue_simplified */
     p->lue0 = 1.4;                /* maximum LUE in kg C GJ-1 */
     p->ncmaxf = 0.04;
@@ -121,6 +125,7 @@ void initialise_params(params *p) {
     p->pcwimmz = 0.0003;
     p->pcwnew = 0.0003;
     p->pcwnewz = 0.0003;
+    p->pdep_in = 0.0004;
     p->pf_min = 0.0002;      /* based on P:C ratio of 5000, guess value */
     p->pmin0 = 0.0;
     p->pmincrit = 2.0;       /* Based on CENTURY VARAT1(2,3) = 2 value */
@@ -139,6 +144,7 @@ void initialise_params(params *p) {
     p->slowpcmin = 0.005;
     p->structcn = 150.0;
     p->structcp = 5500.0;
+    p->tsoil_in = 15.0;
     p->wdecay = 0.02;
 
     for (i = 0; i < 7; i++) {

@@ -377,6 +377,8 @@ int handler(char *section, char *name, char *value, control *c,
         p->cfracts = atof(value);
     } else if (MATCH("params", "cue")) {
         p->cue = atof(value);
+    } else if (MATCH("params", "co2_in")) {
+      p->co2_in = atof(value);
     } else if (MATCH("params", "fdecay")) {
         p->fdecay = atof(value);
     } else if (MATCH("params", "fhw")) {
@@ -387,6 +389,8 @@ int handler(char *section, char *name, char *value, control *c,
         p->fretrans = atof(value);
     } else if (MATCH("params", "fretransp")) {
         p->fretransp = atof(value);
+    } else if (MATCH("params", "I0")) {
+      p->I0 = atof(value);
     } else if (MATCH("params", "k1")) {
       p->k1 = atof(value);
     } else if (MATCH("params", "k2")) {
@@ -429,6 +433,10 @@ int handler(char *section, char *name, char *value, control *c,
         p->nccnew = atof(value);
     } else if (MATCH("params", "nccnewz")) {
         p->nccnewz = atof(value);
+    } else if (MATCH("params", "ndep_in")) {
+      p->ndep_in = atof(value);
+    } else if (MATCH("params", "nfix_in")) {
+      p->nfix_in = atof(value);
     } else if (MATCH("params", "nref")) {
       p->nref = atof(value);
     } else if (MATCH("params", "lue0")) {
@@ -453,6 +461,8 @@ int handler(char *section, char *name, char *value, control *c,
         p->ncrfac = atof(value);
     } else if (MATCH("params", "pcrfac")) {
         p->pcrfac = atof(value);
+    } else if (MATCH("params", "pdep_in")) {
+      p->pdep_in = atof(value);
     } else if (MATCH("params", "ncwimm")) {
         p->ncwimm = atof(value);
     } else if (MATCH("params", "ncwimmz")) {
@@ -533,6 +543,8 @@ int handler(char *section, char *name, char *value, control *c,
         p->structcn = atof(value);
     } else if (MATCH("params", "structcp")) {
         p->structcp = atof(value);
+    } else if (MATCH("params", "tsoil_in")) {
+      p->tsoil_in = atof(value);
     } else if (MATCH("params", "wdecay")) {
         p->wdecay = atof(value);
     } else if (MATCH("params", "crit_n_cost_of_p")) {

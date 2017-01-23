@@ -612,21 +612,17 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s,
     /*
     ** Carbon pools
     */
-    s->shoot += f->cpleaf - f->deadleaves;
+    s->shoot += (f->cpleaf - f->deadleaves) * 365.25;
     s->root += f->cproot - f->deadroots;
     s->branch += f->cpbranch - f->deadbranch;
     s->stem += f->cpstem - f->deadstems;
-
-    //fprintf(stderr, "cproot %f\n", f->cproot);
-    //fprintf(stderr, "deadroots %f\n", f->deadroots);
-
 
     /*
     ** Nitrogen and Phosphorus pools
     */
     s->shootn += f->npleaf - fdecay * s->shootn;
     s->shootp += f->ppleaf - fdecay * s->shootp;
-
+    
     s->branchn += f->npbranch - p->bdecay * s->branchn;
     s->rootn += f->nproot - rdecay * s->rootn;
     s->stemnimm += f->npstemimm - p->wdecay * s->stemnimm;

@@ -140,6 +140,7 @@ typedef struct {
     double c_alloc_r;                       /* allocation to roots at root n_crit and p_crit. */
     double c_alloc_s;                       /* allocation to stem at zero stem n/c and p/c. */
     double cfracts;                         /* carbon fraction of dry biomass */
+    double co2_in;                          /* annual version co2 concentration ppm */
     double crit_n_cost_of_p;                /* Critical value of N cost of root P uptake above which phosphatase production starts [g N (g P)-1]; Wang et al., 2007, GB1018*/
     double cue;                             /* carbon use efficiency, or the ratio of NPP to GPP */
     double decayrate[7];
@@ -150,6 +151,7 @@ typedef struct {
     double fmroot;
     double fretrans;                        /* foliage n retranslocation fraction - 46-57% in young E. globulus trees - see Corbeels et al 2005 ecological modelling 187, pg 463. Roughly 50% from review Aerts '96 */
     double fretransp;                       /* foliage p retranslocation fraction - 39.5-69 in Southern US FACE site - Finzi et al. 2001 Ecology  */
+    double I0;                              /* annual version radiation MJ/m2/yr */
     double k1;                              /* P transfer rate coefficient from labile to secondary inorganic P pool */
     double k2;                              /* P transfer rate coefficient from secondary inorganic P to labile P */
     double k3;                              /* P transfer rate coefficient from secondary inorganic to occluded P pool */
@@ -181,6 +183,8 @@ typedef struct {
     double ncwimmz;                         /* N alloc param: Immobile stem N C at zero leaf N C */
     double ncwnew;                          /* N alloc param: New stem ring N:C at critical leaf N:C (mob) */
     double ncwnewz;                         /* N alloc param: New stem ring N:C at zero leaf N:C (mobile) */
+    double ndep_in;                         /* annual version ndep t/ha/yr */
+    double nfix_in;                         /* annual version nfix t/ha/yr */
     double nf_min;                          /* leaf N:C minimum N concentration which allows productivity */
     double nmin0;                           /* mineral N pool corresponding to Actnc0,etc (g/m2) */
     double nmincrit;                        /* Critical mineral N pool at max soil N:C (g/m2) (Parton et al 1993, McMurtrie et al 2001). */
@@ -205,6 +209,7 @@ typedef struct {
     double pcwimmz;                         /* P alloc param: Immobile stem P C at zero leaf P C */
     double pcwnew;                          /* P alloc param: New stem ring P:C at critical leaf P:C (mob) */
     double pcwnewz;                         /* P alloc param: New stem ring P:C at zero leaf P:C (mobile) */
+    double pdep_in;                         /* Annual version p deposition t/ha/yr */
     double pf_min;                          /* leaf P:C minimum P concentration which allows productivity */
     double pmin0;                           /* mineral P pool corresponding to Actpc0,etc (g/m2) */
     double pmincrit;                        /* Critical mineral P pool at max soil P:C (g/m2) */
@@ -223,6 +228,7 @@ typedef struct {
     double slowpcmin;                       /* Slow pool (=1/200) P:C of new SOM - when Pmin=Pmin0" [units: gP/gC]. */
     double structcn;                        /* C:N ratio of structural bit of litter input */
     double structcp;                        /* C:P ratio of structural bit of litter input, Ref Attiwill 1980, Aus. J. Bot. 28, 199-222 Table 9 sum of branch, stem, sap and heartwood; */
+    double tsoil_in;                        /* annual version tsoil [degree C] */
     double wdecay;                          /* wood turnover rate (1/yr) */
     double prime_y;
     double prime_z;

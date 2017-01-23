@@ -219,27 +219,20 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
 
         year = ma->year[c->day_idx];
         
-        // commented out for annual version;
-        
         if (is_leap_year(year))
             c->num_days = 366;  
         else
             c->num_days = 365;  
         
-        // c->num_days = 1;
-        
         calculate_daylength(s, c->num_days, p->latitude);
-
+        
         /* =================== **
         **   D A Y   L O O P   **
         ** =================== */
         for (doy = 0; doy < c->num_days; doy++) {
 
-            //if (year == 2001 && doy+1 == 230) {
-            //    c->pdebug = TRUE;
-            //}
-
-            unpack_met_data(c, f, ma, m, dummy, s->day_length[doy]);
+            // unpack_met_data(c, f, ma, m, dummy, s->day_length[doy]);
+            unpack_met_data_simple(f, m, p);
           
             fdecay = p->fdecay;
             rdecay = p->rdecay;
@@ -249,7 +242,6 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
             calc_day_growth(c, f, ma, m, nr, p, s, s->day_length[doy],
                             doy, fdecay, rdecay);
 
-            //printf("%d %f %f\n", doy, f->gpp*100, s->lai);
             calculate_csoil_flows(c, f, p, s, m->tsoil, doy);
             calculate_nsoil_flows(c, f, p, s, doy);
             
@@ -719,3 +711,23 @@ void unpack_met_data(control *c, fluxes *f, met_arrays *ma, met *m, int hod,
     return;
 }
 
+void unpack_met_data_simple(fluxes *f, met *m, params *p) {
+  
+  /* unpack met forcing */
+  m->Ca = p->co2_in;
+  m->par = p->I0/365.25;    // 3 GJ m-2 yr-1 to MJ m-2 d-1;
+  
+  m->ndep = p->ndep_in;
+  m->nfix = p->nfix_in;
+  m->pdep = p->pdep_in;
+  m->tsoil = p->tsoil_in;
+  
+  
+  /* N deposition + biological N fixation */
+  f->ninflow = (m->ndep + m->nfix) / 365.25;
+  
+  /* P deposition to fluxes */
+  f->p_atm_dep = m->pdep / 365.25;
+  
+  return;
+}
