@@ -673,8 +673,7 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s,
     s->branchn += f->npbranch - p->bdecay * s->branchn;
     s->rootn += f->nproot - rdecay * s->rootn;
     s->stemnimm += f->npstemimm - p->wdecay * s->stemnimm;
-    s->stemnmob += (f->npstemmob - p->wdecay * s->stemnmob - p->retransmob *
-                    s->stemnmob);
+    s->stemnmob += (f->npstemmob - p->wdecay * s->stemnmob);
     s->stemn = s->stemnimm + s->stemnmob;
 
     s->branchp += f->ppbranch - p->bdecay * s->branchp;
@@ -683,8 +682,7 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s,
 
     s->stempimm += f->ppstemimm - p->wdecay * s->stempimm;
 
-    s->stempmob += (f->ppstemmob - p->wdecay * s->stempmob - p->retransmob *
-                    s->stempmob);
+    s->stempmob += (f->ppstemmob - p->wdecay * s->stempmob);
 
     s->stemp = s->stempimm + s->stempmob;
 
@@ -863,20 +861,14 @@ double nitrogen_retrans(control *c, fluxes *f, params *p, state *s,
         N retranslocated plant matter
 
     */
-    double leafretransn, rootretransn, branchretransn,stemretransn;
+    double leafretransn;
 
     leafretransn = p->fretrans * fdecay * s->shootn;
-
-    rootretransn = p->rretrans * rdecay * s->rootn;
-    branchretransn = p->bretrans * p->bdecay * s->branchn;
-    stemretransn = (p->wretrans * p->wdecay * s->stemnmob + p->retransmob *
-                    s->stemnmob);
 
     /* store for NCEAS output */
     f->leafretransn = leafretransn;
 
-    return (leafretransn + rootretransn + branchretransn +
-            stemretransn);
+    return (leafretransn);
 }
 
 double phosphorus_retrans(control *c, fluxes *f, params *p, state *s,
@@ -897,21 +889,14 @@ double phosphorus_retrans(control *c, fluxes *f, params *p, state *s,
         P retrans : float
         P retranslocated plant matter
     */
-    double leafretransp, rootretransp, branchretransp, stemretransp;
+    double leafretransp;
 
     leafretransp = p->fretransp * fdecay * s->shootp;
-    
-
-    rootretransp = p->rretrans * rdecay * s->rootp;
-    branchretransp = p->bretrans * p->bdecay * s->branchp;
-    stemretransp = (p->wretrans * p->wdecay * s->stempmob + p->retransmob *
-                    s->stempmob);
 
     /* store for NCEAS output */
     f->leafretransp = leafretransp;
 
-    return (leafretransp + rootretransp + branchretransp +
-            stemretransp);
+    return (leafretransp);
 }
 
 double calculate_nuptake(control *c, params *p, state *s) {

@@ -26,8 +26,6 @@ typedef struct {
     int   output_ascii;
     int   passiveconst;
     int   print_options;
-    int   strfloat;
-    int   strpfloat;
     int   use_eff_nc;
     int   num_days;
     int   total_num_days;
@@ -138,7 +136,6 @@ typedef struct {
     double actpcmin;                        /* Active pool (=1/80) P:C of new SOM - when Pmin=Pmin0 [units: gP/gC]. Based on forest version of CENTURY (Parton et al. 1993) */
     double bdecay;                          /* branch and large root turnover rate (1/yr) */
     double biochemical_p_constant;          /* Michaelis-Menton constant for biochemical P mineralisation [g N (g P)-1]; Wang et al., 2007, GB1018*/
-    double bretrans;                        /* branch n retranslocation fraction */
     double c_alloc_b;                       /* allocation to branches at branch n_crit and p_crit. */
     double c_alloc_f;                       /* allocation to leaves at leaf n_crit and p_crit. */
     double c_alloc_r;                       /* allocation to roots at root n_crit and p_crit. */
@@ -221,8 +218,6 @@ typedef struct {
     double rateloss;                        /* Rate of N loss from mineral N pool (/yr) */
     double rateuptake;                      /* Rate of N uptake from mineral N pool (/yr) from here? http://face.ornl.gov/Finzi-PNAS.pdf Seems to correspond to very low NPP values */
     double rdecay;                          /* root turnover rate (1/yr) */
-    double retransmob;                      /* Fraction stem mobile N retranscd (/yr) */
-    double rretrans;                        /* root n retranslocation fraction */
     double sapturnover;                     /* Sapwood turnover rate: conversion of sapwood to heartwood (1/yr) */
     double sla;                             /* specific leaf area (m2 one-sided/kg DW) */
     double slamax;                          /* (if equal slazero=no effect) specific leaf area new fol at max leaf N/C (m2 one-sided/kg DW) */
@@ -232,11 +227,8 @@ typedef struct {
     double slowpcmax;                       /* Slow pool (=1/90) P:C ratio of new SOM - maximum [units: gP/gC]. */
     double slowpcmin;                       /* Slow pool (=1/200) P:C of new SOM - when Pmin=Pmin0" [units: gP/gC]. */
     double structcn;                        /* C:N ratio of structural bit of litter input */
-    double structrat;                       /* structural input n:c as fraction of metab */
     double structcp;                        /* C:P ratio of structural bit of litter input, Ref Attiwill 1980, Aus. J. Bot. 28, 199-222 Table 9 sum of branch, stem, sap and heartwood; */
-    double structratp;                      /* structural input p:c as fraction of metab */
     double wdecay;                          /* wood turnover rate (1/yr) */
-    double wretrans;                        /* mobile wood N retranslocation fraction */
     double prime_y;
     double prime_z;
 

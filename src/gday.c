@@ -201,7 +201,6 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
      * done here as rate constants elsewhere in the code are assumed to be in
      * units of days not years
      */
-    // commented out for annual version;
     correct_rate_constants(p, FALSE);
     day_end_calculations(c, p, s, -99, TRUE);
 
@@ -291,7 +290,6 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
     /* ========================= **
     **   E N D   O F   Y E A R   **
     ** ========================= */
-    // commented out for annual version;
     correct_rate_constants(p, TRUE);
 
     if (c->print_options == END && c->spin_up == FALSE) {
@@ -430,7 +428,6 @@ void correct_rate_constants(params *p, int output) {
         p->prateuptake *= NDAYS_IN_YR;
         p->rateloss *= NDAYS_IN_YR;
         p->prateloss *= NDAYS_IN_YR;
-        p->retransmob *= NDAYS_IN_YR;
         p->fdecay *= NDAYS_IN_YR;
         p->rdecay *= NDAYS_IN_YR;
         p->bdecay *= NDAYS_IN_YR;
@@ -455,7 +452,6 @@ void correct_rate_constants(params *p, int output) {
         p->prateuptake /= NDAYS_IN_YR;
         p->rateloss /= NDAYS_IN_YR;
         p->prateloss /= NDAYS_IN_YR;
-        p->retransmob /= NDAYS_IN_YR;
         p->fdecay /= NDAYS_IN_YR;
         p->rdecay /= NDAYS_IN_YR;
         p->bdecay /= NDAYS_IN_YR;

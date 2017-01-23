@@ -24,11 +24,11 @@ void calculate_litterfall(control *c, fluxes *f, params *p, state *s,
 
     /* litter N:C ratios, roots and shoot */
     ncflit = s->shootnc * (1.0 - p->fretrans);
-    ncrlit = s->rootnc * (1.0 - p->rretrans);
+    ncrlit = s->rootnc;
     
     /* litter P:C ratios, roots and shoot */
     pcflit = s->shootpc * (1.0 - p->fretransp);
-    pcrlit = s->rootpc * (1.0 - p->rretrans);
+    pcrlit = s->rootpc;
 
     /* C litter production */
     f->deadroots = *rdecay * s->root;
@@ -51,18 +51,14 @@ void calculate_litterfall(control *c, fluxes *f, params *p, state *s,
     /* Assuming fraction is retranslocated before senescence, i.e. a fracion
        of nutrients is stored within the plant */
     f->deadrootn = f->deadroots * ncrlit;
-    f->deadbranchn = p->bdecay * s->branchn * (1.0 - p->bretrans);
 
     f->deadrootp = f->deadroots * pcrlit;
-    f->deadbranchp = p->bdecay * s->branchp * (1.0 - p->bretrans);
 
     /* N in stemwood litter - only mobile n is retranslocated */
-    f->deadstemn = p->wdecay * (s->stemnimm + s->stemnmob * \
-                    (1.0 - p->wretrans));
+    f->deadstemn = p->wdecay * (s->stemnimm + s->stemnmob);
 
     /* P in stemwood litter - only mobile p is retranslocated */
-    f->deadstemp = p->wdecay * (s->stempimm + s->stempmob * \
-                   (1.0 - p->wretrans));
+    f->deadstemp = p->wdecay * (s->stempimm + s->stempmob);
         
     return;
 

@@ -252,10 +252,6 @@ int handler(char *section, char *name, char *value, control *c,
             fprintf(stderr, "Unknown print option: %s\n", temp);
             exit(EXIT_FAILURE);
         }
-    } else if (MATCH("control", "strfloat")) {
-        c->strfloat = atoi(value);
-    } else if (MATCH("control", "strpfloat")) {
-        c->strpfloat = atoi(value);
     } else if (MATCH("control", "use_eff_nc")) {
         c->use_eff_nc = atoi(value);
     }
@@ -527,10 +523,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->prateuptake = atof(value);
     } else if (MATCH("params", "rdecay")) {
         p->rdecay = atof(value);
-    } else if (MATCH("params", "retransmob")) {
-        p->retransmob = atof(value);
-    } else if (MATCH("params", "rretrans")) {
-        p->rretrans = atof(value);
     } else if (MATCH("params", "sapturnover")) {
         p->sapturnover = atof(value);
     } else if (MATCH("params", "sla")) {
@@ -549,16 +541,10 @@ int handler(char *section, char *name, char *value, control *c,
         p->slowpcmin = atof(value);
     } else if (MATCH("params", "structcn")) {
         p->structcn = atof(value);
-    } else if (MATCH("params", "structrat")) {
-        p->structrat = atof(value);
     } else if (MATCH("params", "structcp")) {
         p->structcp = atof(value);
-    } else if (MATCH("params", "structratp")) {
-        p->structratp = atof(value);
     } else if (MATCH("params", "wdecay")) {
         p->wdecay = atof(value);
-    } else if (MATCH("params", "wretrans")) {
-        p->wretrans = atof(value);
     } else if (MATCH("params", "crit_n_cost_of_p")) {
         p->crit_n_cost_of_p = atof(value);
     } else if (MATCH("params", "max_p_biochemical")) {

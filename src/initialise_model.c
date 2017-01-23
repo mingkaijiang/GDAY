@@ -29,8 +29,6 @@ void initialise_control(control *c) {
     c->output_ascii = TRUE;         /* If this is false you get a binary file as an output. */
     c->passiveconst = FALSE;        /* hold passive pool at passivesoil */
     c->print_options = DAILY;       /* DAILY=every timestep, END=end of run */
-    c->strfloat = 0;                /* Structural pool input N:C varies=1, fixed=0 */
-    c->strpfloat = 0;               /* Structural pool input P:C varies=1, fixed=0 */
     c->use_eff_nc = 0;              /* use constant leaf n:c for  metfrac s */
     c->spin_up = FALSE;             /* Spin up to a steady state? If False it just runs the model */
 
@@ -55,7 +53,6 @@ void initialise_params(params *p) {
     p->actpcmin = 0.0125;
     p->bdecay = 0.02;
     p->biochemical_p_constant = 150.0;
-    p->bretrans = 0.0;
     p->c_alloc_b = 0.1;       
     p->c_alloc_f = 0.2;       
     p->c_alloc_r = 0.2;       
@@ -136,8 +133,6 @@ void initialise_params(params *p) {
     p->rateloss = 0.5;                /* value = 0.05 in Wang et al., 2007 GB1018 */
     p->rateuptake = 2.7;
     p->rdecay = 0.33333;
-    p->retransmob = 0.0;
-    p->rretrans = 0.0;
     p->sapturnover = 0.1;
     p->sla = 4.4;
     p->slamax = 4.4;
@@ -147,12 +142,9 @@ void initialise_params(params *p) {
     p->slowpcmax = 0.011111;
     p->slowpcmin = 0.005;
     p->structcn = 150.0;
-    p->structrat = 0.0;
     p->structcp = 5500.0;
-    p->structratp = 0.0;
     p->wdecay = 0.02;
-    p->wretrans = 0.0;
-    
+
     for (i = 0; i < 7; i++) {
         p->decayrate[i] = 0.0;
     }
