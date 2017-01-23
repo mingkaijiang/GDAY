@@ -135,8 +135,6 @@ void initialise_params(params *p) {
     p->rdecay = 0.33333;
     p->sapturnover = 0.1;
     p->sla = 4.4;
-    p->slamax = 4.4;
-    p->slazero = 4.4;
     p->slowncmax = 0.066666;
     p->slowncmin = 0.025;
     p->slowpcmax = 0.011111;

@@ -527,10 +527,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->sapturnover = atof(value);
     } else if (MATCH("params", "sla")) {
         p->sla = atof(value);
-    } else if (MATCH("params", "slamax")) {
-        p->slamax = atof(value);
-    } else if (MATCH("params", "slazero")) {
-        p->slazero = atof(value);
     } else if (MATCH("params", "slowncmax")) {
         p->slowncmax = atof(value);
     } else if (MATCH("params", "slowncmin")) {

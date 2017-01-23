@@ -599,16 +599,6 @@ void carbon_allocation(control *c, fluxes *f, params *p, state *s,
     f->cpbranch = f->npp * f->albranch;
     f->cpstem = f->npp * f->alstem;
 
-    /* evaluate SLA of new foliage accounting for variation in SLA
-       with tree and leaf age (Sands and Landsberg, 2002). Assume
-       SLA of new foliage is linearly related to leaf N:C ratio
-       via nitfac. Based on date from two E.globulus stands in SW Aus, see
-       Corbeels et al (2005) Ecological Modelling, 187, 449-474.
-       (m2 onesided/kg DW)
-     This needs to be updated to consider P effect
-    */
-    p->sla = p->slazero + npitfac * (p->slamax - p->slazero);
-
     /* update leaf area [m2 m-2] */
     if (float_eq(s->shoot, 0.0)) {
       s->lai = 0.0;
