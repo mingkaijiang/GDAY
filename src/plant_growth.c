@@ -17,8 +17,8 @@
 * =========================================================================== */
 #include "plant_growth.h"
 
-void calc_day_growth(control *c, fluxes *f, met_arrays *ma,
-                     met *m, nrutil *nr, params *p, state *s, double day_length,
+void calc_day_growth(control *c, fluxes *f, 
+                     met *m, nrutil *nr, params *p, state *s,
                      int doy, double fdecay, double rdecay)
 {
    double dummy=0.0;
@@ -28,7 +28,7 @@ void calc_day_growth(control *c, fluxes *f, met_arrays *ma,
    int    recalc_wb;
 
     /* calculate daily GPP/NPP, respiration and update water balance */
-    carbon_daily_production(c, f, m, p, s, day_length);
+    carbon_daily_production(c, f, m, p, s);
 
     // leaf N:C as a fraction of Ncmaxyoung, i.e. the max N:C ratio of
     //foliage in young stand, and leaf P:C as a fraction of Pcmaxyoung
@@ -71,14 +71,8 @@ void calc_day_growth(control *c, fluxes *f, met_arrays *ma,
     return;
 }
 
-void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
-                             double daylen) {
+void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s) {
     /* Calculate GPP, NPP and plant respiration at the daily timestep
-
-    Parameters:
-    -----------
-    daylen : float
-        daytime length (hrs)
 
     References:
     -----------

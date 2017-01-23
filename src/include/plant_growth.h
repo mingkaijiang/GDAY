@@ -12,8 +12,8 @@
 #include "photosynthesis.h"
 
 /* C stuff */
-void    calc_day_growth(control *, fluxes *, met_arrays *ma, met *,
-                        nrutil *, params *, state *, double, int, double,
+void    calc_day_growth(control *, fluxes *, met *,
+                        nrutil *, params *, state *, int, double,
                         double);
 void    carbon_allocation(control *, fluxes *, params *, state *, double, int);
 void    calc_carbon_allocation_fracs(control *c, fluxes *, params *, state *,
@@ -21,8 +21,7 @@ void    calc_carbon_allocation_fracs(control *c, fluxes *, params *, state *,
 void    update_plant_state(control *, fluxes *, params *, state *,
                            double, double, int);
 void    precision_control(fluxes *, state *);
-void    carbon_daily_production(control *, fluxes *, met *m, params *, state *,
-                                double);
+void    carbon_daily_production(control *, fluxes *, met *m, params *, state *);
 
 void    calculate_cnp_wood_ratios(control *c, params *, state *, double, double,
                                   double, double *, 

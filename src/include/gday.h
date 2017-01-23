@@ -78,15 +78,14 @@
 void   clparser(int, char **, control *);
 void   usage(char **);
 
-void   run_sim(control *, fluxes *, met_arrays *, met *,
+void   run_sim(control *, fluxes *, met *,
                params *p, state *, nrutil *);
-void   spin_up_pools(control *, fluxes *, met_arrays *, met *,
+void   spin_up_pools(control *, fluxes *, met *,
                      params *p, state *, nrutil *);
 void   correct_rate_constants(params *, int output);
 void   reset_all_n_pools_and_fluxes(fluxes *, state *);
 void   reset_all_p_pools_and_fluxes(fluxes *, state *);
 void   day_end_calculations(control *, params *, state *, int, int);
-void   unpack_met_data(control *, fluxes *f, met_arrays *, met *, int, double);
 void   unpack_met_data_simple(fluxes *, met *, params *p); 
 
 #endif /* GDAY_H */

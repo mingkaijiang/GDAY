@@ -322,7 +322,6 @@ typedef struct {
     double npbranch;
     double npstemimm;
     double npstemmob;
-    double nrootexudate;
 
     /* daily P production */
     double ppleaf;
@@ -330,7 +329,6 @@ typedef struct {
     double ppbranch;
     double ppstemimm;
     double ppstemmob;
-    double prootexudate;
 
     /* dying stuff */
     double deadleaves;      /* Leaf litter C production (t/ha/yr) */
@@ -457,7 +455,7 @@ typedef struct {
     double   *y;
     double   *dydx;
     double   *xp;
-	double  **yp;
+	  double  **yp;
     int       N;
     int       kmax;
 

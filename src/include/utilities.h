@@ -14,8 +14,6 @@
 
 
 /* utilities */
-double day_length(int, int, double);
-void   calculate_daylength(state *, int, double);
 int    is_leap_year(int);
 void   prog_error(const char *, const unsigned int);
 bool   float_eq(double, double);

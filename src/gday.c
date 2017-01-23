@@ -78,18 +78,6 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
     } 
 
-    // potentially allocating 1 extra spot, but will be fine as we always
-    // index by num_days
-    if ((s->day_length = (double *)calloc(366, sizeof(double))) == NULL) {
-        fprintf(stderr,"Error allocating space for day_length\n");
-		    exit(EXIT_FAILURE);
-    } 
-    
-    /*if ((s->day_length = (double *)calloc(1, sizeof(double))) == NULL) {
-      fprintf(stderr,"Error allocating space for day_length\n");
-      exit(EXIT_FAILURE);
-    }*/
-
     initialise_control(c);
     initialise_params(p);
     initialise_fluxes(f);
@@ -116,9 +104,9 @@ int main(int argc, char **argv)
     /* model runs */
     
     if (c->spin_up) {
-        spin_up_pools(c, f, ma, m, p, s, nr);
+        spin_up_pools(c, f, m, p, s, nr);
     } else {
-        run_sim(c, f, ma, m, p, s, nr);
+        run_sim(c, f, m, p, s, nr);
     }
 
     /* clean up */
@@ -141,7 +129,6 @@ int main(int argc, char **argv)
     free(ma->par_am);
     free(ma->par_pm);
     
-    free(s->day_length);
     free(ma);
     free(m);
     free(p);
@@ -151,7 +138,7 @@ int main(int argc, char **argv)
     exit(EXIT_SUCCESS);
 }
 
-void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
+void run_sim(control *c, fluxes *f,  met *m,
              params *p, state *s, nrutil *nr){
 
     int    nyr, doy, window_size, i, dummy = 0;
@@ -217,21 +204,22 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
 
     for (nyr = 0; nyr < c->num_years; nyr++) {
 
-        year = ma->year[c->day_idx];
+        // year = ma->year[c->day_idx];
+        
+        year = 100.0;
         
         if (is_leap_year(year))
             c->num_days = 366;  
         else
             c->num_days = 365;  
         
-        calculate_daylength(s, c->num_days, p->latitude);
+        //calculate_daylength(s, c->num_days, p->latitude);
         
         /* =================== **
         **   D A Y   L O O P   **
         ** =================== */
         for (doy = 0; doy < c->num_days; doy++) {
 
-            // unpack_met_data(c, f, ma, m, dummy, s->day_length[doy]);
             unpack_met_data_simple(f, m, p);
           
             fdecay = p->fdecay;
@@ -239,7 +227,7 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
           
             calculate_litterfall(c, f, p, s, doy, &fdecay, &rdecay);
             
-            calc_day_growth(c, f, ma, m, nr, p, s, s->day_length[doy],
+            calc_day_growth(c, f, m, nr, p, s,
                             doy, fdecay, rdecay);
 
             calculate_csoil_flows(c, f, p, s, m->tsoil, doy);
@@ -295,7 +283,7 @@ void run_sim(control *c, fluxes *f, met_arrays *ma, met *m,
 
 }
 
-void spin_up_pools(control *c, fluxes *f, met_arrays *ma, met *m,
+void spin_up_pools(control *c, fluxes *f, met *m,
                    params *p, state *s, nrutil *nr){
     /* Spin up model plant & soil pools to equilibrium.
 
@@ -344,7 +332,7 @@ void spin_up_pools(control *c, fluxes *f, met_arrays *ma, met *m,
 
             /* 1700 years (17 yrs x 100 cycles) */
             for (i = 0; i < 100; i++) {
-                run_sim(c, f, ma, m, p, s, nr); /* run GDAY */
+                run_sim(c, f, m, p, s, nr); /* run GDAY */
             }
             if (c->pcycle) {
                 /* Have we reached a steady state? */
@@ -681,36 +669,6 @@ void day_end_calculations(control *c, params *p, state *s, int days_in_year,
     return;
 }
 
-void unpack_met_data(control *c, fluxes *f, met_arrays *ma, met *m, int hod,
-                     double day_length) {
-
-    double c1, c2;
-
-    /* unpack met forcing */
-    m->Ca = ma->co2[c->day_idx];
-    m->par = ma->par_am[c->day_idx] + ma->par_pm[c->day_idx];
-    
-    /* Conversion factor for PAR to SW rad */
-    c1 = MJ_TO_J * J_2_UMOL / (day_length * 60.0 * 60.0) * PAR_2_SW;
-    c2 = MJ_TO_J * J_2_UMOL / (day_length / 2.0 * 60.0 * 60.0) * PAR_2_SW;
-    m->sw_rad = m->par * c1;
-    m->sw_rad_am = ma->par_am[c->day_idx] * c2;
-    m->sw_rad_pm = ma->par_pm[c->day_idx] * c2;
-    m->ndep = ma->ndep[c->day_idx];
-    m->nfix = ma->nfix[c->day_idx];
-    m->pdep = ma->pdep[c->day_idx];
-    m->tsoil = ma->tsoil[c->day_idx];
-    
-
-    /* N deposition + biological N fixation */
-    f->ninflow = m->ndep + m->nfix;
-    
-    /* P deposition to fluxes */
-    f->p_atm_dep = m->pdep;
-    
-    return;
-}
-
 void unpack_met_data_simple(fluxes *f, met *m, params *p) {
   
   /* unpack met forcing */
@@ -721,7 +679,6 @@ void unpack_met_data_simple(fluxes *f, met *m, params *p) {
   m->nfix = p->nfix_in;
   m->pdep = p->pdep_in;
   m->tsoil = p->tsoil_in;
-  
   
   /* N deposition + biological N fixation */
   f->ninflow = (m->ndep + m->nfix) / 365.25;
