@@ -36,7 +36,7 @@ void write_output_header(control *c, FILE **fp) {
     fprintf(*fp, "#Git_revision_code:%s\n", c->git_code_ver);
 
     /* time stuff */
-    fprintf(*fp, "year,doy,");
+    fprintf(*fp, "year,");
 
     /*
     ** STATE
@@ -103,8 +103,7 @@ void write_output_header(control *c, FILE **fp) {
     return;
 }
 
-void write_daily_outputs_ascii(control *c, fluxes *f, state *s, int year,
-                               int doy) {
+void write_daily_outputs_ascii(control *c, fluxes *f, state *s, int year) {
     /*
         Write daily state and fluxes headers to an output CSV file. Note we
         are not writing anything useful like units as there is a wrapper
@@ -114,7 +113,7 @@ void write_daily_outputs_ascii(control *c, fluxes *f, state *s, int year,
 
 
     /* time stuff */
-    fprintf(c->ofp, "%.10f,%.10f,", (double)year, (double)doy);
+    fprintf(c->ofp, "%.10f,", (double)year);
 
     /*
     ** STATE
@@ -208,8 +207,7 @@ void write_daily_outputs_ascii(control *c, fluxes *f, state *s, int year,
     return;
 }
 
-void write_daily_outputs_binary(control *c, fluxes *f, state *s, int year,
-                                int doy) {
+void write_daily_outputs_binary(control *c, fluxes *f, state *s, int year) {
     /*
         Write daily state and fluxes headers to an output CSV file. Note we
         are not writing anything useful like units as there is a wrapper
@@ -220,8 +218,6 @@ void write_daily_outputs_binary(control *c, fluxes *f, state *s, int year,
 
     /* time stuff */
     temp = (double)year;
-    fwrite(&temp, sizeof(double), 1, c->ofp);
-    temp = (double)doy;
     fwrite(&temp, sizeof(double), 1, c->ofp);
 
 

@@ -237,18 +237,13 @@ typedef struct {
 
 typedef struct {
 
-    double *year;
-    double *par;
-    double *tsoil;
-    double *co2;
-    double *ndep;
-    double *nfix;       /* N inputs from biological fixation (t/ha/timestep (d/30min)) */
-    double *pdep;
-
-    /* Day timestep */
-    //double *prjday; /* should really be renamed to doy for consistancy */
-    //double *par_am;
-    //double *par_pm;
+    double year;
+    double par;
+    double tsoil;
+    double co2;
+    double ndep;
+    double nfix;       /* N inputs from biological fixation (t/ha/timestep (d/30min)) */
+    double pdep;
 
     /* sub-daily timestep */
     double *doy;
@@ -268,6 +263,8 @@ typedef struct {
     double nfix;       /* N inputs from biological fixation (t/ha/timestep (d/30min)) */
     double pdep;
     double tsoil;
+    double year;
+    double co2;
 
     /* daily */
     double sw_rad_am;

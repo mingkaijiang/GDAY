@@ -17,7 +17,7 @@
 #include "litter_production.h"
 
 void calculate_litterfall(control *c, fluxes *f, params *p, state *s,
-                          int doy, double *fdecay, double *rdecay) {
+                          double *fdecay, double *rdecay) {
 
     double  ncflit, ncrlit;
     double  pcflit, pcrlit;

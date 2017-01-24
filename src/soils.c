@@ -21,7 +21,7 @@
 #include "soils.h"
 
 void calculate_csoil_flows(control *c, fluxes *f, params *p, state *s,
-                           double tsoil, int doy) {
+                           double tsoil) {
     double lnleaf, lnroot;
     /* Fraction of C lost due to microbial respiration */
     double frac_microb_resp = 0.85 - (0.68 * p->finesoil);
@@ -490,8 +490,7 @@ void precision_control_soil_c(fluxes *f, state *s) {
 }
 
 
-void calculate_nsoil_flows(control *c, fluxes *f, params *p, state *s,
-                           int doy) {
+void calculate_nsoil_flows(control *c, fluxes *f, params *p, state *s) {
 
     /* Fraction of C lost due to microbial respiration */
     double frac_microb_resp = 0.85 - (0.68 * p->finesoil);
@@ -986,8 +985,7 @@ void precision_control_soil_n(fluxes *f, state *s) {
     return;
 }
 
-void calculate_psoil_flows(control *c, fluxes *f, params *p, state *s,
-                           int doy) {
+void calculate_psoil_flows(control *c, fluxes *f, params *p, state *s) {
 
     /* Fraction of C lost due to microbial respiration */
     double frac_microb_resp = 0.85 - (0.68 * p->finesoil);

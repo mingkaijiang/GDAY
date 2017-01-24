@@ -19,7 +19,7 @@
 
 void calc_day_growth(control *c, fluxes *f, 
                      met *m, nrutil *nr, params *p, state *s,
-                     int doy, double fdecay, double rdecay)
+                     double fdecay, double rdecay)
 {
    double dummy=0.0;
    double nitfac, pitfac, npitfac;
@@ -47,7 +47,7 @@ void calc_day_growth(control *c, fluxes *f,
     calc_carbon_allocation_fracs(c, f, p, s, npitfac);
 
     /* Distribute new C, N and P through the system */
-    carbon_allocation(c, f, p, s, npitfac, doy);
+    carbon_allocation(c, f, p, s, npitfac);
 
     calculate_cnp_wood_ratios(c, p, s, npitfac, nitfac, pitfac,
                               &ncbnew, &ncwimm,
@@ -56,9 +56,9 @@ void calc_day_growth(control *c, fluxes *f,
                               
     recalc_wb = np_allocation(c, f, p, s, ncbnew, ncwimm, ncwnew,
                               pcbnew, pcwimm, pcwnew,
-                              fdecay, rdecay, doy);
+                              fdecay, rdecay);
     
-    update_plant_state(c, f, p, s, fdecay, rdecay, doy);
+    update_plant_state(c, f, p, s, fdecay, rdecay);
 
     precision_control(f, s);
     
@@ -266,7 +266,7 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
 int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
                   double ncwimm, double ncwnew, double pcbnew,
                   double pcwimm, double pcwnew,double fdecay,
-                  double rdecay, int doy) {
+                  double rdecay) {
     /*
         Nitrogen and phosphorus distribution - allocate available N and
         P (mineral) through system. N and P is first allocated to the woody
@@ -308,8 +308,8 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
 
     /* N and P retranslocated proportion from dying plant tissue and stored within
        the plant */
-    f->retrans = nitrogen_retrans(c, f, p, s, fdecay, rdecay, doy);
-    f->retransp = phosphorus_retrans(c, f, p, s, fdecay, rdecay, doy);
+    f->retrans = nitrogen_retrans(c, f, p, s, fdecay, rdecay);
+    f->retransp = phosphorus_retrans(c, f, p, s, fdecay, rdecay);
     f->nuptake = calculate_nuptake(c, p, s);
     f->puptake = calculate_puptake(c, p, s, f);
     
@@ -349,14 +349,14 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     arg = f->npstemimm + f->npstemmob + f->npbranch;
     if (arg > ntot && c->fixleafnc == FALSE && c->ncycle) {
       recalc_wb = cut_back_production(c, f, p, s, ntot, ncbnew,
-                                      ncwimm, ncwnew, doy);
+                                      ncwimm, ncwnew);
     }
     
     /* If we have allocated more P than we have avail, cut back C prodn */
     arg = f->ppstemimm + f->ppstemmob + f->ppbranch;
     if (arg > ptot && c->fixleafpc == FALSE && c->pcycle) {
       recalc_wb = cut_back_production(c, f, p, s, ptot, pcbnew, 
-                                      pcwimm, pcwnew, doy);
+                                      pcwimm, pcwnew);
     }
     
     /* Nitrogen reallocation to flexible-ratio pools */
@@ -384,7 +384,7 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
 
 int cut_back_production(control *c, fluxes *f, params *p, state *s,
                         double tot, double xcbnew, 
-                        double xcwimm, double xcwnew, int doy) {
+                        double xcwimm, double xcwnew) {
 
     double lai_inc, conv;
     double pcbnew, pcwimm, pcwnew;
@@ -559,7 +559,7 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
 }
 
 void carbon_allocation(control *c, fluxes *f, params *p, state *s,
-                       double npitfac, int doy) {
+                       double npitfac) {
     /* C distribution - allocate available C through system
 
     Parameters:
@@ -586,7 +586,7 @@ void carbon_allocation(control *c, fluxes *f, params *p, state *s,
 }
 
 void update_plant_state(control *c, fluxes *f, params *p, state *s,
-                        double fdecay, double rdecay, int doy) {
+                        double fdecay, double rdecay) {
     /*
     Daily change in C content
 
@@ -791,7 +791,7 @@ void precision_control(fluxes *f, state *s) {
 
 
 double nitrogen_retrans(control *c, fluxes *f, params *p, state *s,
-                        double fdecay, double rdecay, int doy) {
+                        double fdecay, double rdecay) {
     /* Nitrogen retranslocated from senesced plant matter.
     Constant rate of n translocated from mobile pool
 
@@ -819,7 +819,7 @@ double nitrogen_retrans(control *c, fluxes *f, params *p, state *s,
 }
 
 double phosphorus_retrans(control *c, fluxes *f, params *p, state *s,
-                          double fdecay, double rdecay, int doy) {
+                          double fdecay, double rdecay) {
     /*
         Phosphorus retranslocated from senesced plant matter.
         Constant rate of p translocated from mobile pool

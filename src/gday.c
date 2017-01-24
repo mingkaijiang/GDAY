@@ -99,7 +99,7 @@ int main(int argc, char **argv)
     }
     
     /* read met data */
-    read_daily_met_data_simple(argv, c, ma, p);
+    read_daily_met_data_simple(argv, c, m, p, f);
     
     /* model runs */
     if (c->spin_up) {
@@ -117,13 +117,6 @@ int main(int argc, char **argv)
     }
 
     free(c);
-    free(ma->year);
-    free(ma->tsoil);
-    free(ma->co2);
-    free(ma->ndep);
-    free(ma->pdep);
-    free(ma->par);
-
     free(ma);
     free(m);
     free(p);
@@ -184,7 +177,7 @@ void run_sim(control *c, fluxes *f,  met *m, met_arrays *ma,
      * units of days not years
      */
     correct_rate_constants(p, FALSE);
-    day_end_calculations(c, p, s, -99, TRUE);
+    day_end_calculations(c, p, s, TRUE);
 
     s->lai = MAX(0.01, (p->sla * M2_AS_HA / KG_AS_TONNES /
                           p->cfracts * s->shoot));
@@ -192,32 +185,34 @@ void run_sim(control *c, fluxes *f,  met *m, met_arrays *ma,
     /* ====================== **
     **   Y E A R    L O O P   **
     ** ====================== */
-    //c->day_idx = 0;
-
     for (nyr = 0; nyr < c->num_years; nyr++) {
       
             c->num_days = 365;  
+      
+            // fprintf(stderr, "num_years %d\n", c->num_years);
         
         /* =================== **
         **   D A Y   L O O P   **
         ** =================== */
         for (doy = 0; doy < c->num_days; doy++) {
+          
+            // fprintf(stderr, "doy %d\n", doy);
 
             unpack_met_data_simple(f, m, p);
           
             fdecay = p->fdecay;
             rdecay = p->rdecay;
           
-            calculate_litterfall(c, f, p, s, doy, &fdecay, &rdecay);
+            calculate_litterfall(c, f, p, s, &fdecay, &rdecay);
             
             calc_day_growth(c, f, m, nr, p, s,
-                            doy, fdecay, rdecay);
+                            fdecay, rdecay);
 
-            calculate_csoil_flows(c, f, p, s, m->tsoil, doy);
-            calculate_nsoil_flows(c, f, p, s, doy);
+            calculate_csoil_flows(c, f, p, s, m->tsoil);
+            calculate_nsoil_flows(c, f, p, s);
             
             if (c->pcycle == TRUE) {
-                calculate_psoil_flows(c, f, p, s, doy);
+                calculate_psoil_flows(c, f, p, s);
             }
 
             /* update stress SMA */
@@ -235,15 +230,14 @@ void run_sim(control *c, fluxes *f,  met *m, met_arrays *ma,
                 reset_all_p_pools_and_fluxes(f, s);
             
             /* calculate C:N ratios and increment annual flux sum */
-            day_end_calculations(c, p, s, c->num_days, FALSE);
+            day_end_calculations(c, p, s, FALSE);
             
             if (c->print_options == DAILY && c->spin_up == FALSE) {
                 if(c->output_ascii)
-                    write_daily_outputs_ascii(c, f, s, year, doy+1);
+                    write_daily_outputs_ascii(c, f, s, year);
                 else
-                    write_daily_outputs_binary(c, f, s, year, doy+1);
+                    write_daily_outputs_binary(c, f, s, year);
             }
-           // c->day_idx++;
             /* ======================= **
             **   E N D   O F   D A Y   **
             ** ======================= */
@@ -580,7 +574,7 @@ void reset_all_p_pools_and_fluxes(fluxes *f, state *s) {
     return;
 }
 
-void day_end_calculations(control *c, params *p, state *s, int days_in_year,
+void day_end_calculations(control *c, params *p, state *s, 
                           int init) {
     /* Calculate derived values from state variables.
 
