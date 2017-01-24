@@ -144,26 +144,6 @@ void run_sim(control *c, fluxes *f,  met *m,
     }
 
     /*
-     * Window size = root lifespan in days...
-     * For deciduous species window size is set as the length of the
-     * growing season in the main part of the code
-     */
-    window_size = (int)(1.0 / p->rdecay * NDAYS_IN_YR);
-    sma_obj *hw = sma(SMA_NEW, window_size).handle;
-    if (s->prev_sma > -900) {
-        for (i = 0; i < window_size; i++) {
-            sma(SMA_ADD, hw, s->prev_sma);
-        }
-    }
-    /* Set up SMA
-     *  - If we don't have any information about the N & water limitation, i.e.
-     *    as would be the case with spin-up, assume that there is no limitation
-     *    to begin with.
-     */
-    if (s->prev_sma < -900)
-        s->prev_sma = 1.0;
-
-    /*
      * Params are defined in per year, needs to be per day. Important this is
      * done here as rate constants elsewhere in the code are assumed to be in
      * units of days not years
@@ -199,9 +179,6 @@ void run_sim(control *c, fluxes *f,  met *m,
       /* update stress SMA */
       current_limitation = calculate_growth_stress_limitation(p, s, c);
       
-      sma(SMA_ADD, hw, current_limitation);
-      s->prev_sma = sma(SMA_MEAN, hw).sma;
-      
       /* Turn off all N calculations */
       if (c->ncycle == FALSE)
         reset_all_n_pools_and_fluxes(f, s);
@@ -229,8 +206,6 @@ void run_sim(control *c, fluxes *f,  met *m,
     if (c->print_options == END && c->spin_up == FALSE) {
         write_final_state(c, p, s);
     }
-
-    sma(SMA_FREE, hw);
 
     return;
 
@@ -627,8 +602,8 @@ void unpack_met_data_simple(fluxes *f, met *m, params *p) {
   
   /* unpack met forcing */
   m->Ca = p->co2_in;
-  m->par = p->I0/365.25;  
-  //m->par = p->I0;    
+  //m->par = p->I0/365.25;  
+  m->par = p->I0;    
   
   
   m->ndep = p->ndep_in;
@@ -636,11 +611,11 @@ void unpack_met_data_simple(fluxes *f, met *m, params *p) {
   m->pdep = p->pdep_in;
   m->tsoil = p->tsoil_in;
   
-  f->ninflow = (m->ndep + m->nfix) / 365.25;
-  f->p_atm_dep = m->pdep / 365.25;
+  //f->ninflow = (m->ndep + m->nfix) / 365.25;
+  //f->p_atm_dep = m->pdep / 365.25;
   
-  //f->ninflow = (m->ndep + m->nfix);
-  //f->p_atm_dep = m->pdep;
+  f->ninflow = (m->ndep + m->nfix);
+  f->p_atm_dep = m->pdep;
   
   return;
 }

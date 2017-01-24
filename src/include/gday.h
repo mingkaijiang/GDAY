@@ -65,7 +65,6 @@
 
 #include "structures.h"
 #include "initialise_model.h"
-#include "simple_moving_average.h"
 #include "plant_growth.h"
 #include "litter_production.h"
 #include "write_output_file.h"

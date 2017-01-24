@@ -407,9 +407,6 @@ int ohandler(char *section, char *name, char *value, control *c, params *p,
     } else if (MATCH("state", "passivesoilp")) {
         fprintf(c->ofp, "passivesoilp = %.10f\n", s->passivesoilp);
         *match = TRUE;
-    } else if (MATCH("state", "prev_sma")) {
-        fprintf(c->ofp, "prev_sma = %.10f\n", s->prev_sma);
-        *match = TRUE;
     } else if (MATCH("state", "root")) {
         fprintf(c->ofp, "root = %.10f\n", s->root);
         *match = TRUE;

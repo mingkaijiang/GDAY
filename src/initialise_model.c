@@ -351,7 +351,6 @@ void initialise_state(state *s) {
     s->passivesoil = 59.5304597863;
     s->passivesoiln = 8.0134056319;
     s->passivesoilp = 0.541186;         /* based on passive SOM pool C/P ratio of 110 from Parton et al., 1989, Ecology of arable land. */
-    s->prev_sma = -999.9;
     s->root = 3.92887790342;
     s->rootn = 0.076296932914;
     s->rootp = 0.00392888;              /* Yang et al. 2016, Biogeosciences, Table S1, fine root C:P = 1000 */
