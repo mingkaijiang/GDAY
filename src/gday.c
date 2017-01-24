@@ -124,10 +124,6 @@ int main(int argc, char **argv)
     free(ma->pdep);
     free(ma->par);
 
-    /*free(ma->prjday);
-    free(ma->par_am);
-    free(ma->par_pm);
-    */
     free(ma);
     free(m);
     free(p);
