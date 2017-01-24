@@ -99,14 +99,18 @@ int main(int argc, char **argv)
     }
     
     /* read met data */
-    read_daily_met_data(argv, c, ma);
+    // read_daily_met_data(argv, c, ma);
+    read_daily_met_data_simple(argv, c, ma, p);
   
+    //c->num_years = 17;
+    //c->total_num_days = 6205;
+    
     /* model runs */
     
     if (c->spin_up) {
-        spin_up_pools(c, f, m, p, s, nr);
+        spin_up_pools(c, f, m, ma, p, s, nr);
     } else {
-        run_sim(c, f, m, p, s, nr);
+        run_sim(c, f, m, ma, p, s, nr);
     }
 
     /* clean up */
@@ -138,7 +142,7 @@ int main(int argc, char **argv)
     exit(EXIT_SUCCESS);
 }
 
-void run_sim(control *c, fluxes *f,  met *m,
+void run_sim(control *c, fluxes *f,  met *m, met_arrays *ma,
              params *p, state *s, nrutil *nr){
 
     int    nyr, doy, window_size, i, dummy = 0;
@@ -204,16 +208,15 @@ void run_sim(control *c, fluxes *f,  met *m,
 
     for (nyr = 0; nyr < c->num_years; nyr++) {
 
-        // year = ma->year[c->day_idx];
+        year = ma->year[c->day_idx];
         
-        year = 100.0;
+        // fprintf(stderr, "year %f\n", year);
+        //year = 100.0;
         
         if (is_leap_year(year))
             c->num_days = 366;  
         else
             c->num_days = 365;  
-        
-        //calculate_daylength(s, c->num_days, p->latitude);
         
         /* =================== **
         **   D A Y   L O O P   **
@@ -283,7 +286,7 @@ void run_sim(control *c, fluxes *f,  met *m,
 
 }
 
-void spin_up_pools(control *c, fluxes *f, met *m,
+void spin_up_pools(control *c, fluxes *f, met *m,met_arrays *ma,
                    params *p, state *s, nrutil *nr){
     /* Spin up model plant & soil pools to equilibrium.
 
@@ -332,7 +335,7 @@ void spin_up_pools(control *c, fluxes *f, met *m,
 
             /* 1700 years (17 yrs x 100 cycles) */
             for (i = 0; i < 100; i++) {
-                run_sim(c, f, m, p, s, nr); /* run GDAY */
+                run_sim(c, f, m, ma, p, s, nr); /* run GDAY */
             }
             if (c->pcycle) {
                 /* Have we reached a steady state? */

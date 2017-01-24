@@ -78,9 +78,9 @@
 void   clparser(int, char **, control *);
 void   usage(char **);
 
-void   run_sim(control *, fluxes *, met *,
+void   run_sim(control *, fluxes *, met *,met_arrays *,
                params *p, state *, nrutil *);
-void   spin_up_pools(control *, fluxes *, met *,
+void   spin_up_pools(control *, fluxes *, met *,met_arrays *,
                      params *p, state *, nrutil *);
 void   correct_rate_constants(params *, int output);
 void   reset_all_n_pools_and_fluxes(fluxes *, state *);
