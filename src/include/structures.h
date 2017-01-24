@@ -32,14 +32,14 @@ typedef struct {
     char  git_code_ver[STRING_LENGTH];
     int   spin_up;
     int   PRINT_GIT;
-    long  day_idx;
+    //long  day_idx;
     int   pdebug;
 
 } control;
 
 
 typedef struct {
-    double *day_length;
+    //double *day_length;
 
     double activesoil;                  /* active C som pool (t/ha) */
     double activesoiln;                 /* active N som pool (t/ha) */
@@ -246,9 +246,9 @@ typedef struct {
     double *pdep;
 
     /* Day timestep */
-    double *prjday; /* should really be renamed to doy for consistancy */
-    double *par_am;
-    double *par_pm;
+    //double *prjday; /* should really be renamed to doy for consistancy */
+    //double *par_am;
+    //double *par_pm;
 
     /* sub-daily timestep */
     double *doy;

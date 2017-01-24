@@ -99,14 +99,9 @@ int main(int argc, char **argv)
     }
     
     /* read met data */
-    // read_daily_met_data(argv, c, ma);
     read_daily_met_data_simple(argv, c, ma, p);
-  
-    //c->num_years = 17;
-    //c->total_num_days = 6205;
     
     /* model runs */
-    
     if (c->spin_up) {
         spin_up_pools(c, f, m, ma, p, s, nr);
     } else {
@@ -129,10 +124,10 @@ int main(int argc, char **argv)
     free(ma->pdep);
     free(ma->par);
 
-    free(ma->prjday);
+    /*free(ma->prjday);
     free(ma->par_am);
     free(ma->par_pm);
-    
+    */
     free(ma);
     free(m);
     free(p);
@@ -197,25 +192,14 @@ void run_sim(control *c, fluxes *f,  met *m, met_arrays *ma,
 
     s->lai = MAX(0.01, (p->sla * M2_AS_HA / KG_AS_TONNES /
                           p->cfracts * s->shoot));
-    
-    // fprintf(stderr, "shoot %f\n", s->shoot);
-    // fprintf(stderr, "lai 1 %f\n", s->lai);
 
     /* ====================== **
     **   Y E A R    L O O P   **
     ** ====================== */
-    c->day_idx = 0;
+    //c->day_idx = 0;
 
     for (nyr = 0; nyr < c->num_years; nyr++) {
-
-        year = ma->year[c->day_idx];
-        
-        // fprintf(stderr, "year %f\n", year);
-        //year = 100.0;
-        
-        if (is_leap_year(year))
-            c->num_days = 366;  
-        else
+      
             c->num_days = 365;  
         
         /* =================== **
@@ -263,12 +247,12 @@ void run_sim(control *c, fluxes *f,  met *m, met_arrays *ma,
                 else
                     write_daily_outputs_binary(c, f, s, year, doy+1);
             }
-            c->day_idx++;
-
+           // c->day_idx++;
             /* ======================= **
             **   E N D   O F   D A Y   **
             ** ======================= */
         }
+        
     }
     /* ========================= **
     **   E N D   O F   Y E A R   **
