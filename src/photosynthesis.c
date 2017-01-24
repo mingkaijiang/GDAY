@@ -66,33 +66,6 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
   
 }
 
-
-double arrh(double mt, double k25, double Ea, double Tk) {
-    /*
-        Temperature dependence of kinetic parameters is described by an
-        Arrhenius function
-
-        Parameters:
-        ----------
-        k25 : float
-            rate parameter value at 25 degC
-        Ea : float
-            activation energy for the parameter [J mol-1]
-        Tk : float
-            leaf temperature [deg K]
-
-        Returns:
-        -------
-        kt : float
-            temperature dependence on parameter
-
-        References:
-        -----------
-        * Medlyn et al. 2002, PCE, 25, 1167-1179.
-    */
-    return (k25 * exp((Ea * (Tk - mt)) / (mt * RGAS * Tk)));
-}
-
 double lue_simplified(params *p, state *s, double co2) {
     /*
      * New LUE function replacing epsilon function for a simplified calculation

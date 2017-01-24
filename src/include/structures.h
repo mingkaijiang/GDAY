@@ -27,20 +27,14 @@ typedef struct {
     int   passiveconst;
     int   print_options;
     int   use_eff_nc;
-    int   num_days;
-    int   total_num_days;
     char  git_code_ver[STRING_LENGTH];
     int   spin_up;
     int   PRINT_GIT;
-    //long  day_idx;
-    int   pdebug;
 
 } control;
 
 
 typedef struct {
-    //double *day_length;
-
     double activesoil;                  /* active C som pool (t/ha) */
     double activesoiln;                 /* active N som pool (t/ha) */
     double activesoilp;                 /* active P som pool (t/ha) */

@@ -30,7 +30,6 @@ int main(int argc, char **argv)
      */
     control *c;
     fluxes *f;
-    met_arrays *ma;
     met *m;
     params *p;
     state *s;
@@ -45,12 +44,6 @@ int main(int argc, char **argv)
     f = (fluxes *)malloc(sizeof(fluxes));
     if (f == NULL) {
     	fprintf(stderr, "fluxes structure: Not allocated enough memory!\n");
-    	exit(EXIT_FAILURE);
-    }
-
-    ma = (met_arrays *)malloc(sizeof(met_arrays));
-    if (ma == NULL) {
-    	fprintf(stderr, "met arrays structure: Not allocated enough memory!\n");
     	exit(EXIT_FAILURE);
     }
 
@@ -103,9 +96,9 @@ int main(int argc, char **argv)
     
     /* model runs */
     if (c->spin_up) {
-        spin_up_pools(c, f, m, ma, p, s, nr);
+        spin_up_pools(c, f, m, p, s, nr);
     } else {
-        run_sim(c, f, m, ma, p, s, nr);
+        run_sim(c, f, m, p, s, nr);
     }
 
     /* clean up */
@@ -117,7 +110,6 @@ int main(int argc, char **argv)
     }
 
     free(c);
-    free(ma);
     free(m);
     free(p);
     free(s);
@@ -126,7 +118,7 @@ int main(int argc, char **argv)
     exit(EXIT_SUCCESS);
 }
 
-void run_sim(control *c, fluxes *f,  met *m, met_arrays *ma,
+void run_sim(control *c, fluxes *f,  met *m, 
              params *p, state *s, nrutil *nr){
 
     int    nyr, doy, window_size, i, dummy = 0;
@@ -186,62 +178,47 @@ void run_sim(control *c, fluxes *f,  met *m, met_arrays *ma,
     **   Y E A R    L O O P   **
     ** ====================== */
     for (nyr = 0; nyr < c->num_years; nyr++) {
+
+      unpack_met_data_simple(f, m, p);
       
-            c->num_days = 365;  
+      fdecay = p->fdecay;
+      rdecay = p->rdecay;
       
-            // fprintf(stderr, "num_years %d\n", c->num_years);
-        
-        /* =================== **
-        **   D A Y   L O O P   **
-        ** =================== */
-        for (doy = 0; doy < c->num_days; doy++) {
-          
-            // fprintf(stderr, "doy %d\n", doy);
-
-            unpack_met_data_simple(f, m, p);
-          
-            fdecay = p->fdecay;
-            rdecay = p->rdecay;
-          
-            calculate_litterfall(c, f, p, s, &fdecay, &rdecay);
-            
-            calc_day_growth(c, f, m, nr, p, s,
-                            fdecay, rdecay);
-
-            calculate_csoil_flows(c, f, p, s, m->tsoil);
-            calculate_nsoil_flows(c, f, p, s);
-            
-            if (c->pcycle == TRUE) {
-                calculate_psoil_flows(c, f, p, s);
-            }
-
-            /* update stress SMA */
-            current_limitation = calculate_growth_stress_limitation(p, s, c);
-            
-            sma(SMA_ADD, hw, current_limitation);
-            s->prev_sma = sma(SMA_MEAN, hw).sma;
-            
-            /* Turn off all N calculations */
-            if (c->ncycle == FALSE)
-                reset_all_n_pools_and_fluxes(f, s);
-            
-            /* Turn off all P calculations */
-            if (c->pcycle == FALSE)
-                reset_all_p_pools_and_fluxes(f, s);
-            
-            /* calculate C:N ratios and increment annual flux sum */
-            day_end_calculations(c, p, s, FALSE);
-            
-            if (c->print_options == DAILY && c->spin_up == FALSE) {
-                if(c->output_ascii)
-                    write_daily_outputs_ascii(c, f, s, year);
-                else
-                    write_daily_outputs_binary(c, f, s, year);
-            }
-            /* ======================= **
-            **   E N D   O F   D A Y   **
-            ** ======================= */
-        }
+      calculate_litterfall(c, f, p, s, &fdecay, &rdecay);
+      
+      calc_day_growth(c, f, m, nr, p, s,
+                      fdecay, rdecay);
+      
+      calculate_csoil_flows(c, f, p, s, m->tsoil);
+      calculate_nsoil_flows(c, f, p, s);
+      
+      if (c->pcycle == TRUE) {
+        calculate_psoil_flows(c, f, p, s);
+      }
+      
+      /* update stress SMA */
+      current_limitation = calculate_growth_stress_limitation(p, s, c);
+      
+      sma(SMA_ADD, hw, current_limitation);
+      s->prev_sma = sma(SMA_MEAN, hw).sma;
+      
+      /* Turn off all N calculations */
+      if (c->ncycle == FALSE)
+        reset_all_n_pools_and_fluxes(f, s);
+      
+      /* Turn off all P calculations */
+      if (c->pcycle == FALSE)
+        reset_all_p_pools_and_fluxes(f, s);
+      
+      /* calculate C:N ratios and increment annual flux sum */
+      day_end_calculations(c, p, s, FALSE);
+      
+      if (c->print_options == DAILY && c->spin_up == FALSE) {
+        if(c->output_ascii)
+          write_daily_outputs_ascii(c, f, s, year);
+        else
+          write_daily_outputs_binary(c, f, s, year);
+      }
         
     }
     /* ========================= **
@@ -260,7 +237,7 @@ void run_sim(control *c, fluxes *f,  met *m, met_arrays *ma,
 
 }
 
-void spin_up_pools(control *c, fluxes *f, met *m,met_arrays *ma,
+void spin_up_pools(control *c, fluxes *f, met *m,
                    params *p, state *s, nrutil *nr){
     /* Spin up model plant & soil pools to equilibrium.
 
@@ -309,7 +286,7 @@ void spin_up_pools(control *c, fluxes *f, met *m,met_arrays *ma,
 
             /* 1700 years (17 yrs x 100 cycles) */
             for (i = 0; i < 100; i++) {
-                run_sim(c, f, m, ma, p, s, nr); /* run GDAY */
+                run_sim(c, f, m, p, s, nr); /* run GDAY */
             }
             if (c->pcycle) {
                 /* Have we reached a steady state? */
@@ -650,18 +627,20 @@ void unpack_met_data_simple(fluxes *f, met *m, params *p) {
   
   /* unpack met forcing */
   m->Ca = p->co2_in;
-  m->par = p->I0/365.25;    // 3 GJ m-2 yr-1 to MJ m-2 d-1;
+  m->par = p->I0/365.25;  
+  //m->par = p->I0;    
+  
   
   m->ndep = p->ndep_in;
   m->nfix = p->nfix_in;
   m->pdep = p->pdep_in;
   m->tsoil = p->tsoil_in;
   
-  /* N deposition + biological N fixation */
   f->ninflow = (m->ndep + m->nfix) / 365.25;
-  
-  /* P deposition to fluxes */
   f->p_atm_dep = m->pdep / 365.25;
+  
+  //f->ninflow = (m->ndep + m->nfix);
+  //f->p_atm_dep = m->pdep;
   
   return;
 }

@@ -6,18 +6,13 @@ void read_daily_met_data_simple(char **argv, control *c, met *m, params *p, flux
 {
     int    file_len = 0;
     double current_yr = -999.9;
-  
-    /* work out how big the file is */
-    file_len = 1;
     
-    c->total_num_days = file_len;
-    
-    c->num_years = 0;
+    c->num_years = 10000;
     
     /* unpack met forcing */
-    m->year = 17;
+    m->year = 1;
     m->co2 = p->co2_in;
-    m->par = p->I0/365.25;    // 3 GJ m-2 yr-1 to MJ m-2 d-1;
+    m->par = p->I0/365.25;
     
     m->ndep = p->ndep_in;
     m->nfix = p->nfix_in;

@@ -30,7 +30,7 @@ void write_output_header(control *c, FILE **fp) {
         data, units and nice header information.
     */
     int ncols = 86;  /* change with number of variables ? total count below is 93 */
-    int nrows = c->num_days;
+    int nrows = c->num_years;
 
     /* Git version */
     fprintf(*fp, "#Git_revision_code:%s\n", c->git_code_ver);
