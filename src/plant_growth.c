@@ -35,6 +35,9 @@ void calc_day_growth(control *c, fluxes *f,
     nitfac = MIN(1.0, s->shootnc / p->ncmaxf);
     pitfac = MIN(1.0, s->shootpc / p->pcmaxf);
     
+    fprintf(stderr, "nitfac in calc_day_growth %f\n", nitfac);
+    fprintf(stderr, "pitfac in calc_day_growth %f\n", pitfac);
+    
     /* checking for pcycle control parameter */
     if (c->pcycle == TRUE) {
         npitfac = MIN(nitfac, pitfac);
@@ -82,21 +85,21 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s)
   
   // fprintf(stderr, "npp in carbon_daily_production 1 %f\n", f->npp);
   
-    if (s->lai > 0.0) {
-        /* average leaf nitrogen content (g N m-2 leaf) */
-        leafn = (s->shootnc * p->cfracts / p->sla * KG_AS_G);
-        /* average leaf phosphorus content (g P m-2 leaf) */
-        leafp = (s->shootpc * p->cfracts / p->sla * KG_AS_G);
-
-        /* total nitrogen content of the canopy */
-        ncontent = leafn * s->lai;
-        /* total phosphorus content of the canopy */
-        pcontent = leafp * s->lai;
-
-    } else {
-        ncontent = 0.0;
-        pcontent = 0.0;
-    }
+//    if (s->lai > 0.0) {
+//        /* average leaf nitrogen content (g N m-2 leaf) */
+//        leafn = (s->shootnc * p->cfracts / p->sla * KG_AS_G);
+//        /* average leaf phosphorus content (g P m-2 leaf) */
+//        leafp = (s->shootpc * p->cfracts / p->sla * KG_AS_G);
+//
+//        /* total nitrogen content of the canopy */
+//        ncontent = leafn * s->lai;
+//        /* total phosphorus content of the canopy */
+//        pcontent = leafp * s->lai;
+//
+//    } else {
+//        ncontent = 0.0;
+//        pcontent = 0.0;
+//    }
 
     fc = 1.0;
 
@@ -118,6 +121,8 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s)
     /* Calculate NPP */
     f->npp_gCm2 = f->gpp_gCm2 * p->cue;
     f->npp = f->npp_gCm2 * GRAM_C_2_TONNES_HA;
+    
+    fprintf(stderr, "npp after carbon_daily_production %f\n", f->npp);
     
     return;
 }
@@ -313,8 +318,8 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     f->nuptake = calculate_nuptake(c, p, s);
     f->puptake = calculate_puptake(c, p, s, f);
     
-    // fprintf(stderr, "nuptake %f\n", f->nuptake);
-    // fprintf(stderr, "puptake %f\n", f->puptake);
+    fprintf(stderr, "nuptake in np_allocation %f\n", f->nuptake);
+    fprintf(stderr, "puptake in np_allocation %f\n", f->puptake);
 
     /* Mineralised nitrogen lost from the system by volatilisation/leaching */
     f->nloss = p->rateloss * s->inorgn;
@@ -323,10 +328,9 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     f->ploss = p->prateloss * s->inorgavlp;
 
     
-    // fprintf(stderr, "nloss %f\n", f->nloss);
-    // fprintf(stderr, "ploss %f\n", f->ploss);
+    fprintf(stderr, "nloss in np_allocation %f\n", f->nloss);
+    fprintf(stderr, "ploss in np_allocation %f\n", f->ploss);
     
-
     /* total nitrogen/phosphorus to allocate */
     ntot = MAX(0.0, f->nuptake + f->retrans);
     ptot = MAX(0.0, f->puptake + f->retransp);
@@ -554,6 +558,8 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
         fprintf(stderr, "Allocation fracs > 1: %.13f\n", total_alloc);
         exit(EXIT_FAILURE);
     }
+    
+    //fprintf(stderr, "total_alloc in calc_carbon_allocation_fracs %f\n", total_alloc);
 
     return;
 }

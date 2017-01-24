@@ -183,6 +183,7 @@ typedef struct {
     double nmin0;                           /* mineral N pool corresponding to Actnc0,etc (g/m2) */
     double nmincrit;                        /* Critical mineral N pool at max soil N:C (g/m2) (Parton et al 1993, McMurtrie et al 2001). */
     double nref;                            /* leaf N:C for saturation of photosynthesis for lue_simplified */
+    int num_years;                          /* number of years iterated in the year loop */
     double nuptakez;                        /* constant N uptake per year (1/yr) */
     double p_rate_par_weather;              /* parent P material weathering rate [yr-1] */
     double passivesoilnz;

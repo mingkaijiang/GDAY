@@ -84,7 +84,7 @@ void   spin_up_pools(control *, fluxes *, met *,
 void   correct_rate_constants(params *, int output);
 void   reset_all_n_pools_and_fluxes(fluxes *, state *);
 void   reset_all_p_pools_and_fluxes(fluxes *, state *);
-void   day_end_calculations(control *, params *, state *, int);
+void   day_end_calculations(control *, params *, state *);
 void   unpack_met_data_simple(fluxes *, met *, params *p); 
 
 #endif /* GDAY_H */

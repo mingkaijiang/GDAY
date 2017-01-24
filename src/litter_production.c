@@ -26,9 +26,15 @@ void calculate_litterfall(control *c, fluxes *f, params *p, state *s,
     ncflit = s->shootnc * (1.0 - p->fretrans);
     ncrlit = s->rootnc;
     
+    //fprintf(stderr, "shootnc in calculate_litterfall %f\n", s->shootnc);
+    //fprintf(stderr, "ncflit in calculate_litterfall %f\n", ncflit);
+    
     /* litter P:C ratios, roots and shoot */
     pcflit = s->shootpc * (1.0 - p->fretransp);
     pcrlit = s->rootpc;
+    
+    //fprintf(stderr, "shootpc in calculate_litterfall %f\n", s->shootpc);
+    //fprintf(stderr, "pcflit in calculate_litterfall %f\n", pcflit);
 
     /* C litter production */
     f->deadroots = *rdecay * s->root;
@@ -42,6 +48,11 @@ void calculate_litterfall(control *c, fluxes *f, params *p, state *s,
 
     /* P litter production */
     f->deadleafp = f->deadleaves * pcflit;
+    
+    //fprintf(stderr, "deadleaves in calculate_litterfall %f\n", f->deadleaves);
+    //fprintf(stderr, "deadleafn in calculate_litterfall %f\n", f->deadleafn);
+    //fprintf(stderr, "deadleafp in calculate_litterfall %f\n", f->deadleafp);
+    
 
     /* Assuming fraction is retranslocated before senescence, i.e. a fracion
        of nutrients is stored within the plant */

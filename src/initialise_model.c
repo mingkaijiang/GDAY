@@ -91,6 +91,7 @@ void initialise_params(params *p) {
     p->ndep_in = 0.001;
     p->nfix_in = 0.001;
     p->nref = 0.004;              /* leaf N:C for saturation of photosynthesis for lue_simplified */
+    p->num_years = 10000;         /* number of years iterated */
     p->lue0 = 1.4;                /* maximum LUE in kg C GJ-1 */
     p->ncmaxf = 0.04;
     p->ncmaxr = 0.03;

@@ -76,7 +76,7 @@ int main(int argc, char **argv)
     initialise_fluxes(f);
     initialise_state(s);
     initialise_nrutil(nr);
-
+    
     clparser(argc, argv, c);
     /*
      * Read .ini parameter file and meterological data
@@ -148,21 +148,30 @@ void run_sim(control *c, fluxes *f,  met *m,
      * done here as rate constants elsewhere in the code are assumed to be in
      * units of days not years
      */
-    correct_rate_constants(p, FALSE);
-    day_end_calculations(c, p, s, TRUE);
+    // correct_rate_constants(p, FALSE);
+    day_end_calculations(c, p, s);
 
     s->lai = MAX(0.01, (p->sla * M2_AS_HA / KG_AS_TONNES /
                           p->cfracts * s->shoot));
+    
+    // fprintf(stderr, "shoot %f\n", s->shoot);
+    // fprintf(stderr, "lai %f\n", s->lai);
 
     /* ====================== **
     **   Y E A R    L O O P   **
     ** ====================== */
-    for (nyr = 0; nyr < c->num_years; nyr++) {
+    for (nyr = 0; nyr < p->num_years; nyr++) {
 
+      fprintf(stderr, "nyr %d\n", nyr);
+      
       unpack_met_data_simple(f, m, p);
+      
+      // fprintf(stderr, "ninflow %f\n", f->ninflow);
       
       fdecay = p->fdecay;
       rdecay = p->rdecay;
+      
+      // fprintf(stderr, "fdecay %f\n", p->fdecay);
       
       calculate_litterfall(c, f, p, s, &fdecay, &rdecay);
       
@@ -188,7 +197,7 @@ void run_sim(control *c, fluxes *f,  met *m,
         reset_all_p_pools_and_fluxes(f, s);
       
       /* calculate C:N ratios and increment annual flux sum */
-      day_end_calculations(c, p, s, FALSE);
+      day_end_calculations(c, p, s);
       
       if (c->print_options == DAILY && c->spin_up == FALSE) {
         if(c->output_ascii)
@@ -201,7 +210,7 @@ void run_sim(control *c, fluxes *f,  met *m,
     /* ========================= **
     **   E N D   O F   Y E A R   **
     ** ========================= */
-    correct_rate_constants(p, TRUE);
+    // correct_rate_constants(p, TRUE);
 
     if (c->print_options == END && c->spin_up == FALSE) {
         write_final_state(c, p, s);
@@ -324,10 +333,6 @@ void usage(char **argv) {
 
     return;
 }
-
-
-
-
 
 void correct_rate_constants(params *p, int output) {
     /* adjust rate constants for the number of days in years */
@@ -526,8 +531,7 @@ void reset_all_p_pools_and_fluxes(fluxes *f, state *s) {
     return;
 }
 
-void day_end_calculations(control *c, params *p, state *s, 
-                          int init) {
+void day_end_calculations(control *c, params *p, state *s) {
     /* Calculate derived values from state variables.
 
     Parameters:
@@ -604,7 +608,6 @@ void unpack_met_data_simple(fluxes *f, met *m, params *p) {
   m->Ca = p->co2_in;
   //m->par = p->I0/365.25;  
   m->par = p->I0;    
-  
   
   m->ndep = p->ndep_in;
   m->nfix = p->nfix_in;

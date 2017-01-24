@@ -437,6 +437,8 @@ int handler(char *section, char *name, char *value, control *c,
       p->nfix_in = atof(value);
     } else if (MATCH("params", "nref")) {
       p->nref = atof(value);
+    } else if (MATCH("params", "num_years")) {
+      p->num_years = atof(value);
     } else if (MATCH("params", "lue0")) {
       p->lue0 = atof(value);
     } else if (MATCH("params", "pcbnew")) {
