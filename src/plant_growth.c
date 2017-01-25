@@ -35,8 +35,8 @@ void calc_day_growth(control *c, fluxes *f,
     nitfac = MIN(1.0, s->shootnc / p->ncmaxf);
     pitfac = MIN(1.0, s->shootpc / p->pcmaxf);
     
-    fprintf(stderr, "nitfac in calc_day_growth %f\n", nitfac);
-    fprintf(stderr, "pitfac in calc_day_growth %f\n", pitfac);
+    //fprintf(stderr, "nitfac in calc_day_growth %f\n", nitfac);
+    //fprintf(stderr, "pitfac in calc_day_growth %f\n", pitfac);
     
     /* checking for pcycle control parameter */
     if (c->pcycle == TRUE) {
@@ -318,18 +318,17 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     f->nuptake = calculate_nuptake(c, p, s);
     f->puptake = calculate_puptake(c, p, s, f);
     
-    fprintf(stderr, "nuptake in np_allocation %f\n", f->nuptake);
-    fprintf(stderr, "puptake in np_allocation %f\n", f->puptake);
+    //fprintf(stderr, "nuptake in np_allocation %f\n", f->nuptake);
+    //fprintf(stderr, "puptake in np_allocation %f\n", f->puptake);
 
     /* Mineralised nitrogen lost from the system by volatilisation/leaching */
     f->nloss = p->rateloss * s->inorgn;
 
     /* Mineralised P lost from the system by leaching */
     f->ploss = p->prateloss * s->inorgavlp;
-
     
-    fprintf(stderr, "nloss in np_allocation %f\n", f->nloss);
-    fprintf(stderr, "ploss in np_allocation %f\n", f->ploss);
+    //fprintf(stderr, "nloss in np_allocation %f\n", f->nloss);
+    //fprintf(stderr, "ploss in np_allocation %f\n", f->ploss);
     
     /* total nitrogen/phosphorus to allocate */
     ntot = MAX(0.0, f->nuptake + f->retrans);
@@ -379,7 +378,6 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     f->ppleaf = ptot * f->alleaf / (f->alleaf + f->alroot * p->pcrfac);
     f->pproot = ptot - f->ppleaf;
     
-
     return (recalc_wb);
 }
 
@@ -612,7 +610,7 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s,
     /*
     ** Carbon pools
     */
-    s->shoot += (f->cpleaf - f->deadleaves) * 365.25;
+    s->shoot += f->cpleaf - f->deadleaves;
     s->root += f->cproot - f->deadroots;
     s->branch += f->cpbranch - f->deadbranch;
     s->stem += f->cpstem - f->deadstems;
@@ -872,6 +870,7 @@ double calculate_nuptake(control *c, params *p, state *s) {
 
     if (c->nuptake_model == 0) {
         /* Constant N uptake */
+        //fprintf(stderr, "in nuptake_model = 0 \n");
         nuptake = p->nuptakez;
     } else if (c->nuptake_model == 1) {
         /* evaluate nuptake : proportional to dynamic inorganic N pool */

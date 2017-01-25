@@ -42,7 +42,7 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
     
     if (s->lai > 0.0) {
       /* calculation for npp */
-      f->gpp_gCm2 = lue_avg * f->apar * conv; // / (1.0 - exp(-p->kext * s->lai));
+      f->gpp_gCm2 = lue_avg * f->apar * conv;// / (1.0 - exp(-p->kext * s->lai));
     } else {
       f->gpp_gCm2 = 0.0;
     }
@@ -92,13 +92,11 @@ double lue_simplified(params *p, state *s, double co2) {
     
     // fprintf(stderr, "co2 %f\n", co2);
     // fprintf(stderr, "CaResp %f\n", CaResp);
-    // fprintf(stderr, "Nresp %f\n", Nresp);
+    //fprintf(stderr, "Nresp in lue_simplified %f\n", Nresp);
     // fprintf(stderr, "conv %f\n", conv);
-    // fprintf(stderr, "shootnc %f\n", s->shootnc);
-    // fprintf(stderr, "shootc %f\n", s->shoot);
-    // fprintf(stderr, "shootn %f\n", s->shootn);
-    // fprintf(stderr, "plantn %f\n", s->plantn);
-    // fprintf(stderr, "soiln %f\n", s->soiln);
+    //fprintf(stderr, "shootnc in lue_simplified %f\n", s->shootnc);
+    //fprintf(stderr, "shootc in lue_simplified %f\n", s->shoot);
+    //fprintf(stderr, "shootn in lue_simplified %f\n", s->shootn);
     
     return (lue);
 }
