@@ -235,19 +235,6 @@ int handler(char *section, char *name, char *value, control *c,
             fprintf(stderr, "Unknown output_ascii option: %s\n", temp);
             exit(EXIT_FAILURE);
         }
-    } else if (MATCH("control", "passiveconst")) {
-        if (strcmp(temp, "False") == 0 ||
-            strcmp(temp, "FALSE") == 0 ||
-            strcmp(temp, "false") == 0)
-            c->passiveconst = FALSE;
-        else if (strcmp(temp, "True") == 0 ||
-            strcmp(temp, "TRUE") == 0 ||
-            strcmp(temp, "true") == 0)
-            c->passiveconst = TRUE;
-        else {
-            fprintf(stderr, "Unknown passiveconst option: %s\n", temp);
-            exit(EXIT_FAILURE);
-        }
     } else if (MATCH("control", "print_options")) {
         if (strcmp(temp, "Subdaily") == 0 ||
             strcmp(temp, "SUBDAILY") == 0 ||

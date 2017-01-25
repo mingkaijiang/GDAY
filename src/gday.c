@@ -528,13 +528,6 @@ void day_end_calculations(control *c, params *p, state *s) {
     s->litterc = s->littercag + s->littercbg;
     s->plantc = s->root + s->shoot + s->stem + s->branch;
     s->totalc = s->soilc + s->litterc + s->plantc;
-
-    /* optional constant passive pool */
-    if (c->passiveconst) {
-        s->passivesoil = p->passivesoilz;
-        s->passivesoiln = p->passivesoilnz;
-        s->passivesoilp = p->passivesoilpz;
-    }
     
     return;
 }

@@ -28,7 +28,6 @@ void initialise_control(control *c) {
     c->nuptake_model = 1;           /* 0=constant uptake, 1=func of N inorgn, 2=depends on rate of soil N availability */
     c->puptake_model = 1;           /* 0=constant uptake, 1=func of P inorgp, 2=depends on rate of soil P availability */
     c->output_ascii = TRUE;         /* If this is false you get a binary file as an output. */
-    c->passiveconst = FALSE;        /* hold passive pool at passivesoil */
     c->print_options = DAILY;       /* DAILY=every timestep, END=end of run */
     c->use_eff_nc = 0;              /* use constant leaf n:c for  metfrac s */
     c->spin_up = FALSE;             /* Spin up to a steady state? If False it just runs the model */

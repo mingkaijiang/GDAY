@@ -24,7 +24,6 @@ typedef struct {
     int   nuptake_model;
     int   puptake_model;
     int   output_ascii;
-    int   passiveconst;
     int   print_options;
     int   use_eff_nc;
     char  git_code_ver[STRING_LENGTH];
