@@ -267,7 +267,6 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
 
     int    recalc_wb;
     double nsupply, psupply, rtot, ntot, ptot, arg;
-    double depth_guess = 1.0;
 
     /* default is we don't need to recalculate the water balance,
        however if we cut back on NPP due to available N and P below then we do
@@ -372,6 +371,8 @@ int cut_back_production(control *c, fluxes *f, params *p, state *s,
 
     f->npp *= tot / (f->npstemimm + f->npstemmob + \
                       f->npbranch);
+    
+    fprintf(stderr, "npp in cut_back_production %f\n", f-> npp);
 
     /* need to adjust growth values accordingly as well */
     f->cpleaf = f->npp * f->alleaf;

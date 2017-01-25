@@ -431,6 +431,8 @@ int handler(char *section, char *name, char *value, control *c,
         p->pcbnewz = atof(value);
     } else if (MATCH("params", "ncmaxf")) {
         p->ncmaxf = atof(value);
+    } else if (MATCH("params", "nref")) {
+      p->nref = atof(value);
     } else if (MATCH("params", "ncmaxr")) {
         p->ncmaxr = atof(value);
     } else if (MATCH("params", "pcmaxf")) {

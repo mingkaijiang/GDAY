@@ -166,6 +166,7 @@ typedef struct {
     double max_p_biochemical;               /* max rate of biochemical P mineralisation [g P m-2 y-1]; Wang et al., 2007, GB1018*/
     double ncbnewz;                         /* N alloc param: new branch N C at zero leaf N C */
     double ncmaxf;                          /* max N:C ratio of foliage in old stand, if the same as young=no effect */
+    double nref;                            /* leaf nc for saturation of photosynthesis */
     double ncmaxr;                          /* max N:C ratio of roots */
     double ncrfac;                          /* N:C of fine root prodn / N:C of leaf prodn */
     double ncwimmz;                         /* N alloc param: Immobile stem N C at zero leaf N C */

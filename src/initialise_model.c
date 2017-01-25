@@ -87,7 +87,8 @@ void initialise_params(params *p) {
     p->nfix_in = 0.001;
     p->num_years = 1000;         /* number of years iterated */
     p->lue0 = 1.4;                /* maximum LUE in kg C GJ-1 */
-    p->ncmaxf = 0.04;
+    p->ncmaxf = 0.05;
+    p->nref = 0.04;
     p->ncmaxr = 0.03;
     p->ncrfac = 0.8;
     p->ncwimmz = 0.003;
