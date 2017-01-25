@@ -457,15 +457,15 @@ void calculate_cpools(fluxes *f, state *s) {
     */
     precision_control_soil_c(f, s);
     
-    //fprintf(stderr, "activesoil in calculate_cpools %f\n", s->activesoil);
+    fprintf(stderr, "activesoil in calculate_cpools %f\n", s->activesoil);
     //fprintf(stderr, "c_into_active in calculate_cpools %f\n", f->c_into_active);
     //fprintf(stderr, "active_to_slow in calculate_cpools %f\n", f->active_to_slow);
     //fprintf(stderr, "active_to_passive in calculate_cpools %f\n", f->active_to_passive);
     //fprintf(stderr, "co2_to_air in calculate_cpools %f\n", f->co2_to_air[4]);
     
     
-    //fprintf(stderr, "slowsoil in calculate_cpools %f\n", s->slowsoil);
-    //fprintf(stderr, "passivesoil in calculate_cpools %f\n", s->passivesoil);
+    fprintf(stderr, "slowsoil in calculate_cpools %f\n", s->slowsoil);
+    fprintf(stderr, "passivesoil in calculate_cpools %f\n", s->passivesoil);
     
     return;
 }
@@ -920,7 +920,7 @@ void calculate_npools(control *c, fluxes *f, params *p, state *s,
     s->inorgn += (f->ninflow + f->nmineralisation -
                   f->nloss - f->nuptake);                            
 
-    //fprintf(stderr, "inorgn in calculate npools %f\n", s->inorgn);
+    fprintf(stderr, "inorgn in calculate npools %f\n", s->inorgn);
 
     return;
 }

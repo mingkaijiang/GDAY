@@ -81,7 +81,6 @@ void   run_sim(control *, fluxes *, met *,
                params *p, state *, nrutil *);
 void   spin_up_pools(control *, fluxes *, met *,
                      params *p, state *, nrutil *);
-void   correct_rate_constants(params *, int output);
 void   reset_all_n_pools_and_fluxes(fluxes *, state *);
 void   reset_all_p_pools_and_fluxes(fluxes *, state *);
 void   day_end_calculations(control *, params *, state *);

@@ -143,19 +143,10 @@ void run_sim(control *c, fluxes *f,  met *m,
         open_output_file(c, c->out_param_fname, &(c->ofp));
     }
 
-    /*
-     * Params are defined in per year, needs to be per day. Important this is
-     * done here as rate constants elsewhere in the code are assumed to be in
-     * units of days not years
-     */
-    //correct_rate_constants(p, FALSE);
     day_end_calculations(c, p, s);
 
     s->lai = MAX(0.01, (p->sla * M2_AS_HA / KG_AS_TONNES /
                           p->cfracts * s->shoot));
-    
-    // fprintf(stderr, "shoot %f\n", s->shoot);
-    // fprintf(stderr, "lai %f\n", s->lai);
 
     /* ====================== **
     **   Y E A R    L O O P   **
@@ -210,7 +201,6 @@ void run_sim(control *c, fluxes *f,  met *m,
     /* ========================= **
     **   E N D   O F   Y E A R   **
     ** ========================= */
-    //correct_rate_constants(p, TRUE);
 
     if (c->print_options == END && c->spin_up == FALSE) {
         write_final_state(c, p, s);
@@ -338,61 +328,6 @@ void usage(char **argv) {
 
     return;
 }
-
-void correct_rate_constants(params *p, int output) {
-    /* adjust rate constants for the number of days in years */
-
-    if (output) {
-        //p->rateuptake *= NDAYS_IN_YR;
-        //p->prateuptake *= NDAYS_IN_YR;
-        //p->rateloss *= NDAYS_IN_YR;
-        //p->prateloss *= NDAYS_IN_YR;
-        //p->fdecay *= NDAYS_IN_YR;
-        //p->rdecay *= NDAYS_IN_YR;
-        //p->bdecay *= NDAYS_IN_YR;
-        //p->wdecay *= NDAYS_IN_YR;
-        //p->k1 *= NDAYS_IN_YR;
-        //p->k2 *= NDAYS_IN_YR;
-        //p->k3 *= NDAYS_IN_YR;
-        p->kdec1 *= NDAYS_IN_YR;
-        p->kdec2 *= NDAYS_IN_YR;
-        p->kdec3 *= NDAYS_IN_YR;
-        p->kdec4 *= NDAYS_IN_YR;
-        p->kdec5 *= NDAYS_IN_YR;
-        p->kdec6 *= NDAYS_IN_YR;
-        p->kdec7 *= NDAYS_IN_YR;
-        //p->nuptakez *= NDAYS_IN_YR;
-        //p->puptakez *= NDAYS_IN_YR;
-        //p->p_rate_par_weather *= NDAYS_IN_YR;
-        p->max_p_biochemical *= NDAYS_IN_YR;
-    } else {
-        //p->rateuptake /= NDAYS_IN_YR;
-        //p->prateuptake /= NDAYS_IN_YR;
-        //p->rateloss /= NDAYS_IN_YR;
-        //p->prateloss /= NDAYS_IN_YR;
-        //p->fdecay /= NDAYS_IN_YR;
-        //p->rdecay /= NDAYS_IN_YR;
-        //p->bdecay /= NDAYS_IN_YR;
-        //p->wdecay /= NDAYS_IN_YR;
-        //p->k1 /= NDAYS_IN_YR;
-        //p->k2 /= NDAYS_IN_YR;
-        //p->k3 /= NDAYS_IN_YR;
-        p->kdec1 /= NDAYS_IN_YR;
-        p->kdec2 /= NDAYS_IN_YR;
-        p->kdec3 /= NDAYS_IN_YR;
-        p->kdec4 /= NDAYS_IN_YR;
-        p->kdec5 /= NDAYS_IN_YR;
-        p->kdec6 /= NDAYS_IN_YR;
-        p->kdec7 /= NDAYS_IN_YR;
-        //p->nuptakez /= NDAYS_IN_YR;
-        //p->puptakez /= NDAYS_IN_YR;
-        //p->p_rate_par_weather /= NDAYS_IN_YR;
-        p->max_p_biochemical /= NDAYS_IN_YR;
-    }
-
-    return;
-}
-
 
 void reset_all_n_pools_and_fluxes(fluxes *f, state *s) {
     /*
