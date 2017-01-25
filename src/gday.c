@@ -133,10 +133,10 @@ void run_sim(control *c, fluxes *f,  met *m,
         open_output_file(c, c->out_fname, &(c->ofp));
 
         if (c->output_ascii) {
-            write_output_header(c, &(c->ofp));
+            write_output_header(c, p, &(c->ofp));
         } else {
             open_output_file(c, c->out_fname_hdr, &(c->ofp_hdr));
-            write_output_header(c, &(c->ofp_hdr));
+            write_output_header(c, p, &(c->ofp_hdr));
         }
     } else if (c->print_options == END && c->spin_up == FALSE) {
         /* Final state + param file */

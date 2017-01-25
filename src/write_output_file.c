@@ -22,7 +22,7 @@ void open_output_file(control *c, char *fname, FILE **fp) {
         prog_error("Error opening output file for write on line", __LINE__);
 }
 
-void write_output_header(control *c, FILE **fp) {
+void write_output_header(control *c, params *p, FILE **fp) {
     /*
         Write daily state and fluxes headers to an output CSV file. Note we
         are not writing anything useful like units as there is a wrapper
@@ -30,7 +30,7 @@ void write_output_header(control *c, FILE **fp) {
         data, units and nice header information.
     */
     int ncols = 86;  /* change with number of variables ? total count below is 93 */
-    int nrows = c->num_years;
+    int nrows = p->num_years;
 
     /* Git version */
     fprintf(*fp, "#Git_revision_code:%s\n", c->git_code_ver);

@@ -20,7 +20,6 @@ typedef struct {
     int   fixleafpc;
     int   ncycle;
     int   pcycle;
-    int   num_years;
     int   nuptake_model;
     int   puptake_model;
     int   output_ascii;

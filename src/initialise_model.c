@@ -33,7 +33,6 @@ void initialise_control(control *c) {
     c->spin_up = FALSE;             /* Spin up to a steady state? If False it just runs the model */
 
     /* Internal calculated */
-    c->num_years = 0;               /* Total number of years simulated */
     c->PRINT_GIT = FALSE;           /* print the git hash to the cmd line and exit? Called from cmd line parsar */
 
         return;
@@ -91,7 +90,7 @@ void initialise_params(params *p) {
     p->ndep_in = 0.001;
     p->nfix_in = 0.001;
     p->nref = 0.04;              /* leaf N:C for saturation of photosynthesis for lue_simplified */
-    p->num_years = 10000;         /* number of years iterated */
+    p->num_years = 1000;         /* number of years iterated */
     p->lue0 = 1.4;                /* maximum LUE in kg C GJ-1 */
     p->ncmaxf = 0.04;
     p->ncmaxr = 0.03;

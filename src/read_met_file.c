@@ -4,10 +4,7 @@
 
 void read_daily_met_data_simple(char **argv, control *c, met *m, params *p, fluxes *f)
 {
-    int    file_len = 0;
     double current_yr = -999.9;
-    
-    c->num_years = 10000;
     
     /* unpack met forcing */
     m->year = 1;
@@ -21,7 +18,7 @@ void read_daily_met_data_simple(char **argv, control *c, met *m, params *p, flux
     
     /* Build an array of the unique years as we loop over the input file */
     if (current_yr != m->year) {
-      c->num_years++;
+      p->num_years++;
       current_yr = m->year;
     }
 
