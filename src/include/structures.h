@@ -138,7 +138,6 @@ typedef struct {
     double cue;                             /* carbon use efficiency, or the ratio of NPP to GPP */
     double decayrate[7];
     double fdecay;                          /* foliage turnover rate (1/yr) */
-    double fhw;                             /* n:c ratio of stemwood - immobile pool and new ring */
     double finesoil;                        /* clay+silt fraction */
     double fmleaf;
     double fmroot;
@@ -165,23 +164,17 @@ typedef struct {
     double liteffnc;
     double lue0;                            /* maximum LUE in kg C GJ-1 */
     double max_p_biochemical;               /* max rate of biochemical P mineralisation [g P m-2 y-1]; Wang et al., 2007, GB1018*/
-    double ncbnew;                          /* N alloc param: new branch N C at critical leaf N C */
     double ncbnewz;                         /* N alloc param: new branch N C at zero leaf N C */
-    double nccnew;                          /* N alloc param: new coarse root N C at critical leaf N C */
-    double nccnewz;                         /* N alloc param: new coarse root N C at zero leaf N C */
     double ncmaxf;                          /* max N:C ratio of foliage in old stand, if the same as young=no effect */
     double ncmaxr;                          /* max N:C ratio of roots */
     double ncrfac;                          /* N:C of fine root prodn / N:C of leaf prodn */
-    double ncwimm;                          /* N alloc param: Immobile stem N C at critical leaf N C */
     double ncwimmz;                         /* N alloc param: Immobile stem N C at zero leaf N C */
-    double ncwnew;                          /* N alloc param: New stem ring N:C at critical leaf N:C (mob) */
     double ncwnewz;                         /* N alloc param: New stem ring N:C at zero leaf N:C (mobile) */
     double ndep_in;                         /* annual version ndep t/ha/yr */
     double nfix_in;                         /* annual version nfix t/ha/yr */
     double nf_min;                          /* leaf N:C minimum N concentration which allows productivity */
     double nmin0;                           /* mineral N pool corresponding to Actnc0,etc (g/m2) */
     double nmincrit;                        /* Critical mineral N pool at max soil N:C (g/m2) (Parton et al 1993, McMurtrie et al 2001). */
-    double nref;                            /* leaf N:C for saturation of photosynthesis for lue_simplified */
     int num_years;                          /* number of years iterated in the year loop */
     double nuptakez;                        /* constant N uptake per year (1/yr) */
     double p_rate_par_weather;              /* parent P material weathering rate [yr-1] */
@@ -192,16 +185,11 @@ typedef struct {
     double passncmin;                       /* Passive pool (=1/10) N:C of new SOM - when Nmin=Nmin0 [units: gN/gC]. Based on forest version of CENTURY (Parton et al. 1993), see Appendix, McMurtrie 2001, Tree Physiology. */
     double passpcmax;                       /* Passive pool (=1/20) P:C ratio of new SOM - maximum [units: gP/gC] */
     double passpcmin;                       /* Passive pool (=1/200) P:C of new SOM - when Pmin=Pmin0 [units: gP/gC] */
-    double pcbnew;                          /* P alloc param: new branch P C at critical leaf P C */
     double pcbnewz;                         /* P alloc param: new branch P C at zero leaf P C */
-    double pccnew;                          /* P alloc param: new coarse root P C at critical leaf P C */
-    double pccnewz;                         /* P alloc param: new coarse root P C at zero leaf P C */
     double pcmaxf;                          /* max P:C ratio of foliage in old stand, if the same as young=no effect */
     double pcmaxr;                          /* max P:C ratio of roots */
     double pcrfac;                          /* P:C of fine root prodp / P:C c of leaf prodp */
-    double pcwimm;                          /* P alloc param: Immobile stem P C at critical leaf P C */
     double pcwimmz;                         /* P alloc param: Immobile stem P C at zero leaf P C */
-    double pcwnew;                          /* P alloc param: New stem ring P:C at critical leaf P:C (mob) */
     double pcwnewz;                         /* P alloc param: New stem ring P:C at zero leaf P:C (mobile) */
     double pdep_in;                         /* Annual version p deposition t/ha/yr */
     double pf_min;                          /* leaf P:C minimum P concentration which allows productivity */

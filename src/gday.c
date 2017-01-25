@@ -258,7 +258,6 @@ void spin_up_pools(control *c, fluxes *f, met *m,
             prev_plantp = s->plantp;
             prev_soilp = s->soilp;
 
-            /* 1700 years (17 yrs x 100 cycles) */
             for (i = 0; i < 100; i++) {
                 run_sim(c, f, m, p, s, nr); /* run GDAY */
             }

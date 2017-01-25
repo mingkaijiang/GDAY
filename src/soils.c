@@ -921,6 +921,10 @@ void calculate_npools(control *c, fluxes *f, params *p, state *s,
                   f->nloss - f->nuptake);                            
 
     fprintf(stderr, "inorgn in calculate npools %f\n", s->inorgn);
+    fprintf(stderr, "nmineralisation in calculate npools %f\n", f->nmineralisation);
+    fprintf(stderr, "nloss in calculate npools %f\n", f->nloss);
+    fprintf(stderr, "nuptake in calculate npools %f\n", f->nuptake);
+    
 
     return;
 }
