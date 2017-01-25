@@ -21,7 +21,7 @@ void   cfluxes_from_active_pool(fluxes *, params *, state *, double);
 void   cfluxes_from_slow_pool(fluxes *, params *, state *);
 void   cfluxes_from_passive_pool(fluxes *, params *, state *);
 void   calculate_soil_respiration(control *, fluxes *, params *, state *);
-void   calculate_cpools(fluxes *, state *);
+void   calculate_cpools(control *, fluxes *, state *);
 void   precision_control_soil_c(fluxes *, state *);
 
 
@@ -34,10 +34,10 @@ void   nfluxes_from_metabolic_pool(fluxes *, params *, state *);
 void   nfluxes_from_active_pool(fluxes *, params *, state *, double);
 void   nfluxes_from_slow_pool(fluxes *, params *, state *s);
 void   nfluxes_from_passive_pool(fluxes *, params *, state *);
-void   calculate_n_mineralisation(fluxes *);
+void   calculate_n_mineralisation(control *, fluxes *);
 void   calculate_n_immobilisation(fluxes *, params *, state *, double *,
                                   double *, double *, double *);
-void   calc_n_net_mineralisation(fluxes *);
+void   calc_n_net_mineralisation(control *, fluxes *);
 double calculate_nc_slope(params *, double, double);
 void   calculate_npools(control *c, fluxes *, params *, state *, double,
                         double, double);

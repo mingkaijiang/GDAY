@@ -153,6 +153,19 @@ int handler(char *section, char *name, char *value, control *c,
           fprintf(stderr, "Unknown fixed_stem_pc option: %s\n", temp);
           exit(EXIT_FAILURE);
       }
+    } else if (MATCH("control", "diagnosis")) {
+      if (strcmp(temp, "False") == 0 ||
+          strcmp(temp, "FALSE") == 0 ||
+          strcmp(temp, "false") == 0)
+        c->diagnosis = FALSE;
+      else if (strcmp(temp, "True") == 0 ||
+               strcmp(temp, "TRUE") == 0 ||
+               strcmp(temp, "true") == 0)
+        c->diagnosis = TRUE;
+      else {
+        fprintf(stderr, "Unknown diagnosis option: %s\n", temp);
+        exit(EXIT_FAILURE);
+      }
     } else if (MATCH("control", "fixleafnc")) {
         if (strcmp(temp, "False") == 0 ||
             strcmp(temp, "FALSE") == 0 ||

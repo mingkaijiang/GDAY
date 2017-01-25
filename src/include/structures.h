@@ -14,6 +14,7 @@ typedef struct {
     char  out_fname_hdr[STRING_LENGTH];
     char  out_param_fname[STRING_LENGTH];
     char  git_hash[STRING_LENGTH];
+    int   diagnosis;
     int   fixed_stem_nc;
     int   fixed_stem_pc;
     int   fixleafnc;

@@ -153,16 +153,14 @@ void run_sim(control *c, fluxes *f,  met *m,
     ** ====================== */
     for (nyr = 0; nyr < p->num_years; nyr++) {
 
+      if (c->diagnosis) {
       fprintf(stderr, "nyr %d\n", nyr);
+      }
       
       unpack_met_data_simple(f, m, p);
       
-      // fprintf(stderr, "ninflow %f\n", f->ninflow);
-      
       fdecay = p->fdecay;
       rdecay = p->rdecay;
-      
-      // fprintf(stderr, "fdecay %f\n", p->fdecay);
       
       calculate_litterfall(c, f, p, s, &fdecay, &rdecay);
       

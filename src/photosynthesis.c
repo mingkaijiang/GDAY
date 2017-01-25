@@ -56,11 +56,14 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
     /* save apar in MJ m-2 yr-1 */
     f->apar *= UMOL_2_JOL * J_TO_MJ;
     
-    // fprintf(stderr, "npp_gCm2 = %f\n", f->npp_gCm2);
-    // fprintf(stderr, "apar = %f\n", f->apar);
-    // fprintf(stderr, "par = %f\n", m->par);
-    // fprintf(stderr, "fipar = %f\n", s->fipar);
-    // fprintf(stderr, "lai = %f\n", s->lai);
+    if (c->diagnosis) {
+      // fprintf(stderr, "npp_gCm2 in simple_photosynthesis %f\n", f->npp_gCm2);
+      // fprintf(stderr, "apar = %f\n", f->apar);
+      // fprintf(stderr, "par = %f\n", m->par);
+      // fprintf(stderr, "fipar = %f\n", s->fipar);
+      // fprintf(stderr, "lai = %f\n", s->lai);
+      }
+
     
     return;
   
@@ -90,12 +93,12 @@ double lue_simplified(params *p, state *s, double co2) {
       
     lue = p->lue0 * conv * CaResp * Nresp;
     
-    // fprintf(stderr, "co2 %f\n", co2);
-    // fprintf(stderr, "CaResp %f\n", CaResp);
-    //fprintf(stderr, "Nresp in lue_simplified %f\n", Nresp);
-    //fprintf(stderr, "shootnc in lue_simplified %f\n", s->shootnc);
-    //fprintf(stderr, "shootc in lue_simplified %f\n", s->shoot);
-    //fprintf(stderr, "shootn in lue_simplified %f\n", s->shootn);
+      // fprintf(stderr, "co2 %f\n", co2);
+      // fprintf(stderr, "CaResp %f\n", CaResp);
+      //fprintf(stderr, "Nresp in lue_simplified %f\n", Nresp);
+      //fprintf(stderr, "shootnc in lue_simplified %f\n", s->shootnc);
+      //fprintf(stderr, "shootc in lue_simplified %f\n", s->shoot);
+      //fprintf(stderr, "shootn in lue_simplified %f\n", s->shootn);
     
     return (lue);
 }

@@ -29,17 +29,18 @@ void calc_day_growth(control *c, fluxes *f,
 
     /* calculate daily GPP/NPP, respiration and update water balance */
     carbon_daily_production(c, f, m, p, s);
-
-    fprintf(stderr, "npp after carbon_daily_production %f\n", f->npp);
-    fprintf(stderr, "lai after carbon_daily_production %f\n", s->lai);
     
     // leaf N:C as a fraction of Ncmaxyoung, i.e. the max N:C ratio of
     //foliage in young stand, and leaf P:C as a fraction of Pcmaxyoung
     nitfac = MIN(1.0, s->shootnc / p->ncmaxf);
     pitfac = MIN(1.0, s->shootpc / p->pcmaxf);
     
-    fprintf(stderr, "nitfac in calc_day_growth %f\n", nitfac);
-    fprintf(stderr, "pitfac in calc_day_growth %f\n", pitfac);
+    if (c->diagnosis) {
+      fprintf(stderr, "npp after carbon_daily_production %f\n", f->npp);
+      fprintf(stderr, "lai after carbon_daily_production %f\n", s->lai);
+      //fprintf(stderr, "nitfac in calc_day_growth %f\n", nitfac);
+      //fprintf(stderr, "pitfac in calc_day_growth %f\n", pitfac);
+    }
     
     /* checking for pcycle control parameter */
     if (c->pcycle == TRUE) {
@@ -68,11 +69,6 @@ void calc_day_growth(control *c, fluxes *f,
 
     precision_control(f, s);
     
-    /*
-    fprintf(stderr, "ncbnew 2 %f\n", ncbnew);
-    fprintf(stderr, "ncwimm 2 %f\n", ncwimm);
-    fprintf(stderr, "ncwnew 2 %f\n", ncwnew);
-    */
     return;
 }
 
@@ -280,17 +276,18 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     f->nuptake = calculate_nuptake(c, p, s);
     f->puptake = calculate_puptake(c, p, s, f);
     
-    //fprintf(stderr, "nuptake in np_allocation %f\n", f->nuptake);
-    //fprintf(stderr, "puptake in np_allocation %f\n", f->puptake);
-
     /* Mineralised nitrogen lost from the system by volatilisation/leaching */
     f->nloss = p->rateloss * s->inorgn;
 
     /* Mineralised P lost from the system by leaching */
     f->ploss = p->prateloss * s->inorgavlp;
     
-    //fprintf(stderr, "nloss in np_allocation %f\n", f->nloss);
-    //fprintf(stderr, "ploss in np_allocation %f\n", f->ploss);
+    if (c->diagnosis) {
+      //fprintf(stderr, "nuptake in np_allocation %f\n", f->nuptake);
+      //fprintf(stderr, "puptake in np_allocation %f\n", f->puptake);
+      //fprintf(stderr, "nloss in np_allocation %f\n", f->nloss);
+      //fprintf(stderr, "ploss in np_allocation %f\n", f->ploss);
+    }
     
     /* total nitrogen/phosphorus to allocate */
     ntot = MAX(0.0, f->nuptake + f->retrans);
@@ -343,9 +340,6 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     return (recalc_wb);
 }
 
-
-
-
 int cut_back_production(control *c, fluxes *f, params *p, state *s,
                         double tot, double xcbnew, 
                         double xcwimm, double xcwnew) {
@@ -372,7 +366,9 @@ int cut_back_production(control *c, fluxes *f, params *p, state *s,
     f->npp *= tot / (f->npstemimm + f->npstemmob + \
                       f->npbranch);
     
-    fprintf(stderr, "npp in cut_back_production %f\n", f-> npp);
+    if (c->diagnosis) {
+      fprintf(stderr, "npp in cut_back_production %f\n", f-> npp);
+    }
 
     /* need to adjust growth values accordingly as well */
     f->cpleaf = f->npp * f->alleaf;
@@ -466,14 +462,6 @@ double calculate_growth_stress_limitation(params *p, state *s, control *c) {
         current_limitation = MAX(0.1,nutrient_lim);
     }
     
-    /*fprintf(stderr, "plim %f\n", plim);
-    fprintf(stderr, "nlim %f\n", nlim);
-    fprintf(stderr, "shootnc %f\n", s->shootnc);
-    fprintf(stderr, "shootpc %f\n", s->shootpc);
-    fprintf(stderr, "shootc %f\n", s->shoot);
-    fprintf(stderr, "shootn %f\n", s->shootn);
-    fprintf(stderr, "shootp %f\n", s->shootp);
-    */
     return (current_limitation);
 }
 
@@ -521,8 +509,10 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
         exit(EXIT_FAILURE);
     }
     
-    //fprintf(stderr, "total_alloc in calc_carbon_allocation_fracs %f\n", total_alloc);
-
+    if (c->diagnosis) {
+      //fprintf(stderr, "total_alloc in calc_carbon_allocation_fracs %f\n", total_alloc);
+    }
+    
     return;
 }
 

@@ -50,7 +50,7 @@ void calculate_csoil_flows(control *c, fluxes *f, params *p, state *s,
     calculate_soil_respiration(c, f, p, s);
 
     /* update the C pools */
-    calculate_cpools(f, s);
+    calculate_cpools(c, f, s);
 
     /* calculate NEP */
     f->nep = f->npp - f->hetero_resp;
@@ -352,10 +352,6 @@ void cfluxes_from_active_pool(fluxes *f, params *p, state *s,
 
     /* Respiration fluxes */
     f->co2_to_air[4] = activeout * frac_microb_resp;
-    
-    //fprintf(stderr, "activeout in cfluxes_from_active_pools %f\n", activeout);
-    //fprintf(stderr, "frac_microb_resp in cfluxes_from_active_pools %f\n", frac_microb_resp);
-    //fprintf(stderr, "decayrate in cfluxes_from_active_pools %f\n", p->decayrate[4]);
 
     return;
 }
@@ -405,12 +401,10 @@ void calculate_soil_respiration(control *c, fluxes *f, params *p, state *s) {
                           p->decayrate[6]);
     }
     
-    // fprintf(stderr, "hetero_resp %f\n", f->hetero_resp);
-
     return;
 }
 
-void calculate_cpools(fluxes *f, state *s) {
+void calculate_cpools(control *c, fluxes *f, state *s) {
     /* Calculate new soil carbon pools. */
 
     /* Update pools */
@@ -457,15 +451,20 @@ void calculate_cpools(fluxes *f, state *s) {
     */
     precision_control_soil_c(f, s);
     
-    fprintf(stderr, "activesoil in calculate_cpools %f\n", s->activesoil);
-    //fprintf(stderr, "c_into_active in calculate_cpools %f\n", f->c_into_active);
-    //fprintf(stderr, "active_to_slow in calculate_cpools %f\n", f->active_to_slow);
-    //fprintf(stderr, "active_to_passive in calculate_cpools %f\n", f->active_to_passive);
-    //fprintf(stderr, "co2_to_air in calculate_cpools %f\n", f->co2_to_air[4]);
-    
-    
-    fprintf(stderr, "slowsoil in calculate_cpools %f\n", s->slowsoil);
-    fprintf(stderr, "passivesoil in calculate_cpools %f\n", s->passivesoil);
+    if (c->diagnosis) {
+      fprintf(stderr, "activesoil in calculate_cpools %f\n", s->activesoil);
+      //fprintf(stderr, "c_into_active in calculate_cpools %f\n", f->c_into_active);
+      //fprintf(stderr, "active_to_slow in calculate_cpools %f\n", f->active_to_slow);
+      //fprintf(stderr, "active_to_passive in calculate_cpools %f\n", f->active_to_passive);
+      //fprintf(stderr, "co2_to_air in calculate_cpools %f\n", f->co2_to_air[4]);
+      
+      fprintf(stderr, "slowsoil in calculate_cpools %f\n", s->slowsoil);
+      fprintf(stderr, "passivesoil in calculate_cpools %f\n", s->passivesoil);
+      
+      //fprintf(stderr, "c_into_passive %f\n", f->c_into_passive);
+      //fprintf(stderr, "passive_to_active %f\n", f->passive_to_active);
+      //fprintf(stderr, "co2_to_air[6] %f\n", f->co2_to_air[6]);
+      }
     
     return;
 }
@@ -513,7 +512,7 @@ void calculate_nsoil_flows(control *c, fluxes *f, params *p, state *s) {
     nfluxes_from_passive_pool(f, p, s);
 
     /* gross N mineralisation */
-    calculate_n_mineralisation(f);
+    calculate_n_mineralisation(c, f);
     
     //fprintf(stderr, "ngross in calculate_nsoil_flows %f\n", f->ngross);
 
@@ -522,7 +521,7 @@ void calculate_nsoil_flows(control *c, fluxes *f, params *p, state *s) {
                                &slow_nc_slope, &passive_nc_slope);
     
     /* calculate N net mineralisation */
-    calc_n_net_mineralisation(f);
+    calc_n_net_mineralisation(c, f);
     
     //fprintf(stderr, "nmineralisation in calculate_nsoil_flows %f\n", f->nmineralisation);
       
@@ -630,10 +629,6 @@ void nfluxes_from_metabolic_pool(fluxes *f, params *p, state *s) {
     /* N flux soil metabolic pool  -> active pool */
     f->n_soil_metab_to_active = s->metabsoiln * p->decayrate[3];
     
-    //fprintf(stderr, "metabsurfn in nfluxes_from_metabolic_pools %f\n", s->metabsurfn);
-    //fprintf(stderr, "metabsoiln in nfluxes_from_metabolic_pools %f\n", s->metabsoiln);
-    
-    
     return;
 }
 
@@ -678,7 +673,7 @@ void nfluxes_from_passive_pool(fluxes *f, params *p, state *s) {
     return;
 }
 
-void calculate_n_mineralisation(fluxes *f) {
+void calculate_n_mineralisation(control *c, fluxes *f) {
     /* N gross mineralisation rate is given by the excess of N outflows
     over inflows. Nitrogen mineralisation is the process by which organic
     N is converted to plant available inorganic N, i.e. microbes decompose
@@ -696,8 +691,10 @@ void calculate_n_mineralisation(fluxes *f) {
                   f->n_active_to_slow + f->n_active_to_passive +
                   f->n_slow_to_active + f->n_slow_to_passive +
                   f->n_passive_to_active);
-  /*
-    fprintf(stderr, "n_surf_struct_to_slow %f\n", f->n_surf_struct_to_slow);
+  
+  if (c->diagnosis) {
+    /*
+     fprintf(stderr, "n_surf_struct_to_slow %f\n", f->n_surf_struct_to_slow);
     fprintf(stderr, "n_surf_struct_to_active %f\n", f->n_surf_struct_to_active);
     fprintf(stderr, "n_soil_struct_to_slow %f\n", f->n_soil_struct_to_slow);
     fprintf(stderr, "n_soil_struct_to_active %f\n", f->n_soil_struct_to_active);
@@ -708,7 +705,9 @@ void calculate_n_mineralisation(fluxes *f) {
     fprintf(stderr, "n_slow_to_active %f\n", f->n_slow_to_active);
     fprintf(stderr, "n_slow_to_passive %f\n", f->n_slow_to_passive);
     fprintf(stderr, "n_passive_to_active %f\n", f->n_passive_to_active);
-  */  
+    */  
+  }
+
     return;
 }
 
@@ -752,7 +751,7 @@ void calculate_n_immobilisation(fluxes *f, params *p, state *s, double *nimmob,
 
     /* convert units */
     nmin = p->nmin0 / M2_AS_HA * G_AS_TONNES;
-
+    
     arg1 = (p->passncmin - *passive_nc_slope * nmin) * f->c_into_passive;
     arg2 = (p->slowncmin - *slow_nc_slope * nmin) * f->c_into_slow;
     arg3 = f->c_into_active * (p->actncmin - *active_nc_slope * nmin);
@@ -777,10 +776,17 @@ void calculate_n_immobilisation(fluxes *f, params *p, state *s, double *nimmob,
 }
 
 
-void calc_n_net_mineralisation(fluxes *f) {
+void calc_n_net_mineralisation(control *c, fluxes *f) {
     /* N Net mineralisation from microbial activity */
     f->nmineralisation = f->ngross - f->nimmob + f->nlittrelease;
-
+  
+    if (c->diagnosis) {
+      //fprintf(stderr, "ngross %f\n", f->ngross);
+      //fprintf(stderr, "nimmob %f\n", f->nimmob);
+      //fprintf(stderr, "nlittrelease %f\n", f->nlittrelease);
+      
+    }
+    
     return;
 }
 
@@ -920,10 +926,12 @@ void calculate_npools(control *c, fluxes *f, params *p, state *s,
     s->inorgn += (f->ninflow + f->nmineralisation -
                   f->nloss - f->nuptake);                            
 
-    fprintf(stderr, "inorgn in calculate npools %f\n", s->inorgn);
-    fprintf(stderr, "nmineralisation in calculate npools %f\n", f->nmineralisation);
-    fprintf(stderr, "nloss in calculate npools %f\n", f->nloss);
-    fprintf(stderr, "nuptake in calculate npools %f\n", f->nuptake);
+    if (c->diagnosis) {
+      fprintf(stderr, "inorgn in calculate npools %f\n", s->inorgn);
+      fprintf(stderr, "nmineralisation in calculate npools %f\n", f->nmineralisation);
+      fprintf(stderr, "nloss in calculate npools %f\n", f->nloss);
+      fprintf(stderr, "nuptake in calculate npools %f\n", f->nuptake);
+    }
     
 
     return;
