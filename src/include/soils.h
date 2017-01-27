@@ -54,16 +54,15 @@ void   pfluxes_from_metabolic_pool(fluxes *, params *, state *);
 void   pfluxes_from_active_pool(fluxes *, params *, state *, double);
 void   pfluxes_from_slow_pool(fluxes *, params *, state *s);
 void   pfluxes_from_passive_pool(fluxes *, params *, state *);
-void   calculate_p_parent_fluxes(fluxes *, params *, state *);
+void   calculate_p_parent_fluxes(control *, fluxes *, params *, state *);
 void   calculate_p_mineralisation(fluxes *);
 void   calculate_p_immobilisation(fluxes *, params *, state *, double *,
                                   double *, double *, double *);
 void   calculate_p_ssorb_to_avl(state *, fluxes *, params *, control *);
 void   calculate_p_avl_to_ssorb(state *, fluxes *, params *);
 void   calculate_p_ssorb_to_occ(state *, fluxes *, params *);
-void   calc_p_net_mineralisation(fluxes *);
+void   calc_p_net_mineralisation(control *, fluxes *);
 double calculate_pc_slope(params *, double, double);
-void   calculate_p_biochemical_mineralisation(fluxes *, params *,state *);
 void   calculate_ppools(control *c, fluxes *, params *, state *, double,
                         double, double);
 double pc_limit(fluxes *, double, double, double, double);

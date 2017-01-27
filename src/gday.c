@@ -245,7 +245,7 @@ void spin_up_pools(control *c, fluxes *f, met *m,
             fabs((prev_soilc) - (s->soilc)) < tol_c &&
             fabs((prev_plantn) - (s->plantn)) < tol_n &&
             fabs((prev_soiln) - (s->soiln)) < tol_n &&
-            fabs((prev_plantp) - (s->plantp)) < tol_p &&
+            fabs((prev_plantp) - (s->plantp)) < tol_p && 
             fabs((prev_soilp) - (s->soilp)) < tol_p) {
             break;
         } else {
@@ -256,19 +256,19 @@ void spin_up_pools(control *c, fluxes *f, met *m,
             prev_plantp = s->plantp;
             prev_soilp = s->soilp;
 
-            for (i = 0; i < 100; i++) {
+            //for (i = 0; i < 100; i++) {
                 run_sim(c, f, m, p, s, nr); /* run GDAY */
-            }
+            //}
             if (c->pcycle) {
                 /* Have we reached a steady state? */
                 fprintf(stderr,
-                        "Spinup: Plant C - %f, Soil C - %f, Soil N - %f, Soil P - %f\n",
-                        s->plantc, s->soilc, s->soiln, s->soilp);
+                        "Spinup: Plant C - %f, Inorg N %f, Inorg P %f, Active P %f, Active PC %f, Slow PC %f, Passive PC %f\n",
+                         s->plantc, s->inorgn, s->inorgp, s->activesoilp, s->activesoilp/s->activesoil, s->slowsoilp/s->slowsoil, s->passivesoilp/s->passivesoil);
             } else if (c->ncycle) {
               /* Have we reached a steady state? */
               fprintf(stderr,
-                      "Spinup: Plant C - %f, Soil C - %f, Soil N - %f\n",
-                      s->plantc, s->soilc, s->soiln);
+                      "Spinup: Plant C - %f, Active C - %f, Slow C - %f, Passive C %f, Soil N %f\n",
+                      s->plantc,  s->activesoil, s->slowsoil, s->passivesoil, s->soiln);
             } else {
               /* Have we reached a steady state? */
               fprintf(stderr,
@@ -457,7 +457,6 @@ void reset_all_p_pools_and_fluxes(fluxes *f, state *s) {
     f->p_active_to_passive = 0.0;
     f->p_slow_to_active = 0.0;
     f->p_slow_to_passive = 0.0;
-    f->p_slow_biochemical = 0.0;
     f->p_passive_to_active = 0.0;
     f->p_avl_to_ssorb = 0.0;
     f->p_ssorb_to_avl = 0.0;

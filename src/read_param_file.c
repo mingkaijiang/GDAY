@@ -521,13 +521,7 @@ int handler(char *section, char *name, char *value, control *c,
       p->tsoil_in = atof(value);
     } else if (MATCH("params", "wdecay")) {
         p->wdecay = atof(value);
-    } else if (MATCH("params", "crit_n_cost_of_p")) {
-        p->crit_n_cost_of_p = atof(value);
-    } else if (MATCH("params", "max_p_biochemical")) {
-        p->max_p_biochemical = atof(value);
-    } else if (MATCH("params", "biochemical_p_constant")) {
-        p->biochemical_p_constant = atof(value);
-    } 
+    }
 
     return (1);
 }

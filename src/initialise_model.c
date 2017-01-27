@@ -48,13 +48,11 @@ void initialise_params(params *p) {
     p->actpcmax = 0.033333;
     p->actpcmin = 0.0125;
     p->bdecay = 0.02;
-    p->biochemical_p_constant = 150.0;
     p->c_alloc_b = 0.1;       
     p->c_alloc_f = 0.2;       
     p->c_alloc_r = 0.2;       
     p->c_alloc_s = 0.5;
     p->cfracts = 0.5;
-    p->crit_n_cost_of_p = 15.0; 
     p->cue = 0.5;
     p->co2_in = 350.0;
     p->fdecay = 0.59988;
@@ -81,7 +79,6 @@ void initialise_params(params *p) {
     p->ligroot = 0.22;
     p->ligshoot = 0.24;
     p->liteffnc = 0.0;     
-    p->max_p_biochemical = 0.001;  /* converted from 0.1 g P m-2 yr-1 to t/ha/yr */
     p->ncbnewz = 0.003;
     p->ndep_in = 0.001;
     p->nfix_in = 0.001;
@@ -270,7 +267,6 @@ void initialise_fluxes(fluxes *f) {
     f->n_slow_to_passive = 0.0;
     f->p_slow_to_active = 0.0;
     f->p_slow_to_passive = 0.0;
-    f->p_slow_biochemical = 0.0;
 
     /* C N & P fluxes from passive to active pool */
     f->passive_to_active = 0.0;

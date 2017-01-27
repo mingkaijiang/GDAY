@@ -444,14 +444,14 @@ void calculate_cpools(control *c, fluxes *f, state *s) {
     precision_control_soil_c(f, s);
     
     if (c->diagnosis) {
-      fprintf(stderr, "activesoil in calculate_cpools %f\n", s->activesoil);
+      //fprintf(stderr, "activesoil in calculate_cpools %f\n", s->activesoil);
       //fprintf(stderr, "c_into_active in calculate_cpools %f\n", f->c_into_active);
       //fprintf(stderr, "active_to_slow in calculate_cpools %f\n", f->active_to_slow);
       //fprintf(stderr, "active_to_passive in calculate_cpools %f\n", f->active_to_passive);
       //fprintf(stderr, "co2_to_air in calculate_cpools %f\n", f->co2_to_air[4]);
       
-      fprintf(stderr, "slowsoil in calculate_cpools %f\n", s->slowsoil);
-      fprintf(stderr, "passivesoil in calculate_cpools %f\n", s->passivesoil);
+      //fprintf(stderr, "slowsoil in calculate_cpools %f\n", s->slowsoil);
+      //fprintf(stderr, "passivesoil in calculate_cpools %f\n", s->passivesoil);
       
       //fprintf(stderr, "c_into_passive %f\n", f->c_into_passive);
       //fprintf(stderr, "passive_to_active %f\n", f->passive_to_active);
@@ -919,10 +919,10 @@ void calculate_npools(control *c, fluxes *f, params *p, state *s,
                   f->nloss - f->nuptake);                            
 
     if (c->diagnosis) {
-      fprintf(stderr, "inorgn in calculate npools %f\n", s->inorgn);
-      fprintf(stderr, "nmineralisation in calculate npools %f\n", f->nmineralisation);
-      fprintf(stderr, "nloss in calculate npools %f\n", f->nloss);
-      fprintf(stderr, "nuptake in calculate npools %f\n", f->nuptake);
+      //fprintf(stderr, "inorgn in calculate npools %f\n", s->inorgn);
+      //fprintf(stderr, "nmineralisation in calculate npools %f\n", f->nmineralisation);
+      //fprintf(stderr, "nloss in calculate npools %f\n", f->nloss);
+      //fprintf(stderr, "nuptake in calculate npools %f\n", f->nuptake);
     }
     
 
@@ -1033,7 +1033,7 @@ void calculate_psoil_flows(control *c, fluxes *f, params *p, state *s) {
     pfluxes_from_passive_pool(f, p, s);
 
     /* calculate P parent influxe to mineral P */
-    calculate_p_parent_fluxes(f, p, s);
+    calculate_p_parent_fluxes(c, f, p, s);
 
     /* gross P mineralisation */
     calculate_p_mineralisation(f);
@@ -1042,11 +1042,8 @@ void calculate_psoil_flows(control *c, fluxes *f, params *p, state *s) {
     calculate_p_immobilisation(f, p, s, &(f->pimmob), &active_pc_slope,
                              &slow_pc_slope, &passive_pc_slope);
 
-    /* calculate P net mineralisation, excluding biochemical mineralisation */
-    calc_p_net_mineralisation(f);
-
-    /* calculate P biochemical mineralisation */
-    calculate_p_biochemical_mineralisation(f, p, s);
+    /* calculate P net mineralisation*/
+    calc_p_net_mineralisation(c, f);
 
     /* SIM phosphorus dynamics */
     calculate_p_ssorb_to_avl(s, f, p, c);
@@ -1056,6 +1053,15 @@ void calculate_psoil_flows(control *c, fluxes *f, params *p, state *s) {
     /* Update model soil P pools */
     calculate_ppools(c, f, p, s, active_pc_slope, slow_pc_slope,
                      passive_pc_slope);
+    
+    if (c->diagnosis) {
+      fprintf(stderr, "p_par_to_avl %f\n", f->p_par_to_avl);
+      fprintf(stderr, "pmineralisation %f\n", f->pmineralisation);
+      //fprintf(stderr, "p_avl_to_ssorb %f\n", f->p_avl_to_ssorb);
+      //fprintf(stderr, "p_ssorb_to_avl %f\n", f->p_ssorb_to_avl);
+      //fprintf(stderr, "p_ssorb_to_occ %f\n", f->p_ssorb_to_occ);
+    }
+    
 
     return;
 }
@@ -1200,7 +1206,7 @@ void pfluxes_from_passive_pool(fluxes *f, params *p, state *s) {
     return;
 }
 
-void calculate_p_parent_fluxes(fluxes *f, params *p, state *s) {
+void calculate_p_parent_fluxes(control *c, fluxes *f, params *p, state *s) {
     /*
         Calculate weathering of parent P materials, i.e.
         the fluxes enterring into mineral P pool;
@@ -1210,6 +1216,12 @@ void calculate_p_parent_fluxes(fluxes *f, params *p, state *s) {
 
     /* parent material weathering */
     f->p_par_to_avl = p->p_rate_par_weather * s->inorgparp;
+  
+    if(c->diagnosis) {
+      // fprintf(stderr, "p_rate_par_weather in calculate_p_parent_fluxes %f\n", p->p_rate_par_weather);
+      // fprintf(stderr, "inorgparp in calculate_p_parent_fluxes %f\n", s->inorgparp);
+      
+    }
 
     return;
 }
@@ -1300,11 +1312,17 @@ void calculate_p_immobilisation(fluxes *f, params *p, state *s, double *pimmob,
     return;
 }
 
-void calc_p_net_mineralisation(fluxes *f) {
+void calc_p_net_mineralisation(control *c, fluxes *f) {
     /*
         P Net mineralisation from microbial activity
     */
     f->pmineralisation = f->pgross - f->pimmob + f->plittrelease;
+  
+    if(c->diagnosis) {
+        fprintf(stderr, "pgross %f\n", f->pgross);
+        fprintf(stderr, "pimmob %f\n", f->pimmob);
+        fprintf(stderr, "plittrelease %f\n", f->plittrelease);
+    }
 
     return;
 }
@@ -1335,79 +1353,6 @@ double calculate_pc_slope(params *p, double pcmax, double pcmin) {
     return (arg1 / arg2 * conv);
 }
 
-
-void calculate_p_biochemical_mineralisation(fluxes *f, params *p, state *s) {
-  /*
-    Calculate biochemical P mineralisation rate for slow SOM pool only;
-
-    Ref: Wang et al., 2007, GB1018.
-
-    Parameters
-    ----------
-    n_cost_of_p: float
-    N cost of plant root P uptake [g N (g P)-1]
-
-    crit_n_cost_of_p: float
-    The critical value of N cost of root P uptake above which
-    phosphatase production starts [g N (g P)-1]
-
-    max_p_biochemical: float
-    Maximum rate of biochemical P mineralisation [g P m-2 y-1]
-
-    biochemical_p_constant: float
-    Michaelis-Menten constant for biochemical P mineralisation [g N (g P)-1]
-
-    c_gain_of_p: float
-    Carbon per unit of P uptake (NPP/Puptake) [g C (g P)-1]
-
-    c_gain_of_n: float
-    Carbon per unit of N uptake (NPP/Nuptake) [g C (g N)-1]
-
-    Return
-    ----------
-    p_slow_biochemical: float
-    biochemical P mineralisation rate in slow SOM pool
-    Unit [t/ha];
-
-  */
-
-  double n_cost_of_p, c_gain_of_p, c_gain_of_n;
-
-  /* Calculate C gain per unit P */
-  if (f->puptake > 0.0) {
-      c_gain_of_p = f->npp / f->puptake;
-  } else {
-      c_gain_of_p = 0.0;
-  }
-
-  /* Calculate C gain per unit N */
-  if (f->nuptake > 0.0) {
-      c_gain_of_n = f->npp / f->nuptake;
-  } else {
-      c_gain_of_n = 0.0;
-  }
-
-  /* Calculate n cost of p */
-  if (c_gain_of_n > 0.0) {
-      n_cost_of_p = c_gain_of_p / c_gain_of_n;
-  } else {
-      n_cost_of_p = 0.0;
-  }
-
-  // Phosphatase production start when N cost of P is greater than critical
-  // N cost of P value, and when carbon uptake is more strongly limited by
-  // the uptake of P than by the uptake of N */
-  if (c_gain_of_p > c_gain_of_n && n_cost_of_p > p->crit_n_cost_of_p) {
-      f->p_slow_biochemical = p->max_p_biochemical *
-                              ((n_cost_of_p - p->crit_n_cost_of_p) /
-                              (n_cost_of_p - p->crit_n_cost_of_p +
-                               p->biochemical_p_constant));
-  } else {
-      f->p_slow_biochemical = 0.0;
-  }
-
-  return;
-}
 
 void calculate_p_avl_to_ssorb(state *s, fluxes *f, params *p) {
   
@@ -1520,7 +1465,7 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
     p_into_slow = (f->p_surf_struct_to_slow + f->p_soil_struct_to_slow +
                    f->p_active_to_slow);
 
-    p_out_of_slow = f->p_slow_to_active + f->p_slow_to_passive + f->p_slow_biochemical;
+    p_out_of_slow = f->p_slow_to_active + f->p_slow_to_passive;
     p_into_passive = f->p_active_to_passive + f->p_slow_to_passive;
     p_out_of_passive = f->p_passive_to_active;
 
@@ -1559,7 +1504,7 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
     s->passivesoilp += p_into_passive + fixp - p_out_of_passive;
 
     /* Daily increment of soil inorganic available P pool (lab + sorb) */
-    tot_avl_in = f->p_par_to_avl + f->pmineralisation + f->p_slow_biochemical + f->p_ssorb_to_avl;
+    tot_avl_in = f->p_par_to_avl + f->pmineralisation + f->p_ssorb_to_avl;
     
     if (s->inorgavlp > 0) {
       tot_avl_out = f->puptake + f->ploss + f->p_avl_to_ssorb;
@@ -1580,6 +1525,16 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
 
     /* Daily increment of soil inorganic parent P pool */
     s->inorgparp += f->p_atm_dep - f->p_par_to_avl;   
+    
+    if(c->diagnosis) {
+      fprintf(stderr, "tot_avl_in %f\n", tot_avl_in);
+      fprintf(stderr, "tot_avl_out %f\n", tot_avl_out);
+      fprintf(stderr, "inorgavlp %f\n", s->inorgavlp);
+      fprintf(stderr, "inorgssorbp %f\n", s->inorgssorbp);
+      fprintf(stderr, "inorgoccp %f\n", s->inorgoccp);
+      //fprintf(stderr, "inorgparp %f\n", s->inorgparp);
+      
+    }
     
     return;
 }

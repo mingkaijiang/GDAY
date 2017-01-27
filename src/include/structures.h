@@ -127,14 +127,12 @@ typedef struct {
     double actpcmax;                        /* Active pool (=1/30) P:C ratio of new SOM - maximum [units: gP/gC]. Based on forest version of CENTURY (Parton et al. 1993) */
     double actpcmin;                        /* Active pool (=1/80) P:C of new SOM - when Pmin=Pmin0 [units: gP/gC]. Based on forest version of CENTURY (Parton et al. 1993) */
     double bdecay;                          /* branch and large root turnover rate (1/yr) */
-    double biochemical_p_constant;          /* Michaelis-Menton constant for biochemical P mineralisation [g N (g P)-1]; Wang et al., 2007, GB1018*/
     double c_alloc_b;                       /* allocation to branches at branch n_crit and p_crit. */
     double c_alloc_f;                       /* allocation to leaves at leaf n_crit and p_crit. */
     double c_alloc_r;                       /* allocation to roots at root n_crit and p_crit. */
     double c_alloc_s;                       /* allocation to stem at zero stem n/c and p/c. */
     double cfracts;                         /* carbon fraction of dry biomass */
     double co2_in;                          /* annual version co2 concentration ppm */
-    double crit_n_cost_of_p;                /* Critical value of N cost of root P uptake above which phosphatase production starts [g N (g P)-1]; Wang et al., 2007, GB1018*/
     double cue;                             /* carbon use efficiency, or the ratio of NPP to GPP */
     double decayrate[7];
     double fdecay;                          /* foliage turnover rate (1/yr) */
@@ -163,7 +161,6 @@ typedef struct {
     double ligshoot;                        /* lignin-to-biomass ratio in leaf litter; Values from White et al. DBF = 0.18; ENF = 0.24l; GRASS = 0.09; Shrub = 0.15 - Value in smith et al. 2013 = 0.2, note subtly difference in eqn C9. */
     double liteffnc;
     double lue0;                            /* maximum LUE in kg C GJ-1 */
-    double max_p_biochemical;               /* max rate of biochemical P mineralisation [g P m-2 y-1]; Wang et al., 2007, GB1018*/
     double ncbnewz;                         /* N alloc param: new branch N C at zero leaf N C */
     double ncmaxf;                          /* max N:C ratio of foliage in old stand, if the same as young=no effect */
     double nref;                            /* leaf nc for saturation of photosynthesis */
@@ -385,7 +382,6 @@ typedef struct {
     double n_slow_to_passive;
     double p_slow_to_active;
     double p_slow_to_passive;
-    double p_slow_biochemical;
 
     /* fluxes from passive pool */
     double passive_to_active;
