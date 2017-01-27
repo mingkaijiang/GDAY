@@ -8,7 +8,7 @@
 double calc_soil_temp_factor(double);
 void   calculate_csoil_flows(control *, fluxes *, params *, state *,
                              double);
-void   calculate_decay_rates(fluxes *, params *, state *);
+void   calculate_decay_rates(control *, fluxes *, params *, state *);
 double calc_ligin_nratio_leaves(control *c, fluxes *f, params *);
 double calc_ligin_nratio_fine_roots(control *c, fluxes *f, params *);
 double ratio_of_litternc_to_live_rootnc(control *, fluxes *, params *);
@@ -21,8 +21,8 @@ void   cfluxes_from_active_pool(fluxes *, params *, state *, double);
 void   cfluxes_from_slow_pool(fluxes *, params *, state *);
 void   cfluxes_from_passive_pool(fluxes *, params *, state *);
 void   calculate_soil_respiration(control *, fluxes *, params *, state *);
-void   calculate_cpools(control *, fluxes *, state *);
-void   precision_control_soil_c(fluxes *, state *);
+void   calculate_cpools(control *, fluxes *, state *, params *);
+void   precision_control_soil_c(fluxes *, state *, params *);
 
 
 /* N stuff */
@@ -43,7 +43,7 @@ void   calculate_npools(control *c, fluxes *, params *, state *, double,
                         double, double);
 double nc_limit(fluxes *, double, double, double, double);
 double nc_flux(double, double, double);
-void   precision_control_soil_n(fluxes *, state *);
+void   precision_control_soil_n(fluxes *, state *, params *);
 
 /* P stuff */
 void   calculate_psoil_flows(control *, fluxes *, params *, state *);
@@ -67,6 +67,6 @@ void   calculate_ppools(control *c, fluxes *, params *, state *, double,
                         double, double);
 double pc_limit(fluxes *, double, double, double, double);
 double pc_flux(double, double, double);
-void   precision_control_soil_p(fluxes *, state *);
+void   precision_control_soil_p(fluxes *, state *, params *);
 
 #endif /* SOILS_H */

@@ -36,8 +36,8 @@ void calc_day_growth(control *c, fluxes *f,
     pitfac = MIN(1.0, s->shootpc / p->pcmaxf);
     
     if (c->diagnosis) {
-      fprintf(stderr, "npp after carbon_daily_production %f\n", f->npp);
-      fprintf(stderr, "lai after carbon_daily_production %f\n", s->lai);
+      //fprintf(stderr, "npp after carbon_daily_production %f\n", f->npp);
+      //fprintf(stderr, "lai after carbon_daily_production %f\n", s->lai);
       //fprintf(stderr, "nitfac in calc_day_growth %f\n", nitfac);
       //fprintf(stderr, "pitfac in calc_day_growth %f\n", pitfac);
     }
@@ -367,7 +367,7 @@ int cut_back_production(control *c, fluxes *f, params *p, state *s,
                       f->npbranch);
     
     if (c->diagnosis) {
-      fprintf(stderr, "npp in cut_back_production %f\n", f-> npp);
+      //fprintf(stderr, "npp in cut_back_production %f\n", f-> npp);
     }
 
     /* need to adjust growth values accordingly as well */

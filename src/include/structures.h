@@ -155,8 +155,6 @@ typedef struct {
     double kext;                            /* extinction coefficient for light  */
     double kr;                              /* N uptake coefficent (0.05 kg C m-2 to 0.5 tonnes/ha) see Silvia's PhD, Dewar and McM, 96. */
     double krp;                             /* P uptake coefficent */
-    double latitude;                        /* latitude (degrees, negative for south) */
-    double longitude;                       /* longitude (degrees, negative for west) */
     double ligroot;                         /* lignin-to-biomass ratio in root litter; Values from White et al. = 0.22  - Value in Smith et al. 2013 = 0.16, note subtly difference in eqn C9. */
     double ligshoot;                        /* lignin-to-biomass ratio in leaf litter; Values from White et al. DBF = 0.18; ENF = 0.24l; GRASS = 0.09; Shrub = 0.15 - Value in smith et al. 2013 = 0.2, note subtly difference in eqn C9. */
     double liteffnc;

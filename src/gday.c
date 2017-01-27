@@ -154,7 +154,7 @@ void run_sim(control *c, fluxes *f,  met *m,
     for (nyr = 0; nyr < p->num_years; nyr++) {
 
       if (c->diagnosis) {
-      fprintf(stderr, "nyr %d\n", nyr);
+      //fprintf(stderr, "nyr %d\n", nyr);
       }
       
       unpack_met_data_simple(f, m, p);
@@ -267,8 +267,8 @@ void spin_up_pools(control *c, fluxes *f, met *m,
             } else if (c->ncycle) {
               /* Have we reached a steady state? */
               fprintf(stderr,
-                      "Spinup: Plant C - %f, Active C - %f, Slow C - %f, Passive C %f, Soil N %f\n",
-                      s->plantc,  s->activesoil, s->slowsoil, s->passivesoil, s->soiln);
+                      "Spinup: Plant C - %f, Active C %f, Structsoil %f, Metabsoil %f, Metabsurf %f, Inorg N %f\n",
+                      s->plantc,s->activesoil, s->structsoil, s->metabsoil, s->metabsurf, s->inorgn);
             } else {
               /* Have we reached a steady state? */
               fprintf(stderr,

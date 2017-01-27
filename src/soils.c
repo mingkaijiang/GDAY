@@ -29,7 +29,7 @@ void calculate_csoil_flows(control *c, fluxes *f, params *p, state *s,
     f->tfac_soil_decomp = calc_soil_temp_factor(tsoil);
 
     /* calculate model decay rates */
-    calculate_decay_rates(f, p, s);
+    calculate_decay_rates(c, f, p, s);
 
     /*
      * plant litter inputs to the metabolic and structural pools determined
@@ -50,7 +50,7 @@ void calculate_csoil_flows(control *c, fluxes *f, params *p, state *s,
     calculate_soil_respiration(c, f, p, s);
 
     /* update the C pools */
-    calculate_cpools(c, f, s);
+    calculate_cpools(c, f, s, p);
 
     /* calculate NEP */
     f->nep = f->npp - f->hetero_resp;
@@ -67,7 +67,7 @@ void calculate_csoil_flows(control *c, fluxes *f, params *p, state *s,
     return;
 }
 
-void calculate_decay_rates(fluxes *f, params *p, state *s) {
+void calculate_decay_rates(control *c, fluxes *f, params *p, state *s) {
     /* Model decay rates - decomposition rates have a strong temperature
     and moisture dependency. Note same temperature is assumed for all 3
     SOM pools, found by Knorr et al (2005) to be untrue. N mineralisation
@@ -111,6 +111,16 @@ void calculate_decay_rates(fluxes *f, params *p, state *s) {
 
     /* decay rate of passive pool */
     p->decayrate[6] = p->kdec7 * f->tfac_soil_decomp;
+    
+    if(c->diagnosis) {
+      //fprintf(stderr, "decay rate 0 %f\n", p->decayrate[0]);
+      //fprintf(stderr, "decay rate 1 %f\n", p->decayrate[1]);
+      //fprintf(stderr, "decay rate 2 %f\n", p->decayrate[2]);
+      //fprintf(stderr, "decay rate 3 %f\n", p->decayrate[3]);
+      //fprintf(stderr, "decay rate 4 %f\n", p->decayrate[4]);
+      //fprintf(stderr, "decay rate 5 %f\n", p->decayrate[5]);
+      //fprintf(stderr, "decay rate 6 %f\n", p->decayrate[6]);
+    }
 
     return;
 }
@@ -396,7 +406,7 @@ void calculate_soil_respiration(control *c, fluxes *f, params *p, state *s) {
     return;
 }
 
-void calculate_cpools(control *c, fluxes *f, state *s) {
+void calculate_cpools(control *c, fluxes *f, state *s, params *p) {
     /* Calculate new soil carbon pools. */
 
     /* Update pools */
@@ -441,18 +451,13 @@ void calculate_cpools(control *c, fluxes *f, state *s) {
       removed with each timestep. Effectively with time this value which is
       zero can end up becoming zero but to a silly decimal place
     */
-    precision_control_soil_c(f, s);
+    precision_control_soil_c(f, s, p);
     
     if (c->diagnosis) {
-      //fprintf(stderr, "activesoil in calculate_cpools %f\n", s->activesoil);
       //fprintf(stderr, "c_into_active in calculate_cpools %f\n", f->c_into_active);
       //fprintf(stderr, "active_to_slow in calculate_cpools %f\n", f->active_to_slow);
       //fprintf(stderr, "active_to_passive in calculate_cpools %f\n", f->active_to_passive);
       //fprintf(stderr, "co2_to_air in calculate_cpools %f\n", f->co2_to_air[4]);
-      
-      //fprintf(stderr, "slowsoil in calculate_cpools %f\n", s->slowsoil);
-      //fprintf(stderr, "passivesoil in calculate_cpools %f\n", s->passivesoil);
-      
       //fprintf(stderr, "c_into_passive %f\n", f->c_into_passive);
       //fprintf(stderr, "passive_to_active %f\n", f->passive_to_active);
       //fprintf(stderr, "co2_to_air[6] %f\n", f->co2_to_air[6]);
@@ -461,11 +466,12 @@ void calculate_cpools(control *c, fluxes *f, state *s) {
     return;
 }
 
-void precision_control_soil_c(fluxes *f, state *s) {
+void precision_control_soil_c(fluxes *f, state *s, params *p) {
     /* Detect very low values in state variables and force to zero to
     avoid rounding and overflow errors */
 
     double tolerance = 1E-08, excess;
+    double frac_microb_resp = 0.85 - (0.68 * p->finesoil);
 
     /* C & N state variables */
     if (s->metabsurf < tolerance) {
@@ -480,6 +486,23 @@ void precision_control_soil_c(fluxes *f, state *s) {
         f->soil_metab_to_active = excess * 0.45;
         f->co2_to_air[3] = excess * 0.55;
         s->metabsoil = 0.0;
+    }
+    
+    if (s->activesoil < tolerance) {
+        excess = s->activesoil;
+        f->active_to_slow = excess * p->decayrate[4] * (1.0 - frac_microb_resp - 0.004);
+        f->active_to_passive = excess * p->decayrate[4] * 0.004;
+        f->co2_to_air[4] = excess * p->decayrate[4] * frac_microb_resp;
+        s->activesoil = 0.0;
+    }
+    
+    if (s->structsoil < tolerance) {
+        excess = s->structsoil;
+        f->soil_struct_to_slow = excess * p->decayrate[2] * p->ligroot * 0.7;
+        f->soil_struct_to_active = excess * p->decayrate[2] * (1.0 - p->ligroot) * 0.45;
+        f->co2_to_air[1] = (excess * p->decayrate[2] *
+          (p->ligroot * 0.3 + (1.0 - p->ligroot) * 0.55));
+        s->structsoil = 0.0;
     }
 
     return;
@@ -862,7 +885,7 @@ void calculate_npools(control *c, fluxes *f, params *p, state *s,
        potential scenario with the way the model works for tiny bits to be
        removed with each timestep. Effectively with time this value which is
        zero can end up becoming zero but to a silly decimal place */
-    precision_control_soil_n(f, s);
+    precision_control_soil_n(f, s, p);
 
     /* Update SOM pools */
     n_into_active = (f->n_surf_struct_to_active + f->n_soil_struct_to_active +
@@ -919,10 +942,10 @@ void calculate_npools(control *c, fluxes *f, params *p, state *s,
                   f->nloss - f->nuptake);                            
 
     if (c->diagnosis) {
-      //fprintf(stderr, "inorgn in calculate npools %f\n", s->inorgn);
-      //fprintf(stderr, "nmineralisation in calculate npools %f\n", f->nmineralisation);
-      //fprintf(stderr, "nloss in calculate npools %f\n", f->nloss);
-      //fprintf(stderr, "nuptake in calculate npools %f\n", f->nuptake);
+      //fprintf(stderr, "n_into_active calculate npools %f\n", n_into_active);
+      //fprintf(stderr, "n_out_of_active in calculate npools %f\n", n_out_of_active);
+      //fprintf(stderr, "n_into_slow in calculate npools %f\n", n_into_slow);
+      //fprintf(stderr, "n_out_of_slow in calculate npools %f\n", n_out_of_slow);
     }
     
 
@@ -994,7 +1017,7 @@ double nc_flux(double cflux, double nflux, double nc_ratio) {
 }
 
 
-void precision_control_soil_n(fluxes *f, state *s) {
+void precision_control_soil_n(fluxes *f, state *s, params *p) {
     /* Detect very low values in state variables and force to zero to
     avoid rounding and overflow errors */
 
@@ -1055,8 +1078,8 @@ void calculate_psoil_flows(control *c, fluxes *f, params *p, state *s) {
                      passive_pc_slope);
     
     if (c->diagnosis) {
-      fprintf(stderr, "p_par_to_avl %f\n", f->p_par_to_avl);
-      fprintf(stderr, "pmineralisation %f\n", f->pmineralisation);
+      //fprintf(stderr, "p_par_to_avl %f\n", f->p_par_to_avl);
+      //fprintf(stderr, "pmineralisation %f\n", f->pmineralisation);
       //fprintf(stderr, "p_avl_to_ssorb %f\n", f->p_avl_to_ssorb);
       //fprintf(stderr, "p_ssorb_to_avl %f\n", f->p_ssorb_to_avl);
       //fprintf(stderr, "p_ssorb_to_occ %f\n", f->p_ssorb_to_occ);
@@ -1319,9 +1342,9 @@ void calc_p_net_mineralisation(control *c, fluxes *f) {
     f->pmineralisation = f->pgross - f->pimmob + f->plittrelease;
   
     if(c->diagnosis) {
-        fprintf(stderr, "pgross %f\n", f->pgross);
-        fprintf(stderr, "pimmob %f\n", f->pimmob);
-        fprintf(stderr, "plittrelease %f\n", f->plittrelease);
+        //fprintf(stderr, "pgross %f\n", f->pgross);
+        //fprintf(stderr, "pimmob %f\n", f->pimmob);
+        //fprintf(stderr, "plittrelease %f\n", f->plittrelease);
     }
 
     return;
@@ -1453,7 +1476,7 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
     potential scenario with the way the model works for tiny bits to be
     removed with each timestep. Effectively with time this value which is
     zero can end up becoming zero but to a silly decimal place */
-    precision_control_soil_p(f, s);
+    precision_control_soil_p(f, s, p);
 
     /* Update SOM pools */
     p_into_active = (f->p_surf_struct_to_active + f->p_soil_struct_to_active +
@@ -1527,11 +1550,11 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
     s->inorgparp += f->p_atm_dep - f->p_par_to_avl;   
     
     if(c->diagnosis) {
-      fprintf(stderr, "tot_avl_in %f\n", tot_avl_in);
-      fprintf(stderr, "tot_avl_out %f\n", tot_avl_out);
-      fprintf(stderr, "inorgavlp %f\n", s->inorgavlp);
-      fprintf(stderr, "inorgssorbp %f\n", s->inorgssorbp);
-      fprintf(stderr, "inorgoccp %f\n", s->inorgoccp);
+      //fprintf(stderr, "tot_avl_in %f\n", tot_avl_in);
+      //fprintf(stderr, "tot_avl_out %f\n", tot_avl_out);
+      //fprintf(stderr, "inorgavlp %f\n", s->inorgavlp);
+      //fprintf(stderr, "inorgssorbp %f\n", s->inorgssorbp);
+      //fprintf(stderr, "inorgoccp %f\n", s->inorgoccp);
       //fprintf(stderr, "inorgparp %f\n", s->inorgparp);
       
     }
@@ -1609,7 +1632,7 @@ double pc_flux(double cflux, double pflux, double pc_ratio) {
 }
 
 
-void precision_control_soil_p(fluxes *f, state *s) {
+void precision_control_soil_p(fluxes *f, state *s, params *p) {
     /* Detect very low values in state variables and force to zero to
     avoid rounding and overflow errors */
 
