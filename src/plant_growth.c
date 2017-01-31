@@ -69,6 +69,8 @@ void calc_day_growth(control *c, fluxes *f,
 
     precision_control(f, s);
     
+    fprintf(stderr, "npp %f\n", f->npp);
+    
     return;
 }
 
