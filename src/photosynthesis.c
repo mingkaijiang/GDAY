@@ -42,12 +42,12 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
     
     if (s->lai > 0.0) {
       /* calculation for npp */
-      f->gpp_gCm2 = lue_avg * f->apar * conv2;
+      f->npp_gCm2 = lue_avg * f->apar * conv2;
     } else {
-      f->gpp_gCm2 = 0.0;
+      f->npp_gCm2 = 0.0;
     }
     
-    f->npp_gCm2 = f->gpp_gCm2 * p->cue;
+    f->gpp_gCm2 = f->npp_gCm2 / p->cue;
     
     /* g C m-2 to tonnes hectare-1 yr-1 */
     f->gpp = f->gpp_gCm2 * G_AS_TONNES / M2_AS_HA;
@@ -57,7 +57,7 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
     f->apar *= UMOL_2_JOL * J_TO_MJ;
     
     if (c->diagnosis) {
-      // fprintf(stderr, "npp_gCm2 in simple_photosynthesis %f\n", f->npp_gCm2);
+      //fprintf(stderr, "npp in simple_photosynthesis %f\n", f->npp);
       // fprintf(stderr, "apar = %f\n", f->apar);
       // fprintf(stderr, "par = %f\n", m->par);
       // fprintf(stderr, "fipar = %f\n", s->fipar);

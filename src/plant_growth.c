@@ -60,7 +60,7 @@ void calc_day_growth(control *c, fluxes *f,
                               &ncbnew, &ncwimm,
                               &ncwnew, &pcbnew, &pcwimm,
                               &pcwnew);
-                              
+    
     recalc_wb = np_allocation(c, f, p, s, ncbnew, ncwimm, ncwnew,
                               pcbnew, pcwimm, pcwnew,
                               fdecay, rdecay);
@@ -96,7 +96,7 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s)
     
     /* Calculate NPP */
     f->npp_gCm2 = f->gpp_gCm2 * p->cue;
-    f->npp = f->npp_gCm2 * GRAM_C_2_TONNES_HA;
+    f->npp = f->npp_gCm2 * GRAM_C_2_TONNES_HA;     // per year;
 
     return;
 }
@@ -310,6 +310,7 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     /* If we have allocated more N than we have avail, cut back C prodn */
     arg = f->npstemimm + f->npstemmob + f->npbranch;
     if (arg > ntot && c->fixleafnc == FALSE && c->ncycle) {
+      //fprintf(stderr, "in cut_back_production \n");
       recalc_wb = cut_back_production(c, f, p, s, ntot, ncbnew,
                                       ncwimm, ncwnew);
     }
@@ -504,10 +505,6 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
     
     /* Total allocation should be one, if not print warning */
     total_alloc = f->alroot + f->alleaf + f->albranch + f->alstem;
-    if (total_alloc > 1.0+EPSILON) {
-        fprintf(stderr, "Allocation fracs > 1: %.13f\n", total_alloc);
-        exit(EXIT_FAILURE);
-    }
     
     if (c->diagnosis) {
       //fprintf(stderr, "total_alloc in calc_carbon_allocation_fracs %f\n", total_alloc);
@@ -526,7 +523,7 @@ void carbon_allocation(control *c, fluxes *f, params *p, state *s,
         leaf N:C as a fraction of 'Ncmaxf' (max 1.0)
     */
     double days_left;
-    f->cpleaf = f->npp * f->alleaf;
+    f->cpleaf = f->npp * f->alleaf;        // per yr
     f->cproot = f->npp * f->alroot;
     f->cpbranch = f->npp * f->albranch;
     f->cpstem = f->npp * f->alstem;
@@ -538,6 +535,13 @@ void carbon_allocation(control *c, fluxes *f, params *p, state *s,
       s->lai += (f->cpleaf *
         (p->sla * M2_AS_HA / (KG_AS_TONNES * p->cfracts)) -
         f->deadleaves * s->lai / s->shoot);
+      //fprintf(stderr, "lai after carbon_allocation %f\n", s->lai);
+      //fprintf(stderr, "shoot in carbon_allocation %f\n", s->shoot);
+      //fprintf(stderr, "cpleaf %f\n", f->cpleaf);
+      //fprintf(stderr, "cpleaf * sla / cfracts %f\n", f->cpleaf * (p->sla * M2_AS_HA/(KG_AS_TONNES * p->cfracts)));
+      //fprintf(stderr, "deadleaves %f\n", f->deadleaves);
+      //fprintf(stderr, "dealeaves * lai / shoot %f\n", f->deadleaves * s->lai / s->shoot);
+      
     }
 
     return;
@@ -577,6 +581,7 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s,
     
     s->branchn += f->npbranch - p->bdecay * s->branchn;
     s->rootn += f->nproot - rdecay * s->rootn;
+    
     s->stemnimm += f->npstemimm - p->wdecay * s->stemnimm;
     s->stemnmob += (f->npstemmob - p->wdecay * s->stemnmob);
     s->stemn = s->stemnimm + s->stemnmob;
@@ -610,6 +615,11 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s,
       
       if (s->shootn > (s->shoot * ncmaxf)) {
         extrasn = s->shootn - s->shoot * ncmaxf;
+        
+        //fprintf(stderr, "in N uptake cannot be reduced below zero \n");
+        //fprintf(stderr, "extrasn %f\n", extrasn);
+        //fprintf(stderr, "shootn %f\n", s->shootn);
+        //fprintf(stderr, "shoot * ncmaxf %f\n", s->shoot * ncmaxf);
         
         /* Ensure N uptake cannot be reduced below zero. */
         if (extrasn >  f->nuptake)
@@ -874,8 +884,6 @@ double calculate_puptake(control *c, params *p, state *s, fluxes *f) {
 
         /* supply rate of available mineral P */
         U0 = p->prateuptake * s->inorgavlp;
-
-
         Kr = p->krp;
         puptake = MAX(U0 * s->root / (s->root + Kr), 0.0);
     } else {
