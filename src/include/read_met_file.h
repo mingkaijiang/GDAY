@@ -6,6 +6,6 @@
 
 #include "gday.h"
 #include "utilities.h"
-void    read_daily_met_data_simple(char **, control *, met *, params *, fluxes *);
+void    read_annual_met_data_simple(char **, control *, met *, params *);
 
 #endif /* READ_MET_H */

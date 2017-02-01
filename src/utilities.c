@@ -1,17 +1,6 @@
 
 #include "utilities.h"
 
-
-
-int is_leap_year(int yr) {
-
-    if (yr % 400 == 0 || (yr % 100 != 0 && yr % 4 == 0)) {
-        return TRUE;
-    } else {
-        return FALSE;
-    }
-}
-
 void prog_error(const char *reason, const unsigned int line)
 {
     fprintf(stderr, "%s, failed at line: %d\n", reason, line);

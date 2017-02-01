@@ -92,7 +92,7 @@ int main(int argc, char **argv)
     }
     
     /* read met data */
-    read_daily_met_data_simple(argv, c, m, p, f);
+    read_annual_met_data_simple(argv, c, m, p);
     
     s->lai = MAX(0.01, (p->sla * M2_AS_HA / KG_AS_TONNES /
                           p->cfracts * s->shoot));

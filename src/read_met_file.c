@@ -2,7 +2,7 @@
 
 
 
-void read_daily_met_data_simple(char **argv, control *c, met *m, params *p, fluxes *f)
+void read_annual_met_data_simple(char **argv, control *c, met *m, params *p)
 {
     double current_yr = -999.9;
     
@@ -16,12 +16,6 @@ void read_daily_met_data_simple(char **argv, control *c, met *m, params *p, flux
     m->pdep = p->pdep_in;
     m->tsoil = p->tsoil_in;
     
-    /* Build an array of the unique years as we loop over the input file */
-/*    if (current_yr != m->year) {
-      p->num_years++;
-      current_yr = m->year;
-    }
-*/
     return;
 }
 

@@ -14,7 +14,6 @@
 
 
 /* utilities */
-int    is_leap_year(int);
 void   prog_error(const char *, const unsigned int);
 bool   float_eq(double, double);
 
@@ -22,6 +21,5 @@ char   *rstrip(char *);
 char   *lskip(char *);
 char   *find_char_or_comment(char*, char);
 char   *strncpy0(char*, char*, size_t);
-char   *strip_first_and_last_character(char);
 
 #endif /* UTILITIES_H */
