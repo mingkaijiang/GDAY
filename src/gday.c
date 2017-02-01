@@ -94,6 +94,7 @@ int main(int argc, char **argv)
     /* read met data */
     read_annual_met_data_simple(argv, c, m, p);
     
+    /* set initial lai */
     s->lai = MAX(0.01, (p->sla * M2_AS_HA / KG_AS_TONNES /
                           p->cfracts * s->shoot));
     
@@ -101,7 +102,7 @@ int main(int argc, char **argv)
     if (c->spin_up) {
         spin_up_pools(c, f, m, p, s, nr);
     } else {
-        run_sim(c, f, m, p, s, nr);
+        run_sim_annual(c, f, m, p, s, nr);
     }
 
     /* clean up */
@@ -124,13 +125,11 @@ int main(int argc, char **argv)
 void run_sim(control *c, fluxes *f,  met *m, 
              params *p, state *s, nrutil *nr){
 
-    int    nyr, doy, window_size, i, dummy = 0;
-    int    fire_found = FALSE;;
+    int    nyr, i, dummy = 0;
 
     double fdecay, rdecay, current_limitation, npitfac, year;
 
     /* Setup output file */
-
     if (c->print_options == DAILY && c->spin_up == FALSE) {
         /* Daily outputs */
         open_output_file(c, c->out_fname, &(c->ofp));
@@ -148,14 +147,10 @@ void run_sim(control *c, fluxes *f,  met *m,
     
     correct_rate_constants(p, FALSE);
     
-    //fprintf(stderr, "inorgn at the start of year %f\n", s->inorgn);
-
     year_start_calculations(c, p, s);
 
     //s->lai = MAX(0.01, (p->sla * M2_AS_HA / KG_AS_TONNES /
     //                      p->cfracts * s->shoot));
-    
-    //fprintf(stderr, "lai start %f\n", s->lai);
 
     /* ====================== **
     **   Y E A R    L O O P   **
@@ -225,8 +220,138 @@ void run_sim(control *c, fluxes *f,  met *m,
 
     return;
 
-
 }
+
+
+void run_sim_annual(control *c, fluxes *f, met *m,
+                    params *p, state *s, nrutil *nr){
+    /* Run annual simulation to reach quasi-equilibrium state for all pools
+    
+    - Examine sequences of 1 year and check if C pools are changing
+    by more than tol_c unit per yr;
+    
+    - Check N and P pools as well if N & P are turned on.
+    
+    References:
+    ----------
+    Adapted from...
+    * Murty, D and McMurtrie, R. E. (2000) Ecological Modelling, 134,
+    185-205, specifically page 196.
+    */
+    double tol_c = 5E-04;
+    double tol_n = 5E-04;
+    double tol_p = 5E-04;
+    double prev_plantc = 99999.9;
+    double prev_soilc = 99999.9;
+    double prev_plantn = 99999.9;
+    double prev_soiln = 99999.9;
+    double prev_plantp = 99999.9;
+    double prev_soilp = 99999.9;
+    int i, cntrl_flag;
+    
+    /* run simulation variables */
+    int    nyr, dummy = 0;
+    double fdecay, rdecay, current_limitation, npitfac, year;
+    
+    
+    /* Setup output file */
+      /* Daily outputs */
+      open_output_file(c, c->out_param_fname, &(c->ofp));
+      
+      if (c->output_ascii) {
+        write_output_header(c, p, &(c->ofp));
+      } else {
+        open_output_file(c, c->out_fname_hdr, &(c->ofp_hdr));
+        write_output_header(c, p, &(c->ofp_hdr));
+      }
+    
+    fprintf(stderr, "Spinning up the model...\n");
+    while (TRUE) {
+        if (fabs((prev_plantc) - (s->plantc)) < tol_c &&
+            fabs((prev_soilc) - (s->soilc)) < tol_c &&
+            fabs((prev_plantn) - (s->plantn)) < tol_n &&
+            fabs((prev_soiln) - (s->soiln)) < tol_n &&
+            fabs((prev_plantp) - (s->plantp)) < tol_p && 
+            fabs((prev_soilp) - (s->soilp)) < tol_p) {
+          break;
+      } else {
+            prev_plantc = s->plantc;
+            prev_soilc = s->soilc;
+            prev_plantn = s->plantn;
+            prev_soiln = s->soiln;
+            prev_plantp = s->plantp;
+            prev_soilp = s->soilp;
+            
+            /* start simulation */
+            correct_rate_constants(p, FALSE);
+            
+            year_start_calculations(c, p, s);
+            
+            unpack_met_data_simple(f, m, p);   // Check if read_annual_met still needed or not
+            
+            fdecay = p->fdecay;
+            rdecay = p->rdecay;
+            
+            calculate_litterfall(c, f, p, s, &fdecay, &rdecay);
+            
+            calc_day_growth(c, f, m, nr, p, s,
+                            fdecay, rdecay);
+            
+            calculate_csoil_flows(c, f, p, s, m->tsoil);
+            calculate_nsoil_flows(c, f, p, s);
+            
+            if (c->pcycle == TRUE) {
+              calculate_psoil_flows(c, f, p, s);
+            }
+            
+            /* update stress SMA */
+            current_limitation = calculate_growth_stress_limitation(p, s, c);
+            
+            /* Turn off all N calculations */
+            if (c->ncycle == FALSE)
+              reset_all_n_pools_and_fluxes(f, s);
+            
+            /* Turn off all P calculations */
+            if (c->pcycle == FALSE)
+              reset_all_p_pools_and_fluxes(f, s);
+            
+            /* calculate C:N:P ratios and increment annual flux sum */
+            year_end_calculations(c, p, s);
+            
+            if (c->print_options == DAILY && c->spin_up == FALSE) {
+              if(c->output_ascii)
+                write_daily_outputs_ascii(c, f, s, year);
+              else
+                write_daily_outputs_binary(c, f, s, year);
+            }
+            
+            correct_rate_constants(p, TRUE);
+        
+        /* Print to screen and check the process */
+        if (c->pcycle) {
+          /* Have we reached a steady state? */
+          fprintf(stderr,
+                  "Spinup: Plant C %f, Slow P %f, Passive P %f, Inorg P %f, Ssorb P %f, Occluded P %f\n",
+                  s->plantc, s->slowsoilp, s->passivesoilp, s->inorgp, s->inorgssorbp, s->inorgoccp);
+        } else if (c->ncycle) {
+          /* Have we reached a steady state? */
+          fprintf(stderr,
+                  "Spinup: Plant C %f, Active C %f, Slow C %f, Passive C %f, LAI %f, Inorg N %f\n",
+                  s->plantc,s->activesoil, s->slowsoil, s->passivesoil, s->lai, s->inorgn);
+        } else {
+          /* Have we reached a steady state? */
+          fprintf(stderr,
+                  "Spinup: Plant C - %f, Soil C - %f\n",
+                  s->plantc, s->soilc);
+        }   // Print to screen end;
+      }     // if else statement end checking equilibrium;
+    }       // while statement end;
+    
+    write_final_state(c, p, s);
+    
+    return;
+}
+
 
 void spin_up_pools(control *c, fluxes *f, met *m,
                    params *p, state *s, nrutil *nr){
@@ -251,9 +376,6 @@ void spin_up_pools(control *c, fluxes *f, met *m,
     double prev_plantp = 99999.9;
     double prev_soilp = 99999.9;
     int i, cntrl_flag;
-    
-    /* check for convergences in units of kg/m2 */
-    double conv = TONNES_HA_2_KG_M2;
 
     /* Final state + param file */
     open_output_file(c, c->out_param_fname, &(c->ofp));
@@ -299,6 +421,7 @@ void spin_up_pools(control *c, fluxes *f, met *m,
 
     return;
 }
+
 
 void clparser(int argc, char **argv, control *c) {
     int i;

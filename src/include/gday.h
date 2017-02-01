@@ -81,6 +81,8 @@ void   run_sim(control *, fluxes *, met *,
                params *, state *, nrutil *);
 void   spin_up_pools(control *, fluxes *, met *,
                      params *, state *, nrutil *);
+void   run_sim_annual(control *, fluxes *, met *,
+                      params *, state *, nrutil *);
 void   reset_all_n_pools_and_fluxes(fluxes *, state *);
 void   reset_all_p_pools_and_fluxes(fluxes *, state *);
 void   year_end_calculations(control *, params *, state *);

@@ -18,4 +18,3 @@ void read_annual_met_data_simple(char **argv, control *c, met *m, params *p)
     
     return;
 }
-
