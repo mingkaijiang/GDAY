@@ -11,11 +11,8 @@ void initialise_control(control *c) {
 
     c->ifp = NULL;
     c->ofp = NULL;
-    c->ofp_hdr = NULL;
     strcpy(c->cfg_fname, "*NOT SET*");
-    //strcpy(c->met_fname, "*NOT SET*");
     strcpy(c->out_fname, "*NOT SET*");
-    strcpy(c->out_fname_hdr, "*NOT SET*");
     strcpy(c->out_param_fname, "*NOT SET*");
 
     c->fixed_stem_nc = TRUE;        /* False=vary stem N:C with foliage, True=fixed stem N:C */
@@ -27,7 +24,6 @@ void initialise_control(control *c) {
     c->pcycle = TRUE;               /* Phosphorus cycle on or off? */
     c->nuptake_model = 1;           /* 0=constant uptake, 1=func of N inorgn, 2=depends on rate of soil N availability */
     c->puptake_model = 1;           /* 0=constant uptake, 1=func of P inorgp, 2=depends on rate of soil P availability */
-    c->output_ascii = TRUE;         /* If this is false you get a binary file as an output. */
     c->print_options = ANNUAL;      /* ANNUAL=every timestep, END=end of run */
     c->use_eff_nc = 0;              /* use constant leaf n:c for  metfrac s */
     c->spin_up = FALSE;             /* Spin up to a steady state? If False it just runs the model */
@@ -81,7 +77,6 @@ void initialise_params(params *p) {
     p->ncbnewz = 0.003;
     p->ndep_in = 0.001;
     p->nfix_in = 0.001;
-    p->num_years = 1000;         /* number of years iterated */
     p->lue0 = 1.4;                /* maximum LUE in kg C GJ-1 */
     p->ncmaxf = 0.05;
     p->nref = 0.04;

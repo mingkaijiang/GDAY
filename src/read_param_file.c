@@ -110,16 +110,9 @@ int handler(char *section, char *name, char *value, control *c,
     ** FILES
     */
     if (MATCH("files", "cfg_fname")) {
-        /* remove quotation marks around the string
-	    temp++;  removes first quote
-	    temp[strlen(temp)-1] = 0;  removes last quote */
         strcpy(c->cfg_fname, temp);
-    } else if (MATCH("files", "met_fname")) {
-        strcpy(c->met_fname, temp);
     } else if (MATCH("files", "out_fname")) {
         strcpy(c->out_fname, temp);
-    } else if (MATCH("files", "out_fname_hdr")) {
-        strcpy(c->out_fname_hdr, temp);
     } else if (MATCH("files", "out_param_fname")) {
         strcpy(c->out_param_fname, temp);
     }
@@ -222,19 +215,6 @@ int handler(char *section, char *name, char *value, control *c,
         c->nuptake_model = atoi(value);
     } else if (MATCH("control", "puptake_model")) {
         c->puptake_model = atoi(value);
-    } else if (MATCH("control", "output_ascii")) {
-        if (strcmp(temp, "False") == 0 ||
-            strcmp(temp, "FALSE") == 0 ||
-            strcmp(temp, "false") == 0)
-            c->output_ascii = FALSE;
-        else if (strcmp(temp, "True") == 0 ||
-            strcmp(temp, "TRUE") == 0 ||
-            strcmp(temp, "true") == 0)
-            c->output_ascii = TRUE;
-        else {
-            fprintf(stderr, "Unknown output_ascii option: %s\n", temp);
-            exit(EXIT_FAILURE);
-        }
     } else if (MATCH("control", "print_options")) {
         if (strcmp(temp, "Annual") == 0 ||
             strcmp(temp, "ANNUAL") == 0 ||
@@ -419,8 +399,6 @@ int handler(char *section, char *name, char *value, control *c,
       p->ndep_in = atof(value);
     } else if (MATCH("params", "nfix_in")) {
       p->nfix_in = atof(value);
-    } else if (MATCH("params", "num_years")) {
-      p->num_years = atof(value);
     } else if (MATCH("params", "lue0")) {
       p->lue0 = atof(value);
     } else if (MATCH("params", "pcbnewz")) {

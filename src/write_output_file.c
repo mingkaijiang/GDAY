@@ -1,5 +1,5 @@
 /* ============================================================================
-* Print output file (ascii/binary)
+* Print output file (ascii)
 *
 *
 *
@@ -29,8 +29,6 @@ void write_output_header(control *c, params *p, FILE **fp) {
         script to translate the outputs to a nice CSV file with input met
         data, units and nice header information.
     */
-    int ncols = 86;  /* change with number of variables ? total count below is 93 */
-    int nrows = p->num_years;
 
     /* Git version */
     fprintf(*fp, "#Git_revision_code:%s\n", c->git_code_ver);
@@ -95,11 +93,6 @@ void write_output_header(control *c, params *p, FILE **fp) {
     fprintf(*fp, "leafretransn,");
     fprintf(*fp, "leafretransp\n");
 
-
-    if (c->output_ascii == FALSE) {
-        fprintf(*fp, "nrows=%d\n", nrows);
-        fprintf(*fp, "ncols=%d\n", ncols);
-    }
     return;
 }
 
@@ -203,33 +196,6 @@ void write_annual_outputs_ascii(control *c, fluxes *f, state *s, int year) {
     fprintf(c->ofp, "%.10f,", f->leafretransn);
     fprintf(c->ofp, "%.10f\n", f->leafretransp);
 
-
-    return;
-}
-
-void write_annual_outputs_binary(control *c, fluxes *f, state *s, int year) {
-    /*
-        Write annual state and fluxes headers to an output CSV file. Note we
-        are not writing anything useful like units as there is a wrapper
-        script to translate the outputs to a nice CSV file with input met
-        data, units and nice header information.
-    */
-    double temp;
-
-    /* time stuff */
-    temp = (double)year;
-    fwrite(&temp, sizeof(double), 1, c->ofp);
-
-
-    /* plant */
-    fwrite(&(s->shoot), sizeof(double), 1, c->ofp);
-    fwrite(&(s->lai), sizeof(double), 1, c->ofp);
-    fwrite(&(s->branch), sizeof(double), 1, c->ofp);
-    fwrite(&(s->stem), sizeof(double), 1, c->ofp);
-    fwrite(&(s->root), sizeof(double), 1, c->ofp);
-
-    /* C fluxes */
-    fwrite(&(f->npp), sizeof(double), 1, c->ofp);
 
     return;
 }

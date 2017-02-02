@@ -7,11 +7,8 @@ typedef struct {
     FILE *ifp;
     FILE *ofp;
     FILE *ofp_sd;
-    FILE *ofp_hdr;
     char  cfg_fname[STRING_LENGTH];
-    char  met_fname[STRING_LENGTH];
     char  out_fname[STRING_LENGTH];
-    char  out_fname_hdr[STRING_LENGTH];
     char  out_param_fname[STRING_LENGTH];
     char  git_hash[STRING_LENGTH];
     int   diagnosis;
@@ -23,7 +20,6 @@ typedef struct {
     int   pcycle;
     int   nuptake_model;
     int   puptake_model;
-    int   output_ascii;
     int   print_options;
     int   use_eff_nc;
     char  git_code_ver[STRING_LENGTH];
@@ -171,7 +167,6 @@ typedef struct {
     double nf_min;                          /* leaf N:C minimum N concentration which allows productivity */
     double nmin0;                           /* mineral N pool corresponding to Actnc0,etc (g/m2) */
     double nmincrit;                        /* Critical mineral N pool at max soil N:C (g/m2) (Parton et al 1993, McMurtrie et al 2001). */
-    int num_years;                          /* number of years iterated in the year loop */
     double nuptakez;                        /* constant N uptake per year (1/yr) */
     double p_rate_par_weather;              /* parent P material weathering rate [yr-1] */
     double passivesoilnz;

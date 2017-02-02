@@ -100,7 +100,8 @@ int main(int argc, char **argv)
     
     /* model runs */
     if (c->spin_up) {
-        spin_up_pools(c, f, m, p, s, nr);
+        run_sim_annual(c, f, m, p, s, nr);
+        //spin_up_pools(c, f, m, p, s, nr);
     } else {
         run_sim(c, f, m, p, s, nr);
     }
@@ -109,10 +110,6 @@ int main(int argc, char **argv)
     fclose(c->ofp);
 
     fclose(c->ifp);
-    if (c->output_ascii == FALSE) {
-        fclose(c->ofp_hdr);
-    }
-
     free(c);
     free(m);
     free(p);
@@ -125,21 +122,15 @@ int main(int argc, char **argv)
 void run_sim(control *c, fluxes *f,  met *m, 
              params *p, state *s, nrutil *nr){
 
-    int    nyr, i;
+    int    year, i;
 
-    double current_limitation, npitfac, year;
+    double current_limitation, npitfac;
 
     /* Setup output file */
     if (c->print_options == ANNUAL && c->spin_up == FALSE) {
         /* Annual outputs */
         open_output_file(c, c->out_fname, &(c->ofp));
-
-        if (c->output_ascii) {
-            write_output_header(c, p, &(c->ofp));
-        } else {
-            open_output_file(c, c->out_fname_hdr, &(c->ofp_hdr));
-            write_output_header(c, p, &(c->ofp_hdr));
-        }
+        write_output_header(c, p, &(c->ofp));
     } else if (c->print_options == END && c->spin_up == FALSE) {
         /* Final state + param file */
         open_output_file(c, c->out_param_fname, &(c->ofp));
@@ -149,18 +140,6 @@ void run_sim(control *c, fluxes *f,  met *m,
     
     year_start_calculations(c, p, s);
 
-    //s->lai = MAX(0.01, (p->sla * M2_AS_HA / KG_AS_TONNES /
-    //                      p->cfracts * s->shoot));
-
-    /* ====================== **
-    **   Y E A R    L O O P   **
-    ** ====================== */
-    //for (nyr = 0; nyr < p->num_years; nyr++) {
-
-      if (c->diagnosis) {
-      //fprintf(stderr, "nyr %d\n", nyr);
-      }
-      
       unpack_met_data_simple(f, m, p);
       
       //year_start_calculations(c, p, s);
@@ -195,10 +174,7 @@ void run_sim(control *c, fluxes *f,  met *m,
       //fprintf(stderr, "inorgn after year_end_calculations %f\n", s->inorgn);
       
       if (c->print_options == ANNUAL && c->spin_up == FALSE) {
-        if(c->output_ascii)
           write_annual_outputs_ascii(c, f, s, year);
-        else
-          write_annual_outputs_binary(c, f, s, year);
       }
         
     //}
@@ -244,20 +220,14 @@ void run_sim_annual(control *c, fluxes *f, met *m,
     int i, cntrl_flag;
     
     /* run simulation variables */
-    int    nyr;
-    double current_limitation, npitfac, year;
-    
+    int    year = 0;
+    double npitfac;
     
     /* Setup output file */
       /* Annual outputs */
       open_output_file(c, c->out_param_fname, &(c->ofp));
-      
-      if (c->output_ascii) {
-        write_output_header(c, p, &(c->ofp));
-      } else {
-        open_output_file(c, c->out_fname_hdr, &(c->ofp_hdr));
-        write_output_header(c, p, &(c->ofp_hdr));
-      }
+      write_output_header(c, p, &(c->ofp));
+
     
     fprintf(stderr, "Spinning up the model...\n");
     while (TRUE) {
@@ -294,9 +264,6 @@ void run_sim_annual(control *c, fluxes *f, met *m,
               calculate_psoil_flows(c, f, p, s);
             }
             
-            /* update stress SMA */
-            //current_limitation = calculate_growth_stress_limitation(p, s, c);
-            
             /* Turn off all N calculations */
             if (c->ncycle == FALSE)
               reset_all_n_pools_and_fluxes(f, s);
@@ -309,20 +276,20 @@ void run_sim_annual(control *c, fluxes *f, met *m,
             year_end_calculations(c, p, s);
             
             if (c->print_options == ANNUAL && c->spin_up == FALSE) {
-              if(c->output_ascii)
-                write_annual_outputs_ascii(c, f, s, year);
-              else
-                write_annual_outputs_binary(c, f, s, year);
+              write_annual_outputs_ascii(c, f, s, year);
             }
             
             correct_rate_constants(p, TRUE);
+            
+            /* continue at annual timestep */
+            year += 1;
         
         /* Print to screen and check the process */
         if (c->pcycle) {
           /* Have we reached a steady state? */
           fprintf(stderr,
-                  "Spinup: Plant C %f, Slow P %f, Passive P %f, Inorg P %f, Ssorb P %f, Occluded P %f\n",
-                  s->plantc, s->slowsoilp, s->passivesoilp, s->inorgp, s->inorgssorbp, s->inorgoccp);
+                  "Spinup: Year %d, Plant C %f, Leaf NC %f, Leaf PC %f, Soil C %f, Soil N %f, Soil P %f, LAI %f\n",
+                  year, s->plantc, s->shootnc, s->shootpc, s->soilc, s->soiln, s->soilp, s->lai);
         } else if (c->ncycle) {
           /* Have we reached a steady state? */
           fprintf(stderr,
