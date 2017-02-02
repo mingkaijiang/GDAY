@@ -50,9 +50,8 @@
 #define C4 1
 
 /* output time step, where end = the final state */
-#define SUBDAILY 0
-#define DAILY 1
-#define END 2
+#define ANNUAL 0
+#define END 1
 
 /* Texture identifiers */
 #define SILT 0

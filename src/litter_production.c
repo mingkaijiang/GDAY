@@ -16,8 +16,7 @@
 * =========================================================================== */
 #include "litter_production.h"
 
-void calculate_litterfall(control *c, fluxes *f, params *p, state *s,
-                          double *fdecay, double *rdecay) {
+void calculate_litterfall(control *c, fluxes *f, params *p, state *s) {
 
     double  ncflit, ncrlit;
     double  pcflit, pcrlit;
@@ -31,11 +30,11 @@ void calculate_litterfall(control *c, fluxes *f, params *p, state *s,
     pcrlit = s->rootpc;
     
     /* C litter production */
-    f->deadroots = *rdecay * s->root;
+    f->deadroots = p->rdecay * s->root;
     f->deadstems = p->wdecay * s->stem;
     f->deadbranch = p->bdecay * s->branch;
 
-    f->deadleaves = *fdecay * s->shoot;
+    f->deadleaves = p->fdecay * s->shoot;
     
     /* N litter production */
     f->deadleafn = f->deadleaves * ncflit;

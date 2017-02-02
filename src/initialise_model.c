@@ -28,7 +28,7 @@ void initialise_control(control *c) {
     c->nuptake_model = 1;           /* 0=constant uptake, 1=func of N inorgn, 2=depends on rate of soil N availability */
     c->puptake_model = 1;           /* 0=constant uptake, 1=func of P inorgp, 2=depends on rate of soil P availability */
     c->output_ascii = TRUE;         /* If this is false you get a binary file as an output. */
-    c->print_options = DAILY;       /* DAILY=every timestep, END=end of run */
+    c->print_options = ANNUAL;      /* ANNUAL=every timestep, END=end of run */
     c->use_eff_nc = 0;              /* use constant leaf n:c for  metfrac s */
     c->spin_up = FALSE;             /* Spin up to a steady state? If False it just runs the model */
 
@@ -173,20 +173,20 @@ void initialise_fluxes(fluxes *f) {
     f->plittrelease = 0.0;          /* P rel litter = struct + metab */
     f->pmineralisation = 0.0;
 
-    /* daily C production */
+    /* Annual C production */
     f->cpleaf = 0.0;
     f->cproot = 0.0;
     f->cpbranch = 0.0;
     f->cpstem = 0.0;
 
-    /* daily N production */
+    /* Annual N production */
     f->npleaf = 0.0;
     f->nproot = 0.0;
     f->npbranch = 0.0;
     f->npstemimm = 0.0;
     f->npstemmob = 0.0;
     
-    /* daily P production */
+    /* Annual P production */
     f->ppleaf = 0.0;
     f->pproot = 0.0;
     f->ppbranch = 0.0;

@@ -288,11 +288,10 @@ void partition_plant_litter(control *c, fluxes *f, params *p) {
     /* ...to the metabolic pool */
     f->soil_metab_litter = f->deadroots * p->fmroot;             // annual
     
+    /* add diagnostic statement if needed */
     if (c->diagnosis) {
-        //fprintf(stderr, "fmleaf %f\n", p->fmleaf);
-        //fprintf(stderr, "fmroot %f\n", p->fmroot);
-        //fprintf(stderr, "deadroots %f\n", f->deadroots);
     }
+    
 
     return;
 }
@@ -444,10 +443,10 @@ void calculate_cpools(control *c, fluxes *f, state *s, params *p) {
     
     precision_control_soil_c(f, s, p);
     
+    /* add diagnostic statement if needed */
     if (c->diagnosis) {
-      //fprintf(stderr, "c_into_active in calculate_cpools %f\n", f->c_into_active);
-      //fprintf(stderr, "c_out_active in calculate_cpools %f\n", (f->active_to_slow + f->active_to_passive + f->co2_to_air[4]));
-      }
+    }
+    
     
     return;
 }
@@ -498,13 +497,9 @@ void calculate_nsoil_flows(control *c, fluxes *f, params *p, state *s) {
     /* gross N mineralisation */
     calculate_n_mineralisation(c, f);
     
-    //fprintf(stderr, "ngross in calculate_nsoil_flows %f\n", f->ngross);
-
     /* calculate N immobilisation */
     calculate_n_immobilisation(f, p, s, &(f->nimmob), &active_nc_slope,
                                &slow_nc_slope, &passive_nc_slope);
-    
-    //fprintf(stderr, "nimmob in calculate_nsoil_flows %f\n", f->nimmob);
     
     /* calculate N net mineralisation */
     calc_n_net_mineralisation(c, f);
@@ -672,21 +667,10 @@ void calculate_n_mineralisation(control *c, fluxes *f) {
                   f->n_slow_to_active + f->n_slow_to_passive +
                   f->n_passive_to_active);
   
+  /* add diagnostic statement if needed */
   if (c->diagnosis) {
-    /*
-     fprintf(stderr, "n_surf_struct_to_slow %f\n", f->n_surf_struct_to_slow);
-    fprintf(stderr, "n_surf_struct_to_active %f\n", f->n_surf_struct_to_active);
-    fprintf(stderr, "n_soil_struct_to_slow %f\n", f->n_soil_struct_to_slow);
-    fprintf(stderr, "n_soil_struct_to_active %f\n", f->n_soil_struct_to_active);
-    fprintf(stderr, "n_surf_metab_to_active %f\n", f->n_surf_metab_to_active);
-    fprintf(stderr, "n_soil_metab_to_active %f\n", f->n_soil_metab_to_active);
-    fprintf(stderr, "n_active_to_slow %f\n", f->n_active_to_slow);
-    fprintf(stderr, "n_active_to_passive %f\n", f->n_active_to_passive);
-    fprintf(stderr, "n_slow_to_active %f\n", f->n_slow_to_active);
-    fprintf(stderr, "n_slow_to_passive %f\n", f->n_slow_to_passive);
-    fprintf(stderr, "n_passive_to_active %f\n", f->n_passive_to_active);
-    */  
   }
+  
 
     return;
 }
@@ -760,12 +744,10 @@ void calc_n_net_mineralisation(control *c, fluxes *f) {
     /* N Net mineralisation from microbial activity */
     f->nmineralisation = f->ngross - f->nimmob + f->nlittrelease;
   
+    /* add diagnostic statement if needed */
     if (c->diagnosis) {
-      //fprintf(stderr, "ngross %f\n", f->ngross);
-      //fprintf(stderr, "nimmob %f\n", f->nimmob);
-      //fprintf(stderr, "nlittrelease %f\n", f->nlittrelease);
-      
     }
+  
     
     return;
 }
@@ -908,16 +890,10 @@ void calculate_npools(control *c, fluxes *f, params *p, state *s,
        unstable if rateuptake is large */
     s->inorgn += f->ninflow + f->nmineralisation - f->nloss - f->nuptake;   
     
+    /* add diagnostic statement if needed */
     if (c->diagnosis) {
-      //fprintf(stderr, "n_into_active calculate npools %f\n", n_into_active);
-      //fprintf(stderr, "n_out_of_active in calculate npools %f\n", n_out_of_active);
-      //fprintf(stderr, "n_into_slow in calculate npools %f\n", n_into_slow);
-      //fprintf(stderr, "n_out_of_slow in calculate npools %f\n", n_out_of_slow);
-      //fprintf(stderr, "ninflow calculate npools %f\n", f->ninflow);
-      //fprintf(stderr, "nmineralisation calculate npools %f\n", f->nmineralisation);
-      //fprintf(stderr, "nloss calculate npools %f\n", f->nloss);
-      //fprintf(stderr, "nuptake calculate npools %f\n", f->nuptake);
     }
+    
     
 
     return;
@@ -1054,15 +1030,10 @@ void calculate_psoil_flows(control *c, fluxes *f, params *p, state *s) {
     calculate_ppools(c, f, p, s, active_pc_slope, slow_pc_slope,
                      passive_pc_slope);
     
+    /* add diagnostic statement if needed */
     if (c->diagnosis) {
-      //fprintf(stderr, "p_par_to_avl %f\n", f->p_par_to_avl);
-      //fprintf(stderr, "pmineralisation %f\n", f->pmineralisation);
-      //fprintf(stderr, "p_avl_to_ssorb %f\n", f->p_avl_to_ssorb);
-      //fprintf(stderr, "p_ssorb_to_avl %f\n", f->p_ssorb_to_avl);
-      //fprintf(stderr, "p_ssorb_to_occ %f\n", f->p_ssorb_to_occ);
     }
-    
-
+  
     return;
 }
 
@@ -1215,11 +1186,10 @@ void calculate_p_parent_fluxes(control *c, fluxes *f, params *p, state *s) {
     /* parent material weathering */
     f->p_par_to_avl = p->p_rate_par_weather * s->inorgparp;
   
-    if(c->diagnosis) {
-      // fprintf(stderr, "p_rate_par_weather in calculate_p_parent_fluxes %f\n", p->p_rate_par_weather);
-      // fprintf(stderr, "inorgparp in calculate_p_parent_fluxes %f\n", s->inorgparp);
-      
-    }
+  /* add diagnostic statement if needed */
+  if (c->diagnosis) {
+  }
+  
 
     return;
 }
@@ -1316,11 +1286,10 @@ void calc_p_net_mineralisation(control *c, fluxes *f) {
     */
     f->pmineralisation = f->pgross - f->pimmob + f->plittrelease;
   
-    if(c->diagnosis) {
-        //fprintf(stderr, "pgross %f\n", f->pgross);
-        //fprintf(stderr, "pimmob %f\n", f->pimmob);
-        //fprintf(stderr, "plittrelease %f\n", f->plittrelease);
-    }
+  /* add diagnostic statement if needed */
+  if (c->diagnosis) {
+  }
+  
 
     return;
 }
@@ -1524,36 +1493,10 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
     /* Daily increment of soil inorganic parent P pool */
     s->inorgparp += f->p_atm_dep - f->p_par_to_avl;   
     
-    /* Update Year end pool sizes from daily to annual */
-    /*
-    s->structsurfp /= NDAYS_IN_YR;
-    s->structsoilp /= NDAYS_IN_YR;
-    s->metabsurfp /= NDAYS_IN_YR;
-    s->metabsoilp /= NDAYS_IN_YR;
-    s->activesoilp /= NDAYS_IN_YR;
-    s->slowsoilp /= NDAYS_IN_YR;
-    s->passivesoilp /= NDAYS_IN_YR;
-    s->inorgavlp /= NDAYS_IN_YR;   
-    s->inorgssorbp /= NDAYS_IN_YR;
-    s->inorgoccp /= NDAYS_IN_YR;
-    s->inorgparp /= NDAYS_IN_YR;
-    
-    s->inorgp = s->inorgavlp + s->inorgssorbp + s->inorgoccp + s->inorgparp;
-    s->soilp = s->inorgp + s->activesoilp + s->slowsoilp + s->passivesoilp;
-    s->litterpag = s->structsurfp + s->metabsurfp;
-    s->litterpbg = s->structsoilp + s->metabsoilp;
-    s->litterp = s->litterpag + s->litterpbg;
-     */
-    
-    if(c->diagnosis) {
-      //fprintf(stderr, "tot_avl_in %f\n", tot_avl_in);
-      //fprintf(stderr, "tot_avl_out %f\n", tot_avl_out);
-      //fprintf(stderr, "inorgavlp %f\n", s->inorgavlp);
-      //fprintf(stderr, "inorgssorbp %f\n", s->inorgssorbp);
-      //fprintf(stderr, "inorgoccp %f\n", s->inorgoccp);
-      //fprintf(stderr, "inorgparp %f\n", s->inorgparp);
-      
+    /* add diagnostic statement if needed */
+    if (c->diagnosis) {
     }
+    
     
     return;
 }
@@ -1585,10 +1528,6 @@ double pc_limit(fluxes *f, double cpool, double ppool, double pcmin,
     double rel, fix;
     double pmax = cpool * pcmax;
     double pmin = cpool * pcmin;
-
-    //fprintf(stderr, "ppool %f\n", ppool*100000);
-    //fprintf(stderr, "pmax %f\n", pmax*100000);
-    //fprintf(stderr, "pmin %f\n", pmin*100000);
 
     if (ppool > pmax) {
         /* release */

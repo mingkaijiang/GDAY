@@ -236,14 +236,10 @@ int handler(char *section, char *name, char *value, control *c,
             exit(EXIT_FAILURE);
         }
     } else if (MATCH("control", "print_options")) {
-        if (strcmp(temp, "Subdaily") == 0 ||
-            strcmp(temp, "SUBDAILY") == 0 ||
-            strcmp(temp, "subdaily") == 0)
-            c->print_options = SUBDAILY;
-        else if (strcmp(temp, "Daily") == 0 ||
-            strcmp(temp, "DAILY") == 0 ||
-            strcmp(temp, "daily") == 0)
-            c->print_options = DAILY;
+        if (strcmp(temp, "Annual") == 0 ||
+            strcmp(temp, "ANNUAL") == 0 ||
+            strcmp(temp, "annual") == 0)
+            c->print_options = ANNUAL;
         else if (strcmp(temp, "End") == 0 ||
             strcmp(temp, "END") == 0 ||
             strcmp(temp, "end") == 0)

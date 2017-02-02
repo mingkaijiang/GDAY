@@ -4,7 +4,6 @@
 #include "gday.h"
 
 /* litter stuff */
-void   calculate_litterfall(control *, fluxes *, params *, state *, 
-                            double *, double *);
+void   calculate_litterfall(control *, fluxes *, params *, state *);
 
 #endif /* LITTER */

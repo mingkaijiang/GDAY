@@ -17,9 +17,8 @@
 * =========================================================================== */
 #include "plant_growth.h"
 
-void calc_day_growth(control *c, fluxes *f, 
-                     met *m, nrutil *nr, params *p, state *s,
-                     double fdecay, double rdecay)
+void calc_annual_growth(control *c, fluxes *f, 
+                     met *m, nrutil *nr, params *p, state *s)
 {
    double dummy=0.0;
    double nitfac, pitfac, npitfac;
@@ -27,19 +26,16 @@ void calc_day_growth(control *c, fluxes *f,
    double pcbnew, pcwimm, pcwnew;
    //int    recalc_wb;
 
-    /* calculate daily GPP/NPP, respiration and update water balance */
-    carbon_daily_production(c, f, m, p, s);
+    /* calculate annual GPP/NPP, respiration and update water balance */
+    carbon_annual_production(c, f, m, p, s);
     
     // leaf N:C as a fraction of Ncmaxyoung, i.e. the max N:C ratio of
     //foliage in young stand, and leaf P:C as a fraction of Pcmaxyoung
     nitfac = MIN(1.0, s->shootnc / p->ncmaxf);
     pitfac = MIN(1.0, s->shootpc / p->pcmaxf);
     
+    /* add diagnostic statement if needed */
     if (c->diagnosis) {
-      //fprintf(stderr, "npp after carbon_daily_production %f\n", f->npp);
-      //fprintf(stderr, "lai after carbon_daily_production %f\n", s->lai);
-      //fprintf(stderr, "nitfac in calc_day_growth %f\n", nitfac);
-      //fprintf(stderr, "pitfac in calc_day_growth %f\n", pitfac);
     }
     
     /* checking for pcycle control parameter */
@@ -50,7 +46,7 @@ void calc_day_growth(control *c, fluxes *f,
     }
 
     /* figure out the C allocation fractions */
-    /* daily allocation ...*/
+    /* annual allocation ...*/
     calc_carbon_allocation_fracs(c, f, p, s, npitfac);
 
     /* Distribute new C, N and P through the system */
@@ -62,20 +58,17 @@ void calc_day_growth(control *c, fluxes *f,
                               &pcwnew);
     
     np_allocation(c, f, p, s, ncbnew, ncwimm, ncwnew,
-                              pcbnew, pcwimm, pcwnew,
-                              fdecay, rdecay);
+                              pcbnew, pcwimm, pcwnew);
     
-    update_plant_state(c, f, p, s, fdecay, rdecay);
+    update_plant_state(c, f, p, s);
 
     precision_control(f, s);
-    
-    //fprintf(stderr, "npp %f\n", f->npp);
     
     return;
 }
 
-void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s) {
-    /* Calculate GPP, NPP and plant respiration at the daily timestep
+void carbon_annual_production(control *c, fluxes *f, met *m, params *p, state *s) {
+    /* Calculate GPP, NPP and plant respiration at the annual timestep
 
     References:
     -----------
@@ -231,8 +224,7 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
 
 void np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
                   double ncwimm, double ncwnew, double pcbnew,
-                  double pcwimm, double pcwnew,double fdecay,
-                  double rdecay) {
+                  double pcwimm, double pcwnew) {
     /*
         Nitrogen and phosphorus distribution - allocate available N and
         P (mineral) through system. N and P is first allocated to the woody
@@ -273,8 +265,8 @@ void np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
 
     /* N and P retranslocated proportion from dying plant tissue and stored within
        the plant */
-    f->retrans = nitrogen_retrans(c, f, p, s, fdecay, rdecay);
-    f->retransp = phosphorus_retrans(c, f, p, s, fdecay, rdecay);
+    f->retrans = nitrogen_retrans(c, f, p, s);
+    f->retransp = phosphorus_retrans(c, f, p, s);
     f->nuptake = calculate_nuptake(c, p, s);
     f->puptake = calculate_puptake(c, p, s, f);
     
@@ -284,12 +276,10 @@ void np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     /* Mineralised P lost from the system by leaching */
     f->ploss = p->prateloss * s->inorgavlp;
     
+    /* add diagnostic statement if needed */
     if (c->diagnosis) {
-      //fprintf(stderr, "nuptake in np_allocation %f\n", f->nuptake);
-      //fprintf(stderr, "puptake in np_allocation %f\n", f->puptake);
-      //fprintf(stderr, "nloss in np_allocation %f\n", f->nloss);
-      //fprintf(stderr, "ploss in np_allocation %f\n", f->ploss);
     }
+    
     
     /* total nitrogen/phosphorus to allocate */
     ntot = MAX(0.0, f->nuptake + f->retrans);
@@ -368,9 +358,10 @@ void cut_back_production(control *c, fluxes *f, params *p, state *s,
     f->npp *= tot / (f->npstemimm + f->npstemmob + \
                       f->npbranch);
     
+    /* add diagnostic statement if needed */
     if (c->diagnosis) {
-      //fprintf(stderr, "npp in cut_back_production %f\n", f-> npp);
     }
+    
 
     /* need to adjust growth values accordingly as well */
     f->cpleaf = f->npp * f->alleaf;
@@ -438,7 +429,7 @@ double calculate_growth_stress_limitation(params *p, state *s, control *c) {
     }
 
     /*
-     * Limitation by nutrients or water. Water constraint is
+     * Limitation by nutrients. Water constraint is
      * implicit, in that, water stress results in an increase of root mass,
      * which are assumed to spread horizontally within the rooting zone.
      * So in effect, building additional root mass doesnt alleviate the
@@ -463,6 +454,8 @@ double calculate_growth_stress_limitation(params *p, state *s, control *c) {
         nutrient_lim = MIN(nlim, plim);
         current_limitation = MAX(0.1,nutrient_lim);
     }
+    
+    fprintf(stderr, "nlim %f, plim %f\n", nlim, plim);
     
     return (current_limitation);
 }
@@ -507,9 +500,10 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
     /* Total allocation should be one, if not print warning */
     total_alloc = f->alroot + f->alleaf + f->albranch + f->alstem;
     
+    /* add diagnostic statement if needed */
     if (c->diagnosis) {
-      //fprintf(stderr, "total_alloc in calc_carbon_allocation_fracs %f\n", total_alloc);
     }
+    
     
     return;
 }
@@ -536,22 +530,14 @@ void carbon_allocation(control *c, fluxes *f, params *p, state *s,
       s->lai += (f->cpleaf *
         (p->sla * M2_AS_HA / (KG_AS_TONNES * p->cfracts)) -
         f->deadleaves * s->lai / s->shoot);
-      //fprintf(stderr, "lai after carbon_allocation %f\n", s->lai);
-      //fprintf(stderr, "shoot in carbon_allocation %f\n", s->shoot);
-      //fprintf(stderr, "cpleaf %f\n", f->cpleaf);
-      //fprintf(stderr, "cpleaf * sla / cfracts %f\n", f->cpleaf * (p->sla * M2_AS_HA/(KG_AS_TONNES * p->cfracts)));
-      //fprintf(stderr, "deadleaves %f\n", f->deadleaves);
-      //fprintf(stderr, "dealeaves * lai / shoot %f\n", f->deadleaves * s->lai / s->shoot);
-      
     }
 
     return;
 }
 
-void update_plant_state(control *c, fluxes *f, params *p, state *s,
-                        double fdecay, double rdecay) {
+void update_plant_state(control *c, fluxes *f, params *p, state *s) {
     /*
-    Daily change in C content
+    Annual change in C content
 
     Parameters:
     -----------
@@ -577,11 +563,11 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s,
     /*
     ** Nitrogen and Phosphorus pools
     */
-    s->shootn += f->npleaf - fdecay * s->shootn;
-    s->shootp += f->ppleaf - fdecay * s->shootp;
+    s->shootn += f->npleaf - p->fdecay * s->shootn;
+    s->shootp += f->ppleaf - p->fdecay * s->shootp;
     
     s->branchn += f->npbranch - p->bdecay * s->branchn;
-    s->rootn += f->nproot - rdecay * s->rootn;
+    s->rootn += f->nproot - p->rdecay * s->rootn;
     
     s->stemnimm += f->npstemimm - p->wdecay * s->stemnimm;
     s->stemnmob += (f->npstemmob - p->wdecay * s->stemnmob);
@@ -589,7 +575,7 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s,
 
     s->branchp += f->ppbranch - p->bdecay * s->branchp;
 
-    s->rootp += f->pproot - rdecay * s->rootp;
+    s->rootp += f->pproot - p->rdecay * s->rootp;
 
     s->stempimm += f->ppstemimm - p->wdecay * s->stempimm;
 
@@ -616,11 +602,6 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s,
       
       if (s->shootn > (s->shoot * ncmaxf)) {
         extrasn = s->shootn - s->shoot * ncmaxf;
-        
-        //fprintf(stderr, "in N uptake cannot be reduced below zero \n");
-        //fprintf(stderr, "extrasn %f\n", extrasn);
-        //fprintf(stderr, "shootn %f\n", s->shootn);
-        //fprintf(stderr, "shoot * ncmaxf %f\n", s->shoot * ncmaxf);
         
         /* Ensure N uptake cannot be reduced below zero. */
         if (extrasn >  f->nuptake)
@@ -759,8 +740,7 @@ void precision_control(fluxes *f, state *s) {
 }
 
 
-double nitrogen_retrans(control *c, fluxes *f, params *p, state *s,
-                        double fdecay, double rdecay) {
+double nitrogen_retrans(control *c, fluxes *f, params *p, state *s) {
     /* Nitrogen retranslocated from senesced plant matter.
     Constant rate of n translocated from mobile pool
 
@@ -779,7 +759,7 @@ double nitrogen_retrans(control *c, fluxes *f, params *p, state *s,
     */
     double leafretransn;
 
-    leafretransn = p->fretrans * fdecay * s->shootn;
+    leafretransn = p->fretrans * p->fdecay * s->shootn;
 
     /* store for NCEAS output */
     f->leafretransn = leafretransn;
@@ -787,8 +767,7 @@ double nitrogen_retrans(control *c, fluxes *f, params *p, state *s,
     return (leafretransn);
 }
 
-double phosphorus_retrans(control *c, fluxes *f, params *p, state *s,
-                          double fdecay, double rdecay) {
+double phosphorus_retrans(control *c, fluxes *f, params *p, state *s) {
     /*
         Phosphorus retranslocated from senesced plant matter.
         Constant rate of p translocated from mobile pool
@@ -807,7 +786,7 @@ double phosphorus_retrans(control *c, fluxes *f, params *p, state *s,
     */
     double leafretransp;
 
-    leafretransp = p->fretransp * fdecay * s->shootp;
+    leafretransp = p->fretransp * p->fdecay * s->shootp;
 
     /* store for NCEAS output */
     f->leafretransp = leafretransp;
@@ -835,7 +814,6 @@ double calculate_nuptake(control *c, params *p, state *s) {
 
     if (c->nuptake_model == 0) {
         /* Constant N uptake */
-        //fprintf(stderr, "in nuptake_model = 0 \n");
         nuptake = p->nuptakez;
     } else if (c->nuptake_model == 1) {
         /* evaluate nuptake : proportional to dynamic inorganic N pool */
@@ -848,11 +826,6 @@ double calculate_nuptake(control *c, params *p, state *s) {
         U0 = p->rateuptake * s->inorgn;
         Kr = p->kr;
         nuptake = MAX(U0 * s->root / (s->root + Kr), 0.0);
-        
-        // fprintf(stderr, "U0 %f\n", U0);
-        // fprintf(stderr, "root %f\n", s->root);
-        // fprintf(stderr, "root+Kr %f\n", s->root+Kr);
-
     } else {
         fprintf(stderr, "Unknown N uptake option\n");
         exit(EXIT_FAILURE);

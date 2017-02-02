@@ -125,13 +125,13 @@ int main(int argc, char **argv)
 void run_sim(control *c, fluxes *f,  met *m, 
              params *p, state *s, nrutil *nr){
 
-    int    nyr, i, dummy = 0;
+    int    nyr, i;
 
-    double fdecay, rdecay, current_limitation, npitfac, year;
+    double current_limitation, npitfac, year;
 
     /* Setup output file */
-    if (c->print_options == DAILY && c->spin_up == FALSE) {
-        /* Daily outputs */
+    if (c->print_options == ANNUAL && c->spin_up == FALSE) {
+        /* Annual outputs */
         open_output_file(c, c->out_fname, &(c->ofp));
 
         if (c->output_ascii) {
@@ -165,15 +165,9 @@ void run_sim(control *c, fluxes *f,  met *m,
       
       //year_start_calculations(c, p, s);
       
-      //fprintf(stderr, "activesoil after year_start_calculations %f\n", s->activesoil);
+      calculate_litterfall(c, f, p, s);
       
-      fdecay = p->fdecay;
-      rdecay = p->rdecay;
-      
-      calculate_litterfall(c, f, p, s, &fdecay, &rdecay);
-      
-      calc_day_growth(c, f, m, nr, p, s,
-                      fdecay, rdecay);
+      calc_annual_growth(c, f, m, nr, p, s);
       
       calculate_csoil_flows(c, f, p, s, m->tsoil);
       calculate_nsoil_flows(c, f, p, s);
@@ -183,7 +177,7 @@ void run_sim(control *c, fluxes *f,  met *m,
       }
       
       /* update stress SMA */
-      current_limitation = calculate_growth_stress_limitation(p, s, c);
+      //current_limitation = calculate_growth_stress_limitation(p, s, c);
       
       /* Turn off all N calculations */
       if (c->ncycle == FALSE)
@@ -200,11 +194,11 @@ void run_sim(control *c, fluxes *f,  met *m,
       
       //fprintf(stderr, "inorgn after year_end_calculations %f\n", s->inorgn);
       
-      if (c->print_options == DAILY && c->spin_up == FALSE) {
+      if (c->print_options == ANNUAL && c->spin_up == FALSE) {
         if(c->output_ascii)
-          write_daily_outputs_ascii(c, f, s, year);
+          write_annual_outputs_ascii(c, f, s, year);
         else
-          write_daily_outputs_binary(c, f, s, year);
+          write_annual_outputs_binary(c, f, s, year);
       }
         
     //}
@@ -250,12 +244,12 @@ void run_sim_annual(control *c, fluxes *f, met *m,
     int i, cntrl_flag;
     
     /* run simulation variables */
-    int    nyr, dummy = 0;
-    double fdecay, rdecay, current_limitation, npitfac, year;
+    int    nyr;
+    double current_limitation, npitfac, year;
     
     
     /* Setup output file */
-      /* Daily outputs */
+      /* Annual outputs */
       open_output_file(c, c->out_param_fname, &(c->ofp));
       
       if (c->output_ascii) {
@@ -289,13 +283,9 @@ void run_sim_annual(control *c, fluxes *f, met *m,
             
             unpack_met_data_simple(f, m, p);   // Check if read_annual_met still needed or not
             
-            fdecay = p->fdecay;
-            rdecay = p->rdecay;
+            calculate_litterfall(c, f, p, s);
             
-            calculate_litterfall(c, f, p, s, &fdecay, &rdecay);
-            
-            calc_day_growth(c, f, m, nr, p, s,
-                            fdecay, rdecay);
+            calc_annual_growth(c, f, m, nr, p, s);
             
             calculate_csoil_flows(c, f, p, s, m->tsoil);
             calculate_nsoil_flows(c, f, p, s);
@@ -305,7 +295,7 @@ void run_sim_annual(control *c, fluxes *f, met *m,
             }
             
             /* update stress SMA */
-            current_limitation = calculate_growth_stress_limitation(p, s, c);
+            //current_limitation = calculate_growth_stress_limitation(p, s, c);
             
             /* Turn off all N calculations */
             if (c->ncycle == FALSE)
@@ -318,11 +308,11 @@ void run_sim_annual(control *c, fluxes *f, met *m,
             /* calculate C:N:P ratios and increment annual flux sum */
             year_end_calculations(c, p, s);
             
-            if (c->print_options == DAILY && c->spin_up == FALSE) {
+            if (c->print_options == ANNUAL && c->spin_up == FALSE) {
               if(c->output_ascii)
-                write_daily_outputs_ascii(c, f, s, year);
+                write_annual_outputs_ascii(c, f, s, year);
               else
-                write_daily_outputs_binary(c, f, s, year);
+                write_annual_outputs_binary(c, f, s, year);
             }
             
             correct_rate_constants(p, TRUE);
@@ -402,8 +392,8 @@ void spin_up_pools(control *c, fluxes *f, met *m,
             if (c->pcycle) {
                 /* Have we reached a steady state? */
                 fprintf(stderr,
-                        "Spinup: Plant C %f, Leaf NC %f, Leaf PC %f, Soil C %f, Soil N %f, Soil P %f\n",
-                         s->plantc, s->shootnc, s->shootpc, s->soilc, s->soiln, s->soilp);
+                        "Spinup: Plant C %f, Leaf NC %f, Leaf PC %f, Soil C %f, Soil N %f, Soil P %f, LAI %f\n",
+                         s->plantc, s->shootnc, s->shootpc, s->soilc, s->soiln, s->soilp, s->lai);
             } else if (c->ncycle) {
               /* Have we reached a steady state? */
               fprintf(stderr,
@@ -839,9 +829,6 @@ void unpack_met_data_simple(fluxes *f, met *m, params *p) {
   m->nfix = p->nfix_in;
   m->pdep = p->pdep_in;
   m->tsoil = p->tsoil_in;
-  
-  //f->ninflow = (m->ndep + m->nfix) / 365.25;
-  //f->p_atm_dep = m->pdep / 365.25;
   
   f->ninflow = (m->ndep + m->nfix);
   f->p_atm_dep = m->pdep;
