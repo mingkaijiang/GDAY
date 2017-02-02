@@ -25,7 +25,7 @@ void calc_day_growth(control *c, fluxes *f,
    double nitfac, pitfac, npitfac;
    double ncbnew, ncwimm, ncwnew;
    double pcbnew, pcwimm, pcwnew;
-   int    recalc_wb;
+   //int    recalc_wb;
 
     /* calculate daily GPP/NPP, respiration and update water balance */
     carbon_daily_production(c, f, m, p, s);
@@ -61,7 +61,7 @@ void calc_day_growth(control *c, fluxes *f,
                               &ncwnew, &pcbnew, &pcwimm,
                               &pcwnew);
     
-    recalc_wb = np_allocation(c, f, p, s, ncbnew, ncwimm, ncwnew,
+    np_allocation(c, f, p, s, ncbnew, ncwimm, ncwnew,
                               pcbnew, pcwimm, pcwnew,
                               fdecay, rdecay);
     
@@ -69,7 +69,7 @@ void calc_day_growth(control *c, fluxes *f,
 
     precision_control(f, s);
     
-    fprintf(stderr, "npp %f\n", f->npp);
+    //fprintf(stderr, "npp %f\n", f->npp);
     
     return;
 }
@@ -229,7 +229,7 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
     return;
 }
 
-int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
+void np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
                   double ncwimm, double ncwnew, double pcbnew,
                   double pcwimm, double pcwnew,double fdecay,
                   double rdecay) {
@@ -263,13 +263,13 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
             fine root decay rate
     */
 
-    int    recalc_wb;
+    //int    recalc_wb;
     double nsupply, psupply, rtot, ntot, ptot, arg;
 
     /* default is we don't need to recalculate the water balance,
        however if we cut back on NPP due to available N and P below then we do
        need to do this */
-    recalc_wb = FALSE;
+    //recalc_wb = FALSE;
 
     /* N and P retranslocated proportion from dying plant tissue and stored within
        the plant */
@@ -312,15 +312,14 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     /* If we have allocated more N than we have avail, cut back C prodn */
     arg = f->npstemimm + f->npstemmob + f->npbranch;
     if (arg > ntot && c->fixleafnc == FALSE && c->ncycle) {
-      //fprintf(stderr, "in cut_back_production \n");
-      recalc_wb = cut_back_production(c, f, p, s, ntot, ncbnew,
+      cut_back_production(c, f, p, s, ntot, ncbnew,
                                       ncwimm, ncwnew);
     }
     
     /* If we have allocated more P than we have avail, cut back C prodn */
     arg = f->ppstemimm + f->ppstemmob + f->ppbranch;
     if (arg > ptot && c->fixleafpc == FALSE && c->pcycle) {
-      recalc_wb = cut_back_production(c, f, p, s, ptot, pcbnew, 
+      cut_back_production(c, f, p, s, ptot, pcbnew, 
                                       pcwimm, pcwnew);
     }
     
@@ -340,10 +339,10 @@ int np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     f->ppleaf = ptot * f->alleaf / (f->alleaf + f->alroot * p->pcrfac);
     f->pproot = ptot - f->ppleaf;
     
-    return (recalc_wb);
+    return;
 }
 
-int cut_back_production(control *c, fluxes *f, params *p, state *s,
+void cut_back_production(control *c, fluxes *f, params *p, state *s,
                         double tot, double xcbnew, 
                         double xcwimm, double xcwnew) {
 
@@ -352,7 +351,7 @@ int cut_back_production(control *c, fluxes *f, params *p, state *s,
     /* default is we don't need to recalculate the water balance,
        however if we cut back on NPP due to available N and P below then we do
        need to do this */
-    int recalc_wb = FALSE;
+    //int recalc_wb = FALSE;
 
     /* Need to readjust the LAI for the reduced growth as this will
        have already been increased. First we need to figure out how
@@ -403,7 +402,7 @@ int cut_back_production(control *c, fluxes *f, params *p, state *s,
 
     /* New respiration flux */
     f->auto_resp =  f->gpp - f->npp;
-    recalc_wb = TRUE;
+    //recalc_wb = TRUE;
 
     /* Now reduce LAI for down-regulated growth. */
     /* update leaf area [m2 m-2] */
@@ -417,7 +416,7 @@ int cut_back_production(control *c, fluxes *f, params *p, state *s,
         f->deadleaves * s->lai / s->shoot);
     }
 
-    return (recalc_wb);
+    return;
 }
 
 double calculate_growth_stress_limitation(params *p, state *s, control *c) {

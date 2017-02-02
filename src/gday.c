@@ -102,7 +102,7 @@ int main(int argc, char **argv)
     if (c->spin_up) {
         spin_up_pools(c, f, m, p, s, nr);
     } else {
-        run_sim_annual(c, f, m, p, s, nr);
+        run_sim(c, f, m, p, s, nr);
     }
 
     /* clean up */
@@ -402,8 +402,8 @@ void spin_up_pools(control *c, fluxes *f, met *m,
             if (c->pcycle) {
                 /* Have we reached a steady state? */
                 fprintf(stderr,
-                        "Spinup: Plant C %f, Slow P %f, Passive P %f, Inorg P %f, Ssorb P %f, Occluded P %f\n",
-                         s->plantc, s->slowsoilp, s->passivesoilp, s->inorgp, s->inorgssorbp, s->inorgoccp);
+                        "Spinup: Plant C %f, Leaf NC %f, Leaf PC %f, Soil C %f, Soil N %f, Soil P %f\n",
+                         s->plantc, s->shootnc, s->shootpc, s->soilc, s->soiln, s->soilp);
             } else if (c->ncycle) {
               /* Have we reached a steady state? */
               fprintf(stderr,

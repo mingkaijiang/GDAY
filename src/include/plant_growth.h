@@ -29,7 +29,7 @@ void    calculate_cnp_wood_ratios(control *c, params *, state *, double, double,
                                   double *);
 
 /* N stuff */
-int    np_allocation(control *c, fluxes *, params *, state *, double,
+void    np_allocation(control *c, fluxes *, params *, state *, double,
                      double, double, double, double,
                      double, double, double);
 double calculate_nuptake(control *, params *, state *);
@@ -44,7 +44,7 @@ double calculate_puptake(control *, params *, state *, fluxes *);
 double phosphorus_retrans(control *, fluxes *, params *, state *,
                           double, double);
 
-int cut_back_production(control *, fluxes *, params *, state *, double,
+void cut_back_production(control *, fluxes *, params *, state *, double,
                         double, double, double);
 
 #endif /* PLANT_GROWTH */
