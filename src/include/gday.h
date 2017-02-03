@@ -28,27 +28,6 @@
 #define MAX(a,b) (((a) > (b)) ? (a) : (b))
 #define CLIP(x) ((x)<0. ? 0. : ((x)>1. ? 1. : (x)))
 
-/* Stomatal conductanct models */
-#define MEDLYN 0
-
-/* Photosynthesis models */
-#define MATE 0
-#define BEWDY 1
-
-/* Respiration models */
-#define FIXED 0
-#define TEMPERATURE 1
-#define BIOMASS 2
-
-/* Allocation models */
-#define FIXED 0
-#define GRASSES 1
-#define ALLOMETRIC 2
-
-/* Ps pathway */
-#define C3 0
-#define C4 1
-
 /* output time step, where end = the final state */
 #define ANNUAL 0
 #define END 1
@@ -57,10 +36,6 @@
 #define SILT 0
 #define SAND 1
 #define CLAY 2
-
-/* water balance identifiers */
-#define BUCKET 0
-#define HYDRAULICS 1
 
 #include "structures.h"
 #include "initialise_model.h"

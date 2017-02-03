@@ -92,7 +92,7 @@ int main(int argc, char **argv)
     }
     
     /* read met data */
-    read_annual_met_data_simple(argv, c, m, p);
+    //read_annual_met_data_simple(argv, c, m, p);
     
     /* set initial lai */
     s->lai = MAX(0.01, (p->sla * M2_AS_HA / KG_AS_TONNES /
@@ -100,8 +100,8 @@ int main(int argc, char **argv)
     
     /* model runs */
     if (c->spin_up) {
-        run_sim_annual(c, f, m, p, s, nr);
-        //spin_up_pools(c, f, m, p, s, nr);
+        run_sim_annual(c, f, m, p, s, nr);     // print and save output
+        //spin_up_pools(c, f, m, p, s, nr);    // print onto screen only
     } else {
         run_sim(c, f, m, p, s, nr);
     }
@@ -136,51 +136,47 @@ void run_sim(control *c, fluxes *f,  met *m,
         open_output_file(c, c->out_param_fname, &(c->ofp));
     }
     
+    /* read in siple annual met data from parameter files */
+    unpack_met_data_simple(f, m, p);
+    
+    /* correct annual rate */
     correct_rate_constants(p, FALSE);
     
+    /* start the year with all fluxes and stock mass balance */
     year_start_calculations(c, p, s);
 
-      unpack_met_data_simple(f, m, p);
-      
-      //year_start_calculations(c, p, s);
-      
-      calculate_litterfall(c, f, p, s);
-      
-      calc_annual_growth(c, f, m, nr, p, s);
-      
-      calculate_csoil_flows(c, f, p, s, m->tsoil);
-      calculate_nsoil_flows(c, f, p, s);
-      
-      if (c->pcycle == TRUE) {
-        calculate_psoil_flows(c, f, p, s);
-      }
-      
-      /* update stress SMA */
-      //current_limitation = calculate_growth_stress_limitation(p, s, c);
-      
-      /* Turn off all N calculations */
-      if (c->ncycle == FALSE)
-        reset_all_n_pools_and_fluxes(f, s);
-      
-      /* Turn off all P calculations */
-      if (c->pcycle == FALSE)
-        reset_all_p_pools_and_fluxes(f, s);
-      
-      //fprintf(stderr, "activesoil before year_end_calculations %f\n", s->activesoil);
-      
-      /* calculate C:N:P ratios and increment annual flux sum */
-      year_end_calculations(c, p, s);
-      
-      //fprintf(stderr, "inorgn after year_end_calculations %f\n", s->inorgn);
-      
-      if (c->print_options == ANNUAL && c->spin_up == FALSE) {
-          write_annual_outputs_ascii(c, f, s, year);
-      }
-        
-    //}
-    /* ========================= **
-    **   E N D   O F   Y E A R   **
-    ** ========================= */
+    calculate_litterfall(c, f, p, s);
+    
+    calc_annual_growth(c, f, m, nr, p, s);
+    
+    calculate_csoil_flows(c, f, p, s, m->tsoil);
+    calculate_nsoil_flows(c, f, p, s);
+    
+    if (c->pcycle == TRUE) {
+      calculate_psoil_flows(c, f, p, s);
+    }
+    
+    /* update stress SMA */
+    //current_limitation = calculate_growth_stress_limitation(p, s, c);
+    
+    /* Turn off all N calculations */
+    if (c->ncycle == FALSE)
+      reset_all_n_pools_and_fluxes(f, s);
+    
+    /* Turn off all P calculations */
+    if (c->pcycle == FALSE)
+      reset_all_p_pools_and_fluxes(f, s);
+    
+    //fprintf(stderr, "activesoil before year_end_calculations %f\n", s->activesoil);
+    
+    /* calculate C:N:P ratios and increment annual flux sum */
+    year_end_calculations(c, p, s);
+    
+    //fprintf(stderr, "inorgn after year_end_calculations %f\n", s->inorgn);
+    
+    if (c->print_options == ANNUAL && c->spin_up == FALSE) {
+      write_annual_outputs_ascii(c, f, s, year);
+    }      
 
     correct_rate_constants(p, TRUE);
     
@@ -246,12 +242,14 @@ void run_sim_annual(control *c, fluxes *f, met *m,
             prev_plantp = s->plantp;
             prev_soilp = s->soilp;
             
-            /* start simulation */
+            /* read in simple annual met data from parameter files */
+            unpack_met_data_simple(f, m, p);
+            
+            /* correct annual rate */
             correct_rate_constants(p, FALSE);
             
+            /* start the year with all fluxes and stock mass balance */
             year_start_calculations(c, p, s);
-            
-            unpack_met_data_simple(f, m, p);   // Check if read_annual_met still needed or not
             
             calculate_litterfall(c, f, p, s);
             
@@ -275,32 +273,33 @@ void run_sim_annual(control *c, fluxes *f, met *m,
             /* calculate C:N:P ratios and increment annual flux sum */
             year_end_calculations(c, p, s);
             
-            if (c->print_options == ANNUAL && c->spin_up == FALSE) {
+            correct_rate_constants(p, TRUE);
+            
+            /* Print to screen and check the process */
+            if (c->pcycle) {
+              /* Have we reached a steady state? */
+              fprintf(stderr,
+                      "Spinup: Year %d, Plant C %f, Leaf NC %f, Leaf PC %f, Soil C %f, Soil N %f, Soil P %f, LAI %f\n",
+                      year, s->plantc, s->shootnc, s->shootpc, s->soilc, s->soiln, s->soilp, s->lai);
+            } else if (c->ncycle) {
+              /* Have we reached a steady state? */
+              fprintf(stderr,
+                      "Spinup: Plant C %f, Active C %f, Slow C %f, Passive C %f, LAI %f, Inorg N %f\n",
+                      s->plantc,s->activesoil, s->slowsoil, s->passivesoil, s->lai, s->inorgn);
+            } else {
+              /* Have we reached a steady state? */
+              fprintf(stderr,
+                      "Spinup: Plant C - %f, Soil C - %f\n",
+                      s->plantc, s->soilc);
+            }   // Print to screen end;
+            
+            if (c->print_options == ANNUAL && c->spin_up == TRUE) {
               write_annual_outputs_ascii(c, f, s, year);
             }
             
-            correct_rate_constants(p, TRUE);
-            
             /* continue at annual timestep */
             year += 1;
-        
-        /* Print to screen and check the process */
-        if (c->pcycle) {
-          /* Have we reached a steady state? */
-          fprintf(stderr,
-                  "Spinup: Year %d, Plant C %f, Leaf NC %f, Leaf PC %f, Soil C %f, Soil N %f, Soil P %f, LAI %f\n",
-                  year, s->plantc, s->shootnc, s->shootpc, s->soilc, s->soiln, s->soilp, s->lai);
-        } else if (c->ncycle) {
-          /* Have we reached a steady state? */
-          fprintf(stderr,
-                  "Spinup: Plant C %f, Active C %f, Slow C %f, Passive C %f, LAI %f, Inorg N %f\n",
-                  s->plantc,s->activesoil, s->slowsoil, s->passivesoil, s->lai, s->inorgn);
-        } else {
-          /* Have we reached a steady state? */
-          fprintf(stderr,
-                  "Spinup: Plant C - %f, Soil C - %f\n",
-                  s->plantc, s->soilc);
-        }   // Print to screen end;
+            
       }     // if else statement end checking equilibrium;
     }       // while statement end;
     
