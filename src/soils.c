@@ -888,7 +888,7 @@ void calculate_npools(control *c, fluxes *f, params *p, state *s,
     /* Daily increment of soil inorganic N pool, diff btw in and effluxes
        (grazer urine n goes directly into inorganic pool) nb inorgn may be
        unstable if rateuptake is large */
-    s->inorgn += f->ninflow + f->nmineralisation - f->nloss - f->nuptake;   
+    s->inorgn += f->ninflow + f->nmineralisation - f->nloss - f->nuptake;  
     
     /* add diagnostic statement if needed */
     if (c->diagnosis) {

@@ -223,7 +223,6 @@ void run_sim_annual(control *c, fluxes *f, met *m,
       /* Annual outputs */
       open_output_file(c, c->out_param_fname, &(c->ofp));
       write_output_header(c, p, &(c->ofp));
-
     
     fprintf(stderr, "Spinning up the model...\n");
     while (TRUE) {
@@ -594,12 +593,6 @@ void year_end_calculations(control *c, params *p, state *s) {
     }
     
     /* Update Year end pool sizes from daily to annual */
-    /*
-    s->shoot /= NDAYS_IN_YR;
-    s->root /= NDAYS_IN_YR;
-    s->stem /= NDAYS_IN_YR;
-    s->branch /= NDAYS_IN_YR;
-    */
     s->structsurf /= NDAYS_IN_YR;
     s->structsoil /= NDAYS_IN_YR;
     s->metabsurf /= NDAYS_IN_YR;
@@ -608,14 +601,6 @@ void year_end_calculations(control *c, params *p, state *s) {
     s->slowsoil /= NDAYS_IN_YR;
     s->passivesoil /= NDAYS_IN_YR;
     
-    /*
-    s->shootn /= NDAYS_IN_YR;
-    s->rootn /= NDAYS_IN_YR;
-    s->stemnimm /= NDAYS_IN_YR;
-    s->stemnmob /= NDAYS_IN_YR;
-    s->stemn /= NDAYS_IN_YR;
-    s->branchn /= NDAYS_IN_YR;
-    */
     s->structsurfn /= NDAYS_IN_YR;
     s->structsoiln /= NDAYS_IN_YR;
     s->metabsurfn /= NDAYS_IN_YR;
@@ -625,21 +610,14 @@ void year_end_calculations(control *c, params *p, state *s) {
     s->passivesoiln /= NDAYS_IN_YR;
     s->inorgn /= NDAYS_IN_YR;
     
-    /*
-    s->shootp /= NDAYS_IN_YR;
-    s->rootp /= NDAYS_IN_YR;
-    s->stempimm /= NDAYS_IN_YR;
-    s->stempmob /= NDAYS_IN_YR;
-    s->stemp /= NDAYS_IN_YR;
-    s->branchp /= NDAYS_IN_YR;
-     */
     s->structsurfp /= NDAYS_IN_YR;
     s->structsoilp /= NDAYS_IN_YR;
     s->metabsurfp /= NDAYS_IN_YR;
     s->metabsoilp /= NDAYS_IN_YR;
     s->activesoilp /= NDAYS_IN_YR;
     s->slowsoilp /= NDAYS_IN_YR;
-    s->passivesoilp /= NDAYS_IN_YR;
+    s->passivesoilp /= NDAYS_IN_YR; 
+
     s->inorgavlp /= NDAYS_IN_YR;   
     s->inorgssorbp /= NDAYS_IN_YR;
     s->inorgoccp /= NDAYS_IN_YR;
@@ -704,13 +682,6 @@ void year_start_calculations(control *c, params *p, state *s) {
   }
   
   /* Update Year end pool sizes from daily to annual */
-  
-  /*
-  s->shoot *= NDAYS_IN_YR;
-  s->root *= NDAYS_IN_YR;
-  s->stem *= NDAYS_IN_YR;
-  s->branch *= NDAYS_IN_YR;
-   */
   s->structsurf *= NDAYS_IN_YR;
   s->structsoil *= NDAYS_IN_YR;
   s->metabsurf *= NDAYS_IN_YR;
@@ -719,14 +690,6 @@ void year_start_calculations(control *c, params *p, state *s) {
   s->slowsoil *= NDAYS_IN_YR;
   s->passivesoil *= NDAYS_IN_YR;
   
-  /*
-  s->shootn *= NDAYS_IN_YR;
-  s->rootn *= NDAYS_IN_YR;
-  s->stemnimm *= NDAYS_IN_YR;
-  s->stemnmob *= NDAYS_IN_YR;
-  s->stemn *= NDAYS_IN_YR;
-  s->branchn *= NDAYS_IN_YR;
-   */
   s->structsurfn *= NDAYS_IN_YR;
   s->structsoiln *= NDAYS_IN_YR;
   s->metabsurfn *= NDAYS_IN_YR;
@@ -736,21 +699,14 @@ void year_start_calculations(control *c, params *p, state *s) {
   s->passivesoiln *= NDAYS_IN_YR;
   s->inorgn *= NDAYS_IN_YR;
   
-  /*
-  s->shootp *= NDAYS_IN_YR;
-  s->rootp *= NDAYS_IN_YR;
-  s->stempimm *= NDAYS_IN_YR;
-  s->stempmob *= NDAYS_IN_YR;
-  s->stemp *= NDAYS_IN_YR;
-  s->branchp *= NDAYS_IN_YR;
-   */
   s->structsurfp *= NDAYS_IN_YR;
   s->structsoilp *= NDAYS_IN_YR;
   s->metabsurfp *= NDAYS_IN_YR;
   s->metabsoilp *= NDAYS_IN_YR;
   s->activesoilp *= NDAYS_IN_YR;
   s->slowsoilp *= NDAYS_IN_YR;
-  s->passivesoilp *= NDAYS_IN_YR;
+  s->passivesoilp *= NDAYS_IN_YR; 
+
   s->inorgavlp *= NDAYS_IN_YR;   
   s->inorgssorbp *= NDAYS_IN_YR;
   s->inorgoccp *= NDAYS_IN_YR;
@@ -806,14 +762,6 @@ void correct_rate_constants(params *p, int output) {
   /* adjust rate constants for the number of days in years */
   
   if (output) {
-    //p->rateuptake *= NDAYS_IN_YR;
-    //p->prateuptake *= NDAYS_IN_YR;
-    //p->rateloss *= NDAYS_IN_YR;
-    //p->prateloss *= NDAYS_IN_YR;
-    //p->fdecay *= NDAYS_IN_YR;
-    //p->rdecay *= NDAYS_IN_YR;
-    //p->bdecay *= NDAYS_IN_YR;
-    //p->wdecay *= NDAYS_IN_YR;
     p->kdec1 *= NDAYS_IN_YR;
     p->kdec2 *= NDAYS_IN_YR;
     p->kdec3 *= NDAYS_IN_YR;
@@ -824,18 +772,7 @@ void correct_rate_constants(params *p, int output) {
     p->k1 *= NDAYS_IN_YR;
     p->k2 *= NDAYS_IN_YR;
     p->k3 *= NDAYS_IN_YR;
-    //p->nuptakez *= NDAYS_IN_YR;
-    //p->puptakez *= NDAYS_IN_YR;
-    //p->p_rate_par_weather *= NDAYS_IN_YR;
   } else {
-    //p->rateuptake /= NDAYS_IN_YR;
-    //p->prateuptake /= NDAYS_IN_YR;
-    //p->rateloss /= NDAYS_IN_YR;
-    //p->prateloss /= NDAYS_IN_YR;
-    //p->fdecay /= NDAYS_IN_YR;
-    //p->rdecay /= NDAYS_IN_YR;
-    //p->bdecay /= NDAYS_IN_YR;
-    //p->wdecay /= NDAYS_IN_YR;
     p->kdec1 /= NDAYS_IN_YR;
     p->kdec2 /= NDAYS_IN_YR;
     p->kdec3 /= NDAYS_IN_YR;
@@ -846,9 +783,6 @@ void correct_rate_constants(params *p, int output) {
     p->k1 /= NDAYS_IN_YR;
     p->k2 /= NDAYS_IN_YR;
     p->k3 /= NDAYS_IN_YR;
-    //p->nuptakez /= NDAYS_IN_YR;
-    //p->puptakez /= NDAYS_IN_YR;
-    //p->p_rate_par_weather /= NDAYS_IN_YR;
   }
   
   return;

@@ -72,10 +72,10 @@ void write_output_header(control *c, params *p, FILE **fp) {
 
 
     /* N stuff */
-    fprintf(*fp, "nuptake,ngross,nmineralisation,nloss,");
+    fprintf(*fp, "ninflow,nuptake,ngross,nmineralisation,nloss,");
 
     /* P stuff */
-    fprintf(*fp, "puptake,pgross,pmineralisation,ploss,");
+    fprintf(*fp, "p_atm_dep,puptake,pgross,pmineralisation,ploss,");
 
     /* traceability stuff */
     fprintf(*fp, "tfac_soil_decomp,c_into_active,c_into_slow,");
@@ -169,12 +169,12 @@ void write_annual_outputs_ascii(control *c, fluxes *f, state *s, int year) {
                     f->ppleaf,f->ppbranch,f->ppstemimm,f->ppstemmob,f->pproot);
 
     /* N stuff */
-    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,",
-                    f->nuptake,f->ngross,f->nmineralisation,f->nloss);
+    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,%.10f,",
+                    f->ninflow,f->nuptake,f->ngross,f->nmineralisation,f->nloss);
 
     /* P stuff */
-    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,",
-                    f->puptake,f->pgross,f->pmineralisation,f->ploss);
+    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,%.10f,",
+                    f->p_atm_dep,f->puptake,f->pgross,f->pmineralisation,f->ploss);
 
 
     /* traceability stuff */
