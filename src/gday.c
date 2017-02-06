@@ -204,9 +204,9 @@ void run_sim_annual(control *c, fluxes *f, met *m,
     * Murty, D and McMurtrie, R. E. (2000) Ecological Modelling, 134,
     185-205, specifically page 196.
     */
-    double tol_c = 5E-04;
-    double tol_n = 5E-04;
-    double tol_p = 5E-04;
+    double tol_c = 5E-06;
+    double tol_n = 5E-06;
+    double tol_p = 5E-06;
     double prev_plantc = 99999.9;
     double prev_soilc = 99999.9;
     double prev_plantn = 99999.9;
@@ -469,6 +469,9 @@ void reset_all_n_pools_and_fluxes(fluxes *f, state *s) {
     f->deadbranchn = 0.0;
     f->deadstemn = 0.0;
     f->leafretransn = 0.0;
+    f->rootretransn = 0.0;
+    f->stemretransn = 0.0;
+    f->branchretransn = 0.0;
     f->n_surf_struct_litter = 0.0;
     f->n_surf_metab_litter = 0.0;
     f->n_soil_struct_litter = 0.0;
@@ -539,6 +542,9 @@ void reset_all_p_pools_and_fluxes(fluxes *f, state *s) {
     f->deadbranchp = 0.0;
     f->deadstemp = 0.0;
     f->leafretransp = 0.0;
+    f->rootretransp = 0.0;
+    f->stemretransp = 0.0;
+    f->branchretransp = 0.0;
     f->p_surf_struct_litter = 0.0;
     f->p_surf_metab_litter = 0.0;
     f->p_soil_struct_litter = 0.0;

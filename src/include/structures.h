@@ -123,6 +123,7 @@ typedef struct {
     double actpcmax;                        /* Active pool (=1/30) P:C ratio of new SOM - maximum [units: gP/gC]. Based on forest version of CENTURY (Parton et al. 1993) */
     double actpcmin;                        /* Active pool (=1/80) P:C of new SOM - when Pmin=Pmin0 [units: gP/gC]. Based on forest version of CENTURY (Parton et al. 1993) */
     double bdecay;                          /* branch and large root turnover rate (1/yr) */
+    double bretrans;                        /* branch retranslocation coefficient for N and P */
     double c_alloc_b;                       /* allocation to branches at branch n_crit and p_crit. */
     double c_alloc_f;                       /* allocation to leaves at leaf n_crit and p_crit. */
     double c_alloc_r;                       /* allocation to roots at root n_crit and p_crit. */
@@ -135,7 +136,7 @@ typedef struct {
     double finesoil;                        /* clay+silt fraction */
     double fmleaf;
     double fmroot;
-    double fretrans;                        /* foliage n retranslocation fraction - 46-57% in young E. globulus trees - see Corbeels et al 2005 ecological modelling 187, pg 463. Roughly 50% from review Aerts '96 */
+    double fretransn;                        /* foliage n retranslocation fraction - 46-57% in young E. globulus trees - see Corbeels et al 2005 ecological modelling 187, pg 463. Roughly 50% from review Aerts '96 */
     double fretransp;                       /* foliage p retranslocation fraction - 39.5-69 in Southern US FACE site - Finzi et al. 2001 Ecology  */
     double I0;                              /* annual version radiation MJ/m2/yr */
     double k1;                              /* P transfer rate coefficient from labile to secondary inorganic P pool */
@@ -194,6 +195,8 @@ typedef struct {
     double rateloss;                        /* Rate of N loss from mineral N pool (/yr) */
     double rateuptake;                      /* Rate of N uptake from mineral N pool (/yr) from here? http://face.ornl.gov/Finzi-PNAS.pdf Seems to correspond to very low NPP values */
     double rdecay;                          /* root turnover rate (1/yr) */
+    double rretrans;                        /* root retranslocation coefficient */
+    double retransmob;                      /* mobilized wood retranslocation coefficient */
     double sla;                             /* specific leaf area (m2 one-sided/kg DW) */
     double slowncmax;                       /* Slow pool (=1/15) N:C ratio of new SOM - maximum [units: gN/gC]. Based on forest version of CENTURY (Parton et al. 1993), see Appendix, McMurtrie 2001, Tree Physiology. */
     double slowncmin;                       /* Slow pool (=1/40) N:C of new SOM - when Nmin=Nmin0" [units: gN/gC]. Based on forest version of CENTURY (Parton et al. 1993), see Appendix, McMurtrie 2001, Tree Physiology. */
@@ -203,6 +206,7 @@ typedef struct {
     double structcp;                        /* C:P ratio of structural bit of litter input, Ref Attiwill 1980, Aus. J. Bot. 28, 199-222 Table 9 sum of branch, stem, sap and heartwood; */
     double tsoil_in;                        /* annual version tsoil [degree C] */
     double wdecay;                          /* wood turnover rate (1/yr) */
+    double wretrans;                        /* wood retranslocation coefficient */
     double prime_y;
     double prime_z;
 
@@ -257,7 +261,7 @@ typedef struct {
     double nep;
     double auto_resp;
     double hetero_resp;
-    double retrans;         /* plnat n retranslocation */
+    double retransn;         /* plnat n retranslocation */
     double retransp;        /* plant p retranslocation */
     double apar;
 
@@ -314,9 +318,15 @@ typedef struct {
     double deadbranchp;     /* Branch litter P production (t/ha/yr) */
     double deadstemp;       /* Stem litter P production (t/ha/yr) */
 
-    /* grazing stuff */
+    /* retranslocation */
     double leafretransn;    /* N retranslocation leaf */
     double leafretransp;    /* P version of leafretransn */
+    double rootretransn;
+    double rootretransp;
+    double stemretransn;
+    double stemretransp;
+    double branchretransn;
+    double branchretransp;
 
 
     /* C, N & P Surface litter */

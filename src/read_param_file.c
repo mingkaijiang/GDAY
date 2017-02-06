@@ -339,6 +339,8 @@ int handler(char *section, char *name, char *value, control *c,
         p->actpcmin = atof(value);
     } else if (MATCH("params", "bdecay")) {
         p->bdecay = atof(value);
+    } else if (MATCH("params", "bretrans")) {
+      p->bretrans = atof(value);
     } else if (MATCH("params", "c_alloc_b")) {
         p->c_alloc_b = atof(value);
     } else if (MATCH("params", "c_alloc_f")) {
@@ -357,8 +359,8 @@ int handler(char *section, char *name, char *value, control *c,
         p->fdecay = atof(value);
     } else if (MATCH("params", "finesoil")) {
         p->finesoil = atof(value);
-    } else if (MATCH("params", "fretrans")) {
-        p->fretrans = atof(value);
+    } else if (MATCH("params", "fretransn")) {
+        p->fretransn = atof(value);
     } else if (MATCH("params", "fretransp")) {
         p->fretransp = atof(value);
     } else if (MATCH("params", "I0")) {
@@ -477,6 +479,10 @@ int handler(char *section, char *name, char *value, control *c,
         p->prateuptake = atof(value);
     } else if (MATCH("params", "rdecay")) {
         p->rdecay = atof(value);
+    } else if (MATCH("params", "rretrans")) {
+      p->rretrans = atof(value);
+    } else if (MATCH("params", "retransmob")) {
+      p->retransmob = atof(value);
     } else if (MATCH("params", "sla")) {
         p->sla = atof(value);
     } else if (MATCH("params", "slowncmax")) {
@@ -495,6 +501,8 @@ int handler(char *section, char *name, char *value, control *c,
       p->tsoil_in = atof(value);
     } else if (MATCH("params", "wdecay")) {
         p->wdecay = atof(value);
+    } else if (MATCH("params", "wretrans")) {
+        p->wretrans = atof(value);
     }
 
     return (1);

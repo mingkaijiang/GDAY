@@ -44,6 +44,7 @@ void initialise_params(params *p) {
     p->actpcmax = 0.033333;
     p->actpcmin = 0.0125;
     p->bdecay = 0.02;
+    p->bretrans = 0.0;
     p->c_alloc_b = 0.1;       
     p->c_alloc_f = 0.2;       
     p->c_alloc_r = 0.2;       
@@ -55,7 +56,7 @@ void initialise_params(params *p) {
     p->finesoil = 0.51;
     p->fmleaf = 0.0;
     p->fmroot = 0.0;
-    p->fretrans = 0.5;
+    p->fretransn = 0.5;
     p->fretransp = 0.6;
     p->I0 = 3000.0;
     p->k1 = 0.048;
@@ -114,6 +115,8 @@ void initialise_params(params *p) {
     p->rateloss = 0.5;                /* value = 0.05 in Wang et al., 2007 GB1018 */
     p->rateuptake = 2.7;
     p->rdecay = 0.33333;
+    p->rretrans = 0.0; 
+    p->retransmob = 0.0;
     p->sla = 4.4;
     p->slowncmax = 0.066666;
     p->slowncmin = 0.025;
@@ -123,6 +126,7 @@ void initialise_params(params *p) {
     p->structcp = 5500.0;
     p->tsoil_in = 15.0;
     p->wdecay = 0.02;
+    p->wretrans = 0.0;
 
     for (i = 0; i < 7; i++) {
         p->decayrate[i] = 0.0;
@@ -145,7 +149,7 @@ void initialise_fluxes(fluxes *f) {
     f->nep = 0.0;
     f->auto_resp = 0.0;
     f->hetero_resp = 0.0;
-    f->retrans = 0.0;
+    f->retransn = 0.0;
     f->retransp = 0.0;
     f->apar = 0.0;
 
@@ -202,9 +206,15 @@ void initialise_fluxes(fluxes *f) {
     f->deadbranchp = 0.0;  /* Branch litter P production (t/ha/yr) */
     f->deadstemp = 0.0;    /* Stem litter P production (t/ha/yr) */
 
-    /* grazing stuff */
+    /* retranslocation */
     f->leafretransn = 0.0;
     f->leafretransp = 0.0;
+    f->rootretransn = 0.0;
+    f->rootretransp = 0.0;
+    f->stemretransn = 0.0;
+    f->stemretransp = 0.0;
+    f->branchretransn = 0.0;
+    f->branchretransp = 0.0;
 
     /* C N & P Surface litter */
     f->surf_struct_litter = 0.0;

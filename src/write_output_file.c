@@ -91,7 +91,16 @@ void write_output_header(control *c, params *p, FILE **fp) {
 
     /* Misc */
     fprintf(*fp, "leafretransn,");
-    fprintf(*fp, "leafretransp\n");
+    fprintf(*fp, "leafretransp,");
+    fprintf(*fp, "rootretransn,");
+    fprintf(*fp, "rootretransp,");
+    fprintf(*fp, "stemretransn,");
+    fprintf(*fp, "stemretransp,");
+    fprintf(*fp, "branchretransn,");
+    fprintf(*fp, "branchretransp,");
+    fprintf(*fp, "retransn,");
+    fprintf(*fp, "retransp\n");
+    
 
     return;
 }
@@ -194,9 +203,16 @@ void write_annual_outputs_ascii(control *c, fluxes *f, state *s, int year) {
 
     /* Misc */
     fprintf(c->ofp, "%.10f,", f->leafretransn);
-    fprintf(c->ofp, "%.10f\n", f->leafretransp);
-
-
+    fprintf(c->ofp, "%.10f,", f->leafretransp);
+    fprintf(c->ofp, "%.10f,", f->rootretransn);
+    fprintf(c->ofp, "%.10f,", f->rootretransp);
+    fprintf(c->ofp, "%.10f,", f->stemretransn);
+    fprintf(c->ofp, "%.10f,", f->stemretransp);
+    fprintf(c->ofp, "%.10f,", f->branchretransn);
+    fprintf(c->ofp, "%.10f,", f->branchretransp);
+    fprintf(c->ofp, "%.10f,", f->retransn);
+    fprintf(c->ofp, "%.10f\n", f->retransp);
+    
     return;
 }
 

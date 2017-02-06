@@ -205,7 +205,7 @@ double ratio_of_litternc_to_live_leafnc(control *c, fluxes *f, params *p) {
     double nc_leaf_litter;
 
     if (c->use_eff_nc){
-        nc_leaf_litter = p->liteffnc * (1.0 - p->fretrans);
+        nc_leaf_litter = p->liteffnc * (1.0 - p->fretransn);
     } else {
         if (float_eq(f->deadleaves, 0.0)){
             nc_leaf_litter = 0.0;
