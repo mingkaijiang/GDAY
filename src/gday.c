@@ -122,7 +122,7 @@ int main(int argc, char **argv)
 void run_sim(control *c, fluxes *f,  met *m, 
              params *p, state *s, nrutil *nr){
 
-    int    year, i;
+    int    year, i, moy;
 
     double current_limitation, npitfac;
 
@@ -175,7 +175,7 @@ void run_sim(control *c, fluxes *f,  met *m,
     //fprintf(stderr, "inorgn after year_end_calculations %f\n", s->inorgn);
     
     if (c->print_options == ANNUAL && c->spin_up == FALSE) {
-      write_annual_outputs_ascii(c, f, s, year);
+      write_annual_outputs_ascii(c, f, s, year, moy);
     }      
 
     correct_rate_constants(p, TRUE);
@@ -204,9 +204,9 @@ void run_sim_annual(control *c, fluxes *f, met *m,
     * Murty, D and McMurtrie, R. E. (2000) Ecological Modelling, 134,
     185-205, specifically page 196.
     */
-    double tol_c = 5E-06;
-    double tol_n = 5E-06;
-    double tol_p = 5E-06;
+    double tol_c = 5E-04;
+    double tol_n = 5E-04;
+    double tol_p = 5E-04;
     double prev_plantc = 99999.9;
     double prev_soilc = 99999.9;
     double prev_plantn = 99999.9;
@@ -216,7 +216,8 @@ void run_sim_annual(control *c, fluxes *f, met *m,
     int i, cntrl_flag;
     
     /* run simulation variables */
-    int    year = 0;
+    int    year = 0; 
+    int    moy = 0;
     double npitfac;
     
     /* Setup output file */
@@ -241,60 +242,64 @@ void run_sim_annual(control *c, fluxes *f, met *m,
             prev_plantp = s->plantp;
             prev_soilp = s->soilp;
             
-            /* read in simple annual met data from parameter files */
-            unpack_met_data_simple(f, m, p);
+            for(moy = 0; moy < 12; moy++) {
+                
+                /* read in simple annual met data from parameter files */
+                unpack_met_data_simple(f, m, p);
+                
+                /* correct annual rate */
+                correct_rate_constants(p, FALSE);
+                
+                /* start the year with all fluxes and stock mass balance */
+                year_start_calculations(c, p, s);
+                
+                calculate_litterfall(c, f, p, s);
+                
+                calc_annual_growth(c, f, m, nr, p, s);
+                
+                calculate_csoil_flows(c, f, p, s, m->tsoil);
+                calculate_nsoil_flows(c, f, p, s);
+              
+                if (c->pcycle == TRUE) {
+                  calculate_psoil_flows(c, f, p, s);
+                }
+                
+                /* Turn off all N calculations */
+                if (c->ncycle == FALSE)
+                  reset_all_n_pools_and_fluxes(f, s);
+                
+                /* Turn off all P calculations */
+                if (c->pcycle == FALSE)
+                  reset_all_p_pools_and_fluxes(f, s);
+                
+                /* calculate C:N:P ratios and increment annual flux sum */
+                year_end_calculations(c, p, s);
+                
+                correct_rate_constants(p, TRUE);
+                
+                /* Print to screen and check the process */
+                if (c->pcycle) {
+                  /* Have we reached a steady state? */
+                  fprintf(stderr,
+                          "Spinup: Iteration %d, moy %d, Plant C %f, Leaf NC %f, Leaf PC %f, Soil C %f, Soil N %f, Soil P %f, LAI %f\n",
+                          year, moy, s->plantc, s->shootnc, s->shootpc, s->soilc, s->soiln, s->soilp, s->lai);
+                } else if (c->ncycle) {
+                  /* Have we reached a steady state? */
+                  fprintf(stderr,
+                          "Spinup: Plant C %f, Active C %f, Slow C %f, Passive C %f, LAI %f, Inorg N %f\n",
+                          s->plantc,s->activesoil, s->slowsoil, s->passivesoil, s->lai, s->inorgn);
+                } else {
+                  /* Have we reached a steady state? */
+                  fprintf(stderr,
+                          "Spinup: Plant C - %f, Soil C - %f\n",
+                          s->plantc, s->soilc);
+                }   // Print to screen end;
+                
+                if (c->print_options == ANNUAL && c->spin_up == TRUE) {
+                  write_annual_outputs_ascii(c, f, s, year, moy);
+                }
             
-            /* correct annual rate */
-            correct_rate_constants(p, FALSE);
-            
-            /* start the year with all fluxes and stock mass balance */
-            year_start_calculations(c, p, s);
-            
-            calculate_litterfall(c, f, p, s);
-            
-            calc_annual_growth(c, f, m, nr, p, s);
-            
-            calculate_csoil_flows(c, f, p, s, m->tsoil);
-            calculate_nsoil_flows(c, f, p, s);
-            
-            if (c->pcycle == TRUE) {
-              calculate_psoil_flows(c, f, p, s);
-            }
-            
-            /* Turn off all N calculations */
-            if (c->ncycle == FALSE)
-              reset_all_n_pools_and_fluxes(f, s);
-            
-            /* Turn off all P calculations */
-            if (c->pcycle == FALSE)
-              reset_all_p_pools_and_fluxes(f, s);
-            
-            /* calculate C:N:P ratios and increment annual flux sum */
-            year_end_calculations(c, p, s);
-            
-            correct_rate_constants(p, TRUE);
-            
-            /* Print to screen and check the process */
-            if (c->pcycle) {
-              /* Have we reached a steady state? */
-              fprintf(stderr,
-                      "Spinup: Year %d, Plant C %f, Leaf NC %f, Leaf PC %f, Soil C %f, Soil N %f, Soil P %f, LAI %f\n",
-                      year, s->plantc, s->shootnc, s->shootpc, s->soilc, s->soiln, s->soilp, s->lai);
-            } else if (c->ncycle) {
-              /* Have we reached a steady state? */
-              fprintf(stderr,
-                      "Spinup: Plant C %f, Active C %f, Slow C %f, Passive C %f, LAI %f, Inorg N %f\n",
-                      s->plantc,s->activesoil, s->slowsoil, s->passivesoil, s->lai, s->inorgn);
-            } else {
-              /* Have we reached a steady state? */
-              fprintf(stderr,
-                      "Spinup: Plant C - %f, Soil C - %f\n",
-                      s->plantc, s->soilc);
-            }   // Print to screen end;
-            
-            if (c->print_options == ANNUAL && c->spin_up == TRUE) {
-              write_annual_outputs_ascii(c, f, s, year);
-            }
+            }  /* end month loop */
             
             /* continue at annual timestep */
             year += 1;
@@ -597,37 +602,6 @@ void year_end_calculations(control *c, params *p, state *s) {
         s->rootnc = MAX(0.0, s->rootn / s->root);
         s->rootpc = MAX(0.0, s->rootp / s->root);
     }
-    
-    /* Update Year end pool sizes from daily to annual */
-    s->structsurf /= NDAYS_IN_YR;
-    s->structsoil /= NDAYS_IN_YR;
-    s->metabsurf /= NDAYS_IN_YR;
-    s->metabsoil /= NDAYS_IN_YR;
-    s->activesoil /= NDAYS_IN_YR;
-    s->slowsoil /= NDAYS_IN_YR;
-    s->passivesoil /= NDAYS_IN_YR;
-    
-    s->structsurfn /= NDAYS_IN_YR;
-    s->structsoiln /= NDAYS_IN_YR;
-    s->metabsurfn /= NDAYS_IN_YR;
-    s->metabsoiln /= NDAYS_IN_YR;
-    s->activesoiln /= NDAYS_IN_YR;
-    s->slowsoiln /= NDAYS_IN_YR;
-    s->passivesoiln /= NDAYS_IN_YR;
-    s->inorgn /= NDAYS_IN_YR;
-    
-    s->structsurfp /= NDAYS_IN_YR;
-    s->structsoilp /= NDAYS_IN_YR;
-    s->metabsurfp /= NDAYS_IN_YR;
-    s->metabsoilp /= NDAYS_IN_YR;
-    s->activesoilp /= NDAYS_IN_YR;
-    s->slowsoilp /= NDAYS_IN_YR;
-    s->passivesoilp /= NDAYS_IN_YR; 
-
-    s->inorgavlp /= NDAYS_IN_YR;   
-    s->inorgssorbp /= NDAYS_IN_YR;
-    s->inorgoccp /= NDAYS_IN_YR;
-    s->inorgparp /= NDAYS_IN_YR;
 
     /* total plant, soil & litter nitrogen */
     s->soiln = s->inorgn + s->activesoiln + s->slowsoiln + s->passivesoiln;
@@ -687,38 +661,6 @@ void year_start_calculations(control *c, params *p, state *s) {
     s->rootpc = MAX(0.0, s->rootp / s->root);
   }
   
-  /* Update Year end pool sizes from daily to annual */
-  s->structsurf *= NDAYS_IN_YR;
-  s->structsoil *= NDAYS_IN_YR;
-  s->metabsurf *= NDAYS_IN_YR;
-  s->metabsoil *= NDAYS_IN_YR;
-  s->activesoil *= NDAYS_IN_YR;
-  s->slowsoil *= NDAYS_IN_YR;
-  s->passivesoil *= NDAYS_IN_YR;
-  
-  s->structsurfn *= NDAYS_IN_YR;
-  s->structsoiln *= NDAYS_IN_YR;
-  s->metabsurfn *= NDAYS_IN_YR;
-  s->metabsoiln *= NDAYS_IN_YR;
-  s->activesoiln *= NDAYS_IN_YR;
-  s->slowsoiln *= NDAYS_IN_YR;
-  s->passivesoiln *= NDAYS_IN_YR;
-  s->inorgn *= NDAYS_IN_YR;
-  
-  s->structsurfp *= NDAYS_IN_YR;
-  s->structsoilp *= NDAYS_IN_YR;
-  s->metabsurfp *= NDAYS_IN_YR;
-  s->metabsoilp *= NDAYS_IN_YR;
-  s->activesoilp *= NDAYS_IN_YR;
-  s->slowsoilp *= NDAYS_IN_YR;
-  s->passivesoilp *= NDAYS_IN_YR; 
-
-  s->inorgavlp *= NDAYS_IN_YR;   
-  s->inorgssorbp *= NDAYS_IN_YR;
-  s->inorgoccp *= NDAYS_IN_YR;
-  s->inorgparp *= NDAYS_IN_YR;
-  
-  
   /* total plant, soil & litter nitrogen */
   s->soiln = s->inorgn + s->activesoiln + s->slowsoiln + s->passivesoiln;
   s->litternag = s->structsurfn + s->metabsurfn;
@@ -751,11 +693,11 @@ void unpack_met_data_simple(fluxes *f, met *m, params *p) {
   
   /* unpack met forcing */
   m->Ca = p->co2_in;
-  m->par = p->I0;    
+  m->par = p->I0 / NMONTHS_IN_YR;       // convert annual input to monthly
   
-  m->ndep = p->ndep_in;
-  m->nfix = p->nfix_in;
-  m->pdep = p->pdep_in;
+  m->ndep = p->ndep_in / NMONTHS_IN_YR; // convert annual input to monthly
+  m->nfix = p->nfix_in / NMONTHS_IN_YR; // convert annual input to monthly
+  m->pdep = p->pdep_in / NMONTHS_IN_YR; // convert annual input to monthly
   m->tsoil = p->tsoil_in;
   
   f->ninflow = (m->ndep + m->nfix);
@@ -765,30 +707,62 @@ void unpack_met_data_simple(fluxes *f, met *m, params *p) {
 }
 
 void correct_rate_constants(params *p, int output) {
-  /* adjust rate constants for the number of days in years */
+  /* adjust rate constants for the number of months in years */
   
   if (output) {
-    p->kdec1 *= NDAYS_IN_YR;
-    p->kdec2 *= NDAYS_IN_YR;
-    p->kdec3 *= NDAYS_IN_YR;
-    p->kdec4 *= NDAYS_IN_YR;
-    p->kdec5 *= NDAYS_IN_YR;
-    p->kdec6 *= NDAYS_IN_YR;
-    p->kdec7 *= NDAYS_IN_YR;
-    p->k1 *= NDAYS_IN_YR;
-    p->k2 *= NDAYS_IN_YR;
-    p->k3 *= NDAYS_IN_YR;
+    //p->rateuptake *= NMONTHS_IN_YR;
+    //p->prateuptake *= NMONTHS_IN_YR;
+    //p->rateloss *= NMONTHS_IN_YR;
+    //p->prateloss *= NMONTHS_IN_YR;
+    p->fretransn *= NMONTHS_IN_YR;
+    p->fretransp *= NMONTHS_IN_YR;
+    p->rretrans *= NMONTHS_IN_YR;
+    p->bretrans *= NMONTHS_IN_YR;
+    p->wretrans *= NMONTHS_IN_YR;
+    p->retransmob *= NMONTHS_IN_YR;
+    p->fdecay *= NMONTHS_IN_YR;
+    p->rdecay *= NMONTHS_IN_YR;
+    p->bdecay *= NMONTHS_IN_YR;
+    p->wdecay *= NMONTHS_IN_YR;
+    p->kdec1 *= NMONTHS_IN_YR;
+    p->kdec2 *= NMONTHS_IN_YR;
+    p->kdec3 *= NMONTHS_IN_YR;
+    p->kdec4 *= NMONTHS_IN_YR;
+    p->kdec5 *= NMONTHS_IN_YR;
+    p->kdec6 *= NMONTHS_IN_YR;
+    p->kdec7 *= NMONTHS_IN_YR;
+    p->k1 *= NMONTHS_IN_YR;
+    p->k2 *= NMONTHS_IN_YR;
+    p->k3 *= NMONTHS_IN_YR;
+    //p->nuptakez *= NMONTHS_IN_YR;
+    //p->puptakez *= NMONTHS_IN_YR;
   } else {
-    p->kdec1 /= NDAYS_IN_YR;
-    p->kdec2 /= NDAYS_IN_YR;
-    p->kdec3 /= NDAYS_IN_YR;
-    p->kdec4 /= NDAYS_IN_YR;
-    p->kdec5 /= NDAYS_IN_YR;
-    p->kdec6 /= NDAYS_IN_YR;
-    p->kdec7 /= NDAYS_IN_YR;
-    p->k1 /= NDAYS_IN_YR;
-    p->k2 /= NDAYS_IN_YR;
-    p->k3 /= NDAYS_IN_YR;
+    //p->rateuptake /= NMONTHS_IN_YR;
+    //p->prateuptake /= NMONTHS_IN_YR;
+    //p->rateloss /= NMONTHS_IN_YR;
+    //p->prateloss /= NMONTHS_IN_YR;
+    p->fretransn /= NMONTHS_IN_YR;
+    p->fretransp /= NMONTHS_IN_YR;
+    p->rretrans /= NMONTHS_IN_YR;
+    p->bretrans /= NMONTHS_IN_YR;
+    p->wretrans /= NMONTHS_IN_YR;
+    p->retransmob /= NMONTHS_IN_YR;
+    p->fdecay /= NMONTHS_IN_YR;
+    p->rdecay /= NMONTHS_IN_YR;
+    p->bdecay /= NMONTHS_IN_YR;
+    p->wdecay /= NMONTHS_IN_YR;
+    p->kdec1 /= NMONTHS_IN_YR;
+    p->kdec2 /= NMONTHS_IN_YR;
+    p->kdec3 /= NMONTHS_IN_YR;
+    p->kdec4 /= NMONTHS_IN_YR;
+    p->kdec5 /= NMONTHS_IN_YR;
+    p->kdec6 /= NMONTHS_IN_YR;
+    p->kdec7 /= NMONTHS_IN_YR;
+    p->k1 /= NMONTHS_IN_YR;
+    p->k2 /= NMONTHS_IN_YR;
+    p->k3 /= NMONTHS_IN_YR;
+    //p->nuptakez /= NMONTHS_IN_YR;
+    //p->puptakez /= NMONTHS_IN_YR;
   }
   
   return;

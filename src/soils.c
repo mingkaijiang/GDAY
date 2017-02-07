@@ -273,20 +273,20 @@ void partition_plant_litter(control *c, fluxes *f, params *p) {
     /* ...to the structural pool*/
     leaf_material = f->deadleaves * (1.0 - p->fmleaf);
     wood_material = f->deadbranch + f->deadstems;
-    f->surf_struct_litter = leaf_material + wood_material;        // annual 
+    f->surf_struct_litter = leaf_material + wood_material;         
 
     /* ...to the metabolic pool */
-    f->surf_metab_litter = f->deadleaves * p->fmleaf;             // annual
+    f->surf_metab_litter = f->deadleaves * p->fmleaf;             
 
     /*
     ** Root Litter
     */
 
     /* ...to the structural pool */
-    f->soil_struct_litter = f->deadroots * (1.0 - p->fmroot);    // annual
+    f->soil_struct_litter = f->deadroots * (1.0 - p->fmroot);    
 
     /* ...to the metabolic pool */
-    f->soil_metab_litter = f->deadroots * p->fmroot;             // annual
+    f->soil_metab_litter = f->deadroots * p->fmroot;             
     
     /* add diagnostic statement if needed */
     if (c->diagnosis) {
@@ -300,30 +300,30 @@ void cfluxes_from_structural_pool(fluxes *f, params *p, state *s) {
 
     /* Send structural c fluxes to other SOM pools */
     
-    double structout_surf = s->structsurf * p->decayrate[0];       // annual
-    double structout_soil = s->structsoil * p->decayrate[2];       // annual
+    double structout_surf = s->structsurf * p->decayrate[0];       
+    double structout_soil = s->structsoil * p->decayrate[2];       
 
     /* C flux surface structural pool -> slow pool */
-    f->surf_struct_to_slow = structout_surf * p->ligshoot * 0.7;               // annual
+    f->surf_struct_to_slow = structout_surf * p->ligshoot * 0.7;               
 
     /* C flux surface structural pool -> active pool */
-    f->surf_struct_to_active = structout_surf * (1.0 - p->ligshoot) * 0.55;   // annual
+    f->surf_struct_to_active = structout_surf * (1.0 - p->ligshoot) * 0.55;   
 
     /* C flux soil structural pool -> slow pool */
-    f->soil_struct_to_slow = structout_soil * p->ligroot * 0.7;               // annual
+    f->soil_struct_to_slow = structout_soil * p->ligroot * 0.7;               
 
     /* soil structural pool -> active pool */
-    f->soil_struct_to_active = structout_soil * (1.0 - p->ligroot) * 0.45;    // annual
+    f->soil_struct_to_active = structout_soil * (1.0 - p->ligroot) * 0.45;    
 
     /* Respiration fluxes */
 
     /* CO2 lost during transfer of structural C to the slow pool */
     f->co2_to_air[0] = (structout_surf *
-                        (p->ligshoot * 0.3 + (1.0 - p->ligshoot) * 0.45));   // annual
+                        (p->ligshoot * 0.3 + (1.0 - p->ligshoot) * 0.45));   
 
     /* CO2 lost during transfer structural C  to the active pool */
     f->co2_to_air[1] = (structout_soil *
-                        (p->ligroot * 0.3 + (1.0 - p->ligroot) * 0.55));    // annual
+                        (p->ligroot * 0.3 + (1.0 - p->ligroot) * 0.55));    
 
     return;
 }

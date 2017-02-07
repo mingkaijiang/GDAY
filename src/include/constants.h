@@ -8,6 +8,7 @@
 #define MOL_2_MMOL 1000.0
 #define MMOL_2_MOL 1E-03
 #define NDAYS_IN_YR 365.25
+#define NMONTHS_IN_YR 12.0
 #define DEG_TO_KELVIN 273.15
 #define RGAS 8.314
 #define SECS_IN_HOUR 3600.0
