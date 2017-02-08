@@ -51,17 +51,16 @@
 void   clparser(int, char **, control *);
 void   usage(char **);
 
-void   run_sim(control *, fluxes *, met *,
+void   run_sim(control *, fluxes *, met_arrays *, met *,
                params *, state *, nrutil *);
-void   spin_up_pools(control *, fluxes *, met *,
-                     params *, state *, nrutil *);
-void   run_sim_annual(control *, fluxes *, met *,
+void   spin_up_annual(control *, fluxes *, met *,
                       params *, state *, nrutil *);
 void   reset_all_n_pools_and_fluxes(fluxes *, state *);
 void   reset_all_p_pools_and_fluxes(fluxes *, state *);
 void   year_end_calculations(control *, params *, state *);
 void   year_start_calculations(control *, params *, state *);
 void   unpack_met_data_simple(fluxes *, met *, params *); 
+void   unpack_met_data_transient(control *, fluxes *, met_arrays *, met *, params *); 
 void   correct_rate_constants(params *, int );
 
 #endif /* GDAY_H */

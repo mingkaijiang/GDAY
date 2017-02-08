@@ -30,6 +30,7 @@ int main(int argc, char **argv)
      */
     control *c;
     fluxes *f;
+    met_arrays *ma;
     met *m;
     params *p;
     state *s;
@@ -45,6 +46,12 @@ int main(int argc, char **argv)
     if (f == NULL) {
     	fprintf(stderr, "fluxes structure: Not allocated enough memory!\n");
     	exit(EXIT_FAILURE);
+    }
+    
+    ma = (met_arrays *)malloc(sizeof(met_arrays));
+    if (ma == NULL) {
+      fprintf(stderr, "met arrays structure: Not allocated enough memory!\n");
+      exit(EXIT_FAILURE);
     }
 
     m = (met *)malloc(sizeof(met));
@@ -91,8 +98,6 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);
     }
     
-    /* read met data */
-    //read_annual_met_data_simple(argv, c, m, p);
     
     /* set initial lai */
     s->lai = MAX(0.01, (p->sla * M2_AS_HA / KG_AS_TONNES /
@@ -100,17 +105,30 @@ int main(int argc, char **argv)
     
     /* model runs */
     if (c->spin_up) {
-        run_sim_annual(c, f, m, p, s, nr);     // print and save output
-        //spin_up_pools(c, f, m, p, s, nr);    // print onto screen only
+        spin_up_annual(c, f, m, p, s, nr);     // print and save spin_up output, save pools for run_sim;
     } else {
-        run_sim(c, f, m, p, s, nr);
+        /* read transient monthly met data */
+        read_monthly_met_data(argv, c, ma);
+      
+        /* Run simulation, forced by transient met input */
+        run_sim(c, f, ma, m, p, s, nr);
     }
 
     /* clean up */
     fclose(c->ofp);
-
     fclose(c->ifp);
     free(c);
+    if (! c->spin_up) {
+        free(ma->year);
+        free(ma->prjmonth);
+        free(ma->tsoil);
+        free(ma->co2);
+        free(ma->ndep);
+        free(ma->pdep);
+        free(ma->par);
+        free(ma->nfix);
+    }
+    free(ma);
     free(m);
     free(p);
     free(s);
@@ -119,12 +137,12 @@ int main(int argc, char **argv)
     exit(EXIT_SUCCESS);
 }
 
-void run_sim(control *c, fluxes *f,  met *m, 
+void run_sim(control *c, fluxes *f,  met_arrays *ma, met *m, 
              params *p, state *s, nrutil *nr){
 
-    int    year, i, moy;
+    int    nyr, i, moy;
 
-    double current_limitation, npitfac;
+    double year, current_limitation, npitfac;
 
     /* Setup output file */
     if (c->print_options == ANNUAL && c->spin_up == FALSE) {
@@ -136,49 +154,66 @@ void run_sim(control *c, fluxes *f,  met *m,
         open_output_file(c, c->out_param_fname, &(c->ofp));
     }
     
-    /* read in siple annual met data from parameter files */
-    unpack_met_data_simple(f, m, p);
+    /* ====================== **
+     **   Y E A R    L O O P   **
+     ** ====================== */
+    c->month_idx = 0;
     
-    /* correct annual rate */
-    correct_rate_constants(p, FALSE);
-    
-    /* start the year with all fluxes and stock mass balance */
-    year_start_calculations(c, p, s);
+    for (nyr = 0; nyr < c->num_years; nyr++) {
+        year = ma->year[c->month_idx];
 
-    calculate_litterfall(c, f, p, s);
-    
-    calc_annual_growth(c, f, m, nr, p, s);
-    
-    calculate_csoil_flows(c, f, p, s, m->tsoil);
-    calculate_nsoil_flows(c, f, p, s);
-    
-    if (c->pcycle == TRUE) {
-      calculate_psoil_flows(c, f, p, s);
+        /* =================== **
+         ** M O N T H   L O O P   **
+         ** =================== */
+        for (moy = 0; moy < c->num_months; moy++) {
+        
+          /* read in transient monthly met data from input files */
+          unpack_met_data_transient(c, f, ma, m, p);
+          
+          /* correct annual rate */
+          correct_rate_constants(p, FALSE);
+          
+          /* start the year with all fluxes and stock mass balance */
+          year_start_calculations(c, p, s);
+          
+          calculate_litterfall(c, f, p, s);
+          
+          calc_annual_growth(c, f, m, nr, p, s);
+          
+          calculate_csoil_flows(c, f, p, s, m->tsoil);
+          calculate_nsoil_flows(c, f, p, s);
+          
+          if (c->pcycle == TRUE) {
+            calculate_psoil_flows(c, f, p, s);
+          }
+          
+          /* Turn off all N calculations */
+          if (c->ncycle == FALSE)
+            reset_all_n_pools_and_fluxes(f, s);
+          
+          /* Turn off all P calculations */
+          if (c->pcycle == FALSE)
+            reset_all_p_pools_and_fluxes(f, s);
+          
+          /* calculate C:N:P ratios and increment annual flux sum */
+          year_end_calculations(c, p, s);
+          
+          if (c->print_options == ANNUAL && c->spin_up == FALSE) {
+            write_annual_outputs_ascii(c, f, s, year, moy+1);
+          }      
+          
+          correct_rate_constants(p, TRUE);
+          
+          /* ======================= **
+          ** E N D   O F   M O N T H **
+          ** ======================= */
+          c->month_idx++;
+        }
+        
+        /* ========================= **
+         **   E N D   O F   Y E A R   **
+         ** ========================= */
     }
-    
-    /* update stress SMA */
-    //current_limitation = calculate_growth_stress_limitation(p, s, c);
-    
-    /* Turn off all N calculations */
-    if (c->ncycle == FALSE)
-      reset_all_n_pools_and_fluxes(f, s);
-    
-    /* Turn off all P calculations */
-    if (c->pcycle == FALSE)
-      reset_all_p_pools_and_fluxes(f, s);
-    
-    //fprintf(stderr, "activesoil before year_end_calculations %f\n", s->activesoil);
-    
-    /* calculate C:N:P ratios and increment annual flux sum */
-    year_end_calculations(c, p, s);
-    
-    //fprintf(stderr, "inorgn after year_end_calculations %f\n", s->inorgn);
-    
-    if (c->print_options == ANNUAL && c->spin_up == FALSE) {
-      write_annual_outputs_ascii(c, f, s, year, moy);
-    }      
-
-    correct_rate_constants(p, TRUE);
     
     if (c->print_options == END && c->spin_up == FALSE) {
         write_final_state(c, p, s);
@@ -189,7 +224,7 @@ void run_sim(control *c, fluxes *f,  met *m,
 }
 
 
-void run_sim_annual(control *c, fluxes *f, met *m,
+void spin_up_annual(control *c, fluxes *f, met *m,
                     params *p, state *s, nrutil *nr){
     /* Run annual simulation to reach quasi-equilibrium state for all pools
     
@@ -222,7 +257,7 @@ void run_sim_annual(control *c, fluxes *f, met *m,
     
     /* Setup output file */
       /* Annual outputs */
-      open_output_file(c, c->out_param_fname, &(c->ofp));
+      open_output_file(c, c->out_fname, &(c->ofp));
       write_output_header(c, p, &(c->ofp));
     
     fprintf(stderr, "Spinning up the model...\n");
@@ -295,9 +330,9 @@ void run_sim_annual(control *c, fluxes *f, met *m,
                           s->plantc, s->soilc);
                 }   // Print to screen end;
                 
-                if (c->print_options == ANNUAL && c->spin_up == TRUE) {
-                  write_annual_outputs_ascii(c, f, s, year, moy);
-                }
+                /* save spin-up fluxes and stocks */
+                  write_annual_outputs_ascii(c, f, s, year, moy+1);
+                
             
             }  /* end month loop */
             
@@ -306,79 +341,11 @@ void run_sim_annual(control *c, fluxes *f, met *m,
             
       }     // if else statement end checking equilibrium;
     }       // while statement end;
-    
-    write_final_state(c, p, s);
-    
-    return;
-}
 
-
-void spin_up_pools(control *c, fluxes *f, met *m,
-                   params *p, state *s, nrutil *nr){
-    /* Spin up model plant & soil pools to equilibrium.
-
-    - Examine sequences of 50 years and check if C pools are changing
-      by more than 0.005 units per 1000 yrs.
-
-    References:
-    ----------
-    Adapted from...
-    * Murty, D and McMurtrie, R. E. (2000) Ecological Modelling, 134,
-      185-205, specifically page 196.
-    */
-    double tol_c = 5E-04;
-    double tol_n = 5E-04;
-    double tol_p = 5E-04;
-    double prev_plantc = 99999.9;
-    double prev_soilc = 99999.9;
-    double prev_plantn = 99999.9;
-    double prev_soiln = 99999.9;
-    double prev_plantp = 99999.9;
-    double prev_soilp = 99999.9;
-    int i, cntrl_flag;
-
-    /* Final state + param file */
+    /* save end of spin-up parameters and stocks */
     open_output_file(c, c->out_param_fname, &(c->ofp));
-
-    fprintf(stderr, "Spinning up the model...\n");
-    while (TRUE) {
-        if (fabs((prev_plantc) - (s->plantc)) < tol_c &&
-            fabs((prev_soilc) - (s->soilc)) < tol_c &&
-            fabs((prev_plantn) - (s->plantn)) < tol_n &&
-            fabs((prev_soiln) - (s->soiln)) < tol_n &&
-            fabs((prev_plantp) - (s->plantp)) < tol_p && 
-            fabs((prev_soilp) - (s->soilp)) < tol_p) {
-            break;
-        } else {
-            prev_plantc = s->plantc;
-            prev_soilc = s->soilc;
-            prev_plantn = s->plantn;
-            prev_soiln = s->soiln;
-            prev_plantp = s->plantp;
-            prev_soilp = s->soilp;
-
-            run_sim(c, f, m, p, s, nr); /* run GDAY */
-            
-            if (c->pcycle) {
-                /* Have we reached a steady state? */
-                fprintf(stderr,
-                        "Spinup: Plant C %f, Leaf NC %f, Leaf PC %f, Soil C %f, Soil N %f, Soil P %f, LAI %f\n",
-                         s->plantc, s->shootnc, s->shootpc, s->soilc, s->soiln, s->soilp, s->lai);
-            } else if (c->ncycle) {
-              /* Have we reached a steady state? */
-              fprintf(stderr,
-                      "Spinup: Plant C %f, Active C %f, Slow C %f, Passive C %f, LAI %f, Inorg N %f\n",
-                      s->plantc,s->activesoil, s->slowsoil, s->passivesoil, s->lai, s->inorgn);
-            } else {
-              /* Have we reached a steady state? */
-              fprintf(stderr,
-                      "Spinup: Plant C - %f, Soil C - %f\n",
-                      s->plantc, s->soilc);
-            }
-        }
-    }
     write_final_state(c, p, s);
-
+    
     return;
 }
 
@@ -699,6 +666,23 @@ void unpack_met_data_simple(fluxes *f, met *m, params *p) {
   m->nfix = p->nfix_in / NMONTHS_IN_YR; // convert annual input to monthly
   m->pdep = p->pdep_in / NMONTHS_IN_YR; // convert annual input to monthly
   m->tsoil = p->tsoil_in;
+  
+  f->ninflow = (m->ndep + m->nfix);
+  f->p_atm_dep = m->pdep;
+  
+  return;
+}
+
+void unpack_met_data_transient(control *c, fluxes *f, met_arrays *ma, met *m, params *p) {
+  
+  /* unpack met forcing */
+  m->Ca = ma->co2[c->month_idx];
+  m->par = ma->par[c->month_idx];
+  m->ndep = ma->ndep[c->month_idx];
+  m->nfix = ma->nfix[c->month_idx];
+  m->pdep = ma->pdep[c->month_idx];
+  m->tsoil = ma->tsoil[c->month_idx];
+
   
   f->ninflow = (m->ndep + m->nfix);
   f->p_atm_dep = m->pdep;

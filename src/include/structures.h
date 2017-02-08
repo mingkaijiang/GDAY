@@ -8,6 +8,7 @@ typedef struct {
     FILE *ofp;
     FILE *ofp_sd;
     char  cfg_fname[STRING_LENGTH];
+    char  met_fname[STRING_LENGTH];
     char  out_fname[STRING_LENGTH];
     char  out_param_fname[STRING_LENGTH];
     char  git_hash[STRING_LENGTH];
@@ -18,13 +19,17 @@ typedef struct {
     int   fixleafpc;
     int   ncycle;
     int   pcycle;
+    int   num_years;
     int   nuptake_model;
     int   puptake_model;
     int   print_options;
     int   use_eff_nc;
+    int   num_months;
+    int   total_num_months;
     char  git_code_ver[STRING_LENGTH];
     int   spin_up;
     int   PRINT_GIT;
+    long  month_idx;
 
 } control;
 
@@ -214,17 +219,14 @@ typedef struct {
 
 typedef struct {
 
-    double year;
-    double par;
-    double tsoil;
-    double co2;
-    double ndep;
-    double nfix;       /* N inputs from biological fixation (t/ha/timestep (d/30min)) */
-    double pdep;
-
-    /* sub-daily timestep */
-    double *doy;
-    double *diffuse_frac;
+    double *year;
+    double *prjmonth;
+    double *par;
+    double *tsoil;
+    double *co2;
+    double *ndep;
+    double *nfix;       
+    double *pdep;
 
 
 } met_arrays;
@@ -232,20 +234,15 @@ typedef struct {
 
 typedef struct {
 
-    /* sub-daily */
-    double sw_rad;
     double par;
     double Ca;
     double ndep;
-    double nfix;       /* N inputs from biological fixation (t/ha/timestep (d/30min)) */
+    double nfix;       
     double pdep;
     double tsoil;
     double year;
     double co2;
 
-    /* daily */
-    double sw_rad_am;
-    double sw_rad_pm;
 
 } met;
 

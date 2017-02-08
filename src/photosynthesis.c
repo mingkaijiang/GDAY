@@ -1,5 +1,5 @@
 /* ============================================================================
-* Photosynthesis - C3 & C4
+* Photosynthesis - C3 Simple version for quasi-equilibrium analysis
 *
 * see below
 *
@@ -7,10 +7,10 @@
 *
 *
 * AUTHOR:
-*   Martin De Kauwe
+*   Mingkai Jiang
 *
 * DATE:
-*   14.01.2016
+*   07.02.2017
 *
 * =========================================================================== */
 #include "photosynthesis.h"
