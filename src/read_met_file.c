@@ -31,7 +31,7 @@ void read_monthly_met_data(char **argv, control *c, met_arrays *ma)
   double current_yr = -999.9;
   
   if ((fp = fopen(c->met_fname, "r")) == NULL) {
-    fprintf(stderr, "Error: couldn't open daily Met file %s for read\n",
+    fprintf(stderr, "Error: couldn't open monthly Met file %s for read\n",
             c->met_fname);
     exit(EXIT_FAILURE);
   }

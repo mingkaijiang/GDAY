@@ -105,7 +105,8 @@ int main(int argc, char **argv)
     
     /* model runs */
     if (c->spin_up) {
-        spin_up_annual(c, f, m, p, s, nr);     // print and save spin_up output, save pools for run_sim;
+        /* save spin-up simulations and end state parameters */
+        spin_up_annual(c, f, m, p, s, nr);     
     } else {
         /* read transient monthly met data */
         read_monthly_met_data(argv, c, ma);

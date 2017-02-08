@@ -111,6 +111,8 @@ int handler(char *section, char *name, char *value, control *c,
     */
     if (MATCH("files", "cfg_fname")) {
         strcpy(c->cfg_fname, temp);
+    } else if (MATCH("files", "met_fname")) {
+      strcpy(c->met_fname, temp);
     } else if (MATCH("files", "out_fname")) {
         strcpy(c->out_fname, temp);
     } else if (MATCH("files", "out_param_fname")) {
