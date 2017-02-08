@@ -24,10 +24,12 @@ void calc_annual_growth(control *c, fluxes *f,
    double nitfac, pitfac, npitfac;
    double ncbnew, ncwimm, ncwnew;
    double pcbnew, pcwimm, pcwnew;
-   //int    recalc_wb;
 
     /* calculate annual GPP/NPP, respiration and update water balance */
     carbon_annual_production(c, f, m, p, s);
+    
+    f->npp_photo = f->npp;
+    f->gpp_photo = f->gpp;
     
     // leaf N:C as a fraction of Ncmaxyoung, i.e. the max N:C ratio of
     //foliage in young stand, and leaf P:C as a fraction of Pcmaxyoung
@@ -91,7 +93,7 @@ void carbon_annual_production(control *c, fluxes *f, met *m, params *p, state *s
     
     /* Calculate NPP */
     f->npp_gCm2 = f->gpp_gCm2 * p->cue;
-    f->npp = f->npp_gCm2 * GRAM_C_2_TONNES_HA;     // per year;
+    f->npp = f->npp_gCm2 * GRAM_C_2_TONNES_HA;     
 
     return;
 }

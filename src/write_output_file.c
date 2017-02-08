@@ -63,7 +63,7 @@ void write_output_header(control *c, params *p, FILE **fp) {
 
 
     /* C fluxes */
-    fprintf(*fp, "nep,gpp,npp,hetero_resp,auto_resp,apar,");
+    fprintf(*fp, "nep,gpp,npp,gpp_photo,npp_photo,hetero_resp,auto_resp,apar,");
 
     /* C, N and P growth */
     fprintf(*fp, "cpleaf,cpbranch,cpstem,cproot,");
@@ -165,8 +165,8 @@ void write_annual_outputs_ascii(control *c, fluxes *f, state *s, int year, int m
                     f->deadleafp,f->deadbranchp,f->deadstemp,f->deadrootp);
 
     /* C fluxes */
-    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,",
-                    f->nep,f->gpp,f->npp,f->hetero_resp,f->auto_resp,
+    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,",
+                    f->nep,f->gpp,f->npp,f->gpp_photo,f->npp_photo,f->hetero_resp,f->auto_resp,
                     f->apar);
 
     /* C N and P growth */

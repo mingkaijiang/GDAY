@@ -255,6 +255,8 @@ typedef struct {
     double gpp_pm;
     double gpp;
     double npp;
+    double npp_photo;
+    double gpp_photo;
     double nep;
     double auto_resp;
     double hetero_resp;
