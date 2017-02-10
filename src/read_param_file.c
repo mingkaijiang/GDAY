@@ -244,12 +244,6 @@ int handler(char *section, char *name, char *value, control *c,
         s->activesoiln = atof(value);
     } else if (MATCH("state", "activesoilp")) {
         s->activesoilp = atof(value);
-    } else if (MATCH("state", "branch")) {
-        s->branch = atof(value);
-    } else if (MATCH("state", "branchn")) {
-        s->branchn = atof(value);
-    } else if (MATCH("state", "branchp")) {
-        s->branchp = atof(value);
     } else if (MATCH("state", "inorgn")) {
         s->inorgn = atof(value);
     } else if (MATCH("state", "inorgp")) {
@@ -339,12 +333,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->actpcmax = atof(value);
     } else if (MATCH("params", "actpcmin")) {
         p->actpcmin = atof(value);
-    } else if (MATCH("params", "bdecay")) {
-        p->bdecay = atof(value);
-    } else if (MATCH("params", "bretrans")) {
-      p->bretrans = atof(value);
-    } else if (MATCH("params", "c_alloc_b")) {
-        p->c_alloc_b = atof(value);
     } else if (MATCH("params", "c_alloc_f")) {
         p->c_alloc_f = atof(value);
     } else if (MATCH("params", "c_alloc_r")) {
@@ -397,16 +385,12 @@ int handler(char *section, char *name, char *value, control *c,
         p->ligshoot = atof(value);
     } else if (MATCH("params", "liteffnc")) {
         p->liteffnc = atof(value);
-    } else if (MATCH("params", "ncbnewz")) {
-        p->ncbnewz = atof(value);
     } else if (MATCH("params", "ndep_in")) {
       p->ndep_in = atof(value);
     } else if (MATCH("params", "nfix_in")) {
       p->nfix_in = atof(value);
     } else if (MATCH("params", "lue0")) {
       p->lue0 = atof(value);
-    } else if (MATCH("params", "pcbnewz")) {
-        p->pcbnewz = atof(value);
     } else if (MATCH("params", "ncmaxf")) {
         p->ncmaxf = atof(value);
     } else if (MATCH("params", "nref")) {

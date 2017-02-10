@@ -40,9 +40,9 @@ void write_output_header(control *c, params *p, FILE **fp) {
     ** STATE
     */
     /* plant */
-    fprintf(*fp, "shoot,lai,branch,stem,root,");
-    fprintf(*fp, "shootn,branchn,stemn,rootn,");
-    fprintf(*fp, "shootp,branchp,stemp,rootp,");
+    fprintf(*fp, "shoot,lai,stem,root,");
+    fprintf(*fp, "shootn,stemn,rootn,");
+    fprintf(*fp, "shootp,stemp,rootp,");
 
     /* belowground */
     fprintf(*fp, "soilc,soiln,soilp,inorgn,");
@@ -57,18 +57,18 @@ void write_output_header(control *c, params *p, FILE **fp) {
     */
 
     /* litter */
-    fprintf(*fp, "deadleaves,deadbranch,deadstems,deadroots,");
-    fprintf(*fp, "deadleafn,deadbranchn,deadstemn,deadrootn,");
-    fprintf(*fp, "deadleafp,deadbranchp,deadstemp,deadrootp,");
+    fprintf(*fp, "deadleaves,deadstems,deadroots,");
+    fprintf(*fp, "deadleafn,deadstemn,deadrootn,");
+    fprintf(*fp, "deadleafp,deadstemp,deadrootp,");
 
 
     /* C fluxes */
     fprintf(*fp, "nep,gpp,npp,gpp_photo,npp_photo,hetero_resp,auto_resp,apar,");
 
     /* C, N and P growth */
-    fprintf(*fp, "cpleaf,cpbranch,cpstem,cproot,");
-    fprintf(*fp, "npleaf,npbranch,npstemimm,npstemmob,nproot,");
-    fprintf(*fp, "ppleaf,ppbranch,ppstemimm,ppstemmob,pproot,");
+    fprintf(*fp, "cpleaf,cpstem,cproot,");
+    fprintf(*fp, "npleaf,npstemimm,npstemmob,nproot,");
+    fprintf(*fp, "ppleaf,ppstemimm,ppstemmob,pproot,");
 
 
     /* N stuff */
@@ -96,8 +96,6 @@ void write_output_header(control *c, params *p, FILE **fp) {
     fprintf(*fp, "rootretransp,");
     fprintf(*fp, "stemretransn,");
     fprintf(*fp, "stemretransp,");
-    fprintf(*fp, "branchretransn,");
-    fprintf(*fp, "branchretransp,");
     fprintf(*fp, "retransn,");
     fprintf(*fp, "retransp\n");
     
@@ -123,14 +121,14 @@ void write_annual_outputs_ascii(control *c, fluxes *f, state *s, int year, int m
     */
 
     /* plant */
-    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,%.10f,",
-                    s->shoot,s->lai,s->branch,s->stem,s->root);
-
     fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,",
-                    s->shootn,s->branchn,s->stemn,s->rootn);
+                    s->shoot,s->lai,s->stem,s->root);
 
-    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,",
-                    s->shootp,s->branchp,s->stemp,s->rootp);
+    fprintf(c->ofp, "%.10f,%.10f,%.10f,",
+                    s->shootn,s->stemn,s->rootn);
+
+    fprintf(c->ofp, "%.10f,%.10f,%.10f,",
+                    s->shootp,s->stemp,s->rootp);
 
     /* belowground */
     fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,",
@@ -157,12 +155,12 @@ void write_annual_outputs_ascii(control *c, fluxes *f, state *s, int year, int m
     */
 
     /* litter */
-    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,",
-                    f->deadleaves,f->deadbranch,f->deadstems,f->deadroots);
-    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,",
-                    f->deadleafn,f->deadbranchn,f->deadstemn,f->deadrootn);
-    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,",
-                    f->deadleafp,f->deadbranchp,f->deadstemp,f->deadrootp);
+    fprintf(c->ofp, "%.10f,%.10f,%.10f,",
+                    f->deadleaves,f->deadstems,f->deadroots);
+    fprintf(c->ofp, "%.10f,%.10f,%.10f,",
+                    f->deadleafn,f->deadstemn,f->deadrootn);
+    fprintf(c->ofp, "%.10f,%.10f,%.10f,",
+                    f->deadleafp,f->deadstemp,f->deadrootp);
 
     /* C fluxes */
     fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,",
@@ -170,12 +168,12 @@ void write_annual_outputs_ascii(control *c, fluxes *f, state *s, int year, int m
                     f->apar);
 
     /* C N and P growth */
+    fprintf(c->ofp, "%.10f,%.10f,%.10f,",
+                    f->cpleaf,f->cpstem,f->cproot);
     fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,",
-                    f->cpleaf,f->cpbranch,f->cpstem,f->cproot);
-    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,%.10f,",
-                    f->npleaf,f->npbranch,f->npstemimm,f->npstemmob,f->nproot);
-    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,%.10f,",
-                    f->ppleaf,f->ppbranch,f->ppstemimm,f->ppstemmob,f->pproot);
+                    f->npleaf,f->npstemimm,f->npstemmob,f->nproot);
+    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,",
+                    f->ppleaf,f->ppstemimm,f->ppstemmob,f->pproot);
 
     /* N stuff */
     fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,%.10f,",
@@ -208,8 +206,6 @@ void write_annual_outputs_ascii(control *c, fluxes *f, state *s, int year, int m
     fprintf(c->ofp, "%.10f,", f->rootretransp);
     fprintf(c->ofp, "%.10f,", f->stemretransn);
     fprintf(c->ofp, "%.10f,", f->stemretransp);
-    fprintf(c->ofp, "%.10f,", f->branchretransn);
-    fprintf(c->ofp, "%.10f,", f->branchretransp);
     fprintf(c->ofp, "%.10f,", f->retransn);
     fprintf(c->ofp, "%.10f\n", f->retransp);
     
@@ -331,15 +327,6 @@ int ohandler(char *section, char *name, char *value, control *c, params *p,
         *match = TRUE;
     } else if (MATCH("state", "activesoilp")) {
         fprintf(c->ofp, "activesoilp = %.10f\n", s->activesoilp);
-        *match = TRUE;
-    } else if (MATCH("state", "branch")) {
-        fprintf(c->ofp, "branch = %.10f\n", s->branch);
-        *match = TRUE;
-    } else if (MATCH("state", "branchn")) {
-        fprintf(c->ofp, "branchn = %.10f\n", s->branchn);
-        *match = TRUE;
-    } else if (MATCH("state", "branchp")) {
-        fprintf(c->ofp, "branchp = %.10f\n", s->branchp);
         *match = TRUE;
     } else if (MATCH("state", "inorgn")) {
         fprintf(c->ofp, "inorgn = %.10f\n", s->inorgn);

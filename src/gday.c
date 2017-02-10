@@ -322,8 +322,8 @@ void spin_up_annual(control *c, fluxes *f, met *m,
                 } else if (c->ncycle) {
                   /* Have we reached a steady state? */
                   fprintf(stderr,
-                          "Spinup: Plant C %f, Active C %f, Slow C %f, Passive C %f, LAI %f, Inorg N %f\n",
-                          s->plantc,s->activesoil, s->slowsoil, s->passivesoil, s->lai, s->inorgn);
+                          "Spinup: Iteration %d, moy %d, Plant C %f, Active C %f, Slow C %f, Passive C %f, LAI %f, Inorg N %f\n",
+                          year, moy, s->plantc,s->activesoil, s->slowsoil, s->passivesoil, s->lai, s->inorgn);
                 } else {
                   /* Have we reached a steady state? */
                   fprintf(stderr,
@@ -407,7 +407,6 @@ void reset_all_n_pools_and_fluxes(fluxes *f, state *s) {
     */
     s->shootn = 0.0;
     s->rootn = 0.0;
-    s->branchn = 0.0;
     s->stemnimm = 0.0;
     s->stemnmob = 0.0;
     s->structsurfn = 0.0;
@@ -434,17 +433,14 @@ void reset_all_n_pools_and_fluxes(fluxes *f, state *s) {
     f->nmineralisation = 0.0;
     f->npleaf = 0.0;
     f->nproot = 0.0;
-    f->npbranch = 0.0;
     f->npstemimm = 0.0;
     f->npstemmob = 0.0;
     f->deadleafn = 0.0;
     f->deadrootn = 0.0;
-    f->deadbranchn = 0.0;
     f->deadstemn = 0.0;
     f->leafretransn = 0.0;
     f->rootretransn = 0.0;
     f->stemretransn = 0.0;
-    f->branchretransn = 0.0;
     f->n_surf_struct_litter = 0.0;
     f->n_surf_metab_litter = 0.0;
     f->n_soil_struct_litter = 0.0;
@@ -476,7 +472,6 @@ void reset_all_p_pools_and_fluxes(fluxes *f, state *s) {
     */
     s->shootp = 0.0;
     s->rootp = 0.0;
-    s->branchp = 0.0;
     s->stempimm = 0.0;
     s->stempmob = 0.0;
     s->structsurfp = 0.0;
@@ -507,17 +502,14 @@ void reset_all_p_pools_and_fluxes(fluxes *f, state *s) {
     f->pmineralisation = 0.0;
     f->ppleaf = 0.0;
     f->pproot = 0.0;
-    f->ppbranch = 0.0;
     f->ppstemimm = 0.0;
     f->ppstemmob = 0.0;
     f->deadleafp = 0.0;
     f->deadrootp = 0.0;
-    f->deadbranchp = 0.0;
     f->deadstemp = 0.0;
     f->leafretransp = 0.0;
     f->rootretransp = 0.0;
     f->stemretransp = 0.0;
-    f->branchretransp = 0.0;
     f->p_surf_struct_litter = 0.0;
     f->p_surf_metab_litter = 0.0;
     f->p_soil_struct_litter = 0.0;
@@ -576,7 +568,7 @@ void year_end_calculations(control *c, params *p, state *s) {
     s->litternag = s->structsurfn + s->metabsurfn;
     s->litternbg = s->structsoiln + s->metabsoiln;
     s->littern = s->litternag + s->litternbg;
-    s->plantn = s->shootn + s->rootn + s->branchn + s->stemn;
+    s->plantn = s->shootn + s->rootn + s->stemn;
     s->totaln = s->plantn + s->littern + s->soiln;
 
     /* total plant, soil & litter phosphorus */
@@ -585,7 +577,7 @@ void year_end_calculations(control *c, params *p, state *s) {
     s->litterpag = s->structsurfp + s->metabsurfp;
     s->litterpbg = s->structsoilp + s->metabsoilp;
     s->litterp = s->litterpag + s->litterpbg;
-    s->plantp = s->shootp + s->rootp + s->branchp + s->stemp;
+    s->plantp = s->shootp + s->rootp + s->stemp;
     s->totalp = s->plantp + s->litterp + s->soilp;
 
     /* total plant, soil, litter and system carbon */
@@ -593,7 +585,7 @@ void year_end_calculations(control *c, params *p, state *s) {
     s->littercag = s->structsurf + s->metabsurf;
     s->littercbg = s->structsoil + s->metabsoil;
     s->litterc = s->littercag + s->littercbg;
-    s->plantc = s->root + s->shoot + s->stem + s->branch;
+    s->plantc = s->root + s->shoot + s->stem;
     s->totalc = s->soilc + s->litterc + s->plantc;
     
     return;
@@ -634,7 +626,7 @@ void year_start_calculations(control *c, params *p, state *s) {
   s->litternag = s->structsurfn + s->metabsurfn;
   s->litternbg = s->structsoiln + s->metabsoiln;
   s->littern = s->litternag + s->litternbg;
-  s->plantn = s->shootn + s->rootn + s->branchn + s->stemn;
+  s->plantn = s->shootn + s->rootn + s->stemn;
   s->totaln = s->plantn + s->littern + s->soiln;
   
   /* total plant, soil & litter phosphorus */
@@ -643,7 +635,7 @@ void year_start_calculations(control *c, params *p, state *s) {
   s->litterpag = s->structsurfp + s->metabsurfp;
   s->litterpbg = s->structsoilp + s->metabsoilp;
   s->litterp = s->litterpag + s->litterpbg;
-  s->plantp = s->shootp + s->rootp + s->branchp + s->stemp;
+  s->plantp = s->shootp + s->rootp + s->stemp;
   s->totalp = s->plantp + s->litterp + s->soilp;
   
   /* total plant, soil, litter and system carbon */
@@ -651,7 +643,7 @@ void year_start_calculations(control *c, params *p, state *s) {
   s->littercag = s->structsurf + s->metabsurf;
   s->littercbg = s->structsoil + s->metabsoil;
   s->litterc = s->littercag + s->littercbg;
-  s->plantc = s->root + s->shoot + s->stem + s->branch;
+  s->plantc = s->root + s->shoot + s->stem;
   s->totalc = s->soilc + s->litterc + s->plantc;
   
   return;
@@ -702,12 +694,10 @@ void correct_rate_constants(params *p, int output) {
     p->fretransn *= NMONTHS_IN_YR;
     p->fretransp *= NMONTHS_IN_YR;
     p->rretrans *= NMONTHS_IN_YR;
-    p->bretrans *= NMONTHS_IN_YR;
     p->wretrans *= NMONTHS_IN_YR;
     p->retransmob *= NMONTHS_IN_YR;
     p->fdecay *= NMONTHS_IN_YR;
     p->rdecay *= NMONTHS_IN_YR;
-    p->bdecay *= NMONTHS_IN_YR;
     p->wdecay *= NMONTHS_IN_YR;
     p->kdec1 *= NMONTHS_IN_YR;
     p->kdec2 *= NMONTHS_IN_YR;
@@ -729,12 +719,10 @@ void correct_rate_constants(params *p, int output) {
     p->fretransn /= NMONTHS_IN_YR;
     p->fretransp /= NMONTHS_IN_YR;
     p->rretrans /= NMONTHS_IN_YR;
-    p->bretrans /= NMONTHS_IN_YR;
     p->wretrans /= NMONTHS_IN_YR;
     p->retransmob /= NMONTHS_IN_YR;
     p->fdecay /= NMONTHS_IN_YR;
     p->rdecay /= NMONTHS_IN_YR;
-    p->bdecay /= NMONTHS_IN_YR;
     p->wdecay /= NMONTHS_IN_YR;
     p->kdec1 /= NMONTHS_IN_YR;
     p->kdec2 /= NMONTHS_IN_YR;

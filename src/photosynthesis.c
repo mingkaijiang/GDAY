@@ -42,12 +42,12 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
     
     if (s->lai > 0.0) {
       /* calculation for npp */
-      f->gpp_gCm2 = lue_avg * f->apar * conv2;
+      f->npp_gCm2 = lue_avg * f->apar * conv2;
     } else {
-      f->gpp_gCm2 = 0.0;
+      f->npp_gCm2 = 0.0;
     }
     
-    f->npp_gCm2 = f->npp_gCm2 * p->cue;
+    f->gpp_gCm2 = f->npp_gCm2 / p->cue;
     
     /* g C m-2 to tonnes hectare-1 yr-1 */
     f->gpp = f->gpp_gCm2 * G_AS_TONNES / M2_AS_HA;

@@ -22,8 +22,8 @@ void calc_annual_growth(control *c, fluxes *f,
 {
    double dummy=0.0;
    double nitfac, pitfac, npitfac;
-   double ncbnew, ncwimm, ncwnew;
-   double pcbnew, pcwimm, pcwnew;
+   double ncwimm, ncwnew;
+   double pcwimm, pcwnew;
 
     /* calculate annual GPP/NPP, respiration and update water balance */
     carbon_annual_production(c, f, m, p, s);
@@ -33,19 +33,22 @@ void calc_annual_growth(control *c, fluxes *f,
     
     // leaf N:C as a fraction of Ncmaxyoung, i.e. the max N:C ratio of
     //foliage in young stand, and leaf P:C as a fraction of Pcmaxyoung
-    nitfac = MIN(1.0, s->shootnc / p->ncmaxf);
-    pitfac = MIN(1.0, s->shootpc / p->pcmaxf);
+    //nitfac = MIN(1.0, s->shootnc / p->ncmaxf);
+    //pitfac = MIN(1.0, s->shootpc / p->pcmaxf);
     
     /* add diagnostic statement if needed */
     if (c->diagnosis) {
     }
     
     /* checking for pcycle control parameter */
-    if (c->pcycle == TRUE) {
-        npitfac = MIN(nitfac, pitfac);
-    } else {
-        npitfac = nitfac;
-    }
+    //if (c->pcycle == TRUE) {
+    //    npitfac = MIN(nitfac, pitfac);
+    //} else {
+    //    npitfac = nitfac;
+    //}
+    nitfac = 1.0;
+    pitfac = 1.0;
+    npitfac = 1.0;
 
     /* figure out the C allocation fractions */
     /* annual allocation ...*/
@@ -55,12 +58,11 @@ void calc_annual_growth(control *c, fluxes *f,
     carbon_allocation(c, f, p, s, npitfac);
 
     calculate_cnp_wood_ratios(c, p, s, npitfac, nitfac, pitfac,
-                              &ncbnew, &ncwimm,
-                              &ncwnew, &pcbnew, &pcwimm,
-                              &pcwnew);
+                              &ncwimm, &ncwnew, 
+                              &pcwimm, &pcwnew);
     
-    np_allocation(c, f, p, s, ncbnew, ncwimm, ncwnew,
-                              pcbnew, pcwimm, pcwnew);
+    np_allocation(c, f, p, s, ncwimm, ncwnew,
+                              pcwimm, pcwnew);
     
     update_plant_state(c, f, p, s);
 
@@ -100,11 +102,9 @@ void carbon_annual_production(control *c, fluxes *f, met *m, params *p, state *s
 
 void calculate_cnp_wood_ratios(control *c, params *p, state *s,
                                double npitfac, double nitfac, double pitfac,
-                               double *ncbnew, 
                                double *ncwimm, double *ncwnew,
-                               double *pcbnew, 
                                double *pcwimm, double *pcwnew) {
-    /* Estimate the N:C and P:C ratio in the branch and stem. Option to vary
+    /* Estimate the N:C and P:C ratio in the stem. Option to vary
     the N:C and P:C ratio of the stem following Jeffreys (1999) or keep it a fixed
     fraction
 
@@ -119,14 +119,10 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
 
     Returns:
     --------
-    ncbnew : float
-        N:C ratio of branch
     ncwimm : float
         N:C ratio of immobile stem
     ncwnew : float
         N:C ratio of mobile stem
-    pcbnew : float
-        P:C ratio of branch
     pcwimm : float
         P:C ratio of immobile stem
     pcwnew : float
@@ -144,9 +140,6 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
         /* fixed N:C in the stemwood */
         if (c->fixed_stem_nc) {
           
-            /* n:c ratio of new branch wood*/
-            *ncbnew =  nitfac * p->ncbnewz;    
-          
             /* n:c ratio of stemwood - immobile pool and new ring */
             *ncwimm = nitfac * p->ncwimmz;
 
@@ -154,9 +147,7 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
             *ncwnew = nitfac * p->ncwnewz;
 
         } else {
-          
-            *ncbnew = s->shootnc * p->ncbnewz * nitfac;
-          
+        
             *ncwimm = s->shootnc * p->ncwimmz * nitfac; 
 
             *ncwnew = s->shootnc * p->ncwnewz * nitfac;
@@ -165,9 +156,6 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
         /* fixed N:C in the stemwood */
         if (c->fixed_stem_nc) {
         
-            /* n:c ratio of new branch wood*/
-            *ncbnew =  npitfac * p->ncbnewz;     
-        
             /* n:c ratio of stemwood - immobile pool and new ring */
             *ncwimm = npitfac * p->ncwimmz;
         
@@ -175,7 +163,6 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
             *ncwnew = npitfac * p->ncwnewz;
         
         } else {
-            *ncbnew = s->shootnc * p->ncbnewz * nitfac;
            
             *ncwimm = s->shootnc * p->ncwimmz * nitfac; 
           
@@ -188,15 +175,11 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
         /* fixed P:C in the stemwood */
         if (c->fixed_stem_pc) {
         
-          *pcbnew =  pitfac * p->pcbnewz;    
-        
           *pcwimm = pitfac * p->pcwimmz;
         
           *pcwnew = pitfac * p->pcwnewz;
         
         } else {
-        
-          *pcbnew = s->shootpc * p->pcbnewz * pitfac;
         
           *pcwimm = s->shootpc * p->pcwimmz * pitfac; 
          
@@ -206,15 +189,11 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
       /* fixed P:C in the stemwood */
         if (c->fixed_stem_pc) {
         
-          *pcbnew = npitfac * p->pcbnewz;     
-
           *pcwimm = npitfac * p->pcwimmz;
 
           *pcwnew = npitfac * p->pcwnewz;
         
         } else {
-          *pcbnew = s->shootpc * p->pcbnewz * nitfac;
-        
           *pcwimm = s->shootpc * p->pcwimmz * nitfac; 
         
           *pcwnew = s->shootpc * p->pcwnewz * nitfac;
@@ -224,8 +203,8 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
     return;
 }
 
-void np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
-                  double ncwimm, double ncwnew, double pcbnew,
+void np_allocation(control *c, fluxes *f, params *p, state *s, 
+                  double ncwimm, double ncwnew, 
                   double pcwimm, double pcwnew) {
     /*
         Nitrogen and phosphorus distribution - allocate available N and
@@ -239,14 +218,10 @@ void np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
 
         Parameters:
         -----------
-        ncbnew : float
-            N:C ratio of branch
         ncwimm : float
             N:C ratio of immobile stem
         ncwnew : float
             N:C ratio of mobile stem
-        pcbnew : float
-            P:C ratio of branch
         pcwimm : float
             P:C ratio of immobile stem
         pcwnew : float
@@ -289,29 +264,25 @@ void np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     /* N flux into new ring (mobile component -> can be retrans for new
     woody tissue) */
     f->npstemmob = f->npp * f->alstem * (ncwnew - ncwimm);
-    f->npbranch = f->npp * f->albranch * ncbnew;
 
     /* allocate P to pools with fixed P:C ratios */
     f->ppstemimm = f->npp * f->alstem * pcwimm;
     f->ppstemmob = f->npp * f->alstem * (pcwnew - pcwimm);
-    f->ppbranch = f->npp * f->albranch * pcbnew;
-    
+
     /* If we have allocated more N than we have avail, cut back C prodn */
-    arg = f->npstemimm + f->npstemmob + f->npbranch;
+    arg = f->npstemimm + f->npstemmob;
     if (arg > ntot && c->fixleafnc == FALSE && c->ncycle) {
-      cut_back_production(c, f, p, s, ntot, ncbnew,
-                                      ncwimm, ncwnew);
+      cut_back_production(c, f, p, s, ntot, ncwimm, ncwnew);
     }
     
     /* If we have allocated more P than we have avail, cut back C prodn */
-    arg = f->ppstemimm + f->ppstemmob + f->ppbranch;
+    arg = f->ppstemimm + f->ppstemmob;
     if (arg > ptot && c->fixleafpc == FALSE && c->pcycle) {
-      cut_back_production(c, f, p, s, ptot, pcbnew, 
-                                      pcwimm, pcwnew);
+      cut_back_production(c, f, p, s, ptot, pcwimm, pcwnew);
     }
     
     /* Nitrogen reallocation to flexible-ratio pools */
-    ntot -= f->npbranch + f->npstemimm + f->npstemmob;
+    ntot -= f->npstemimm + f->npstemmob;
     ntot = MAX(0.0, ntot);
     
     /* allocate remaining N to flexible-ratio pools */
@@ -319,7 +290,7 @@ void np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
     f->nproot = ntot - f->npleaf;
     
     /* Phosphorus reallocation to flexible-ratio pools */
-    ptot -= f->ppbranch + f->ppstemimm + f->ppstemmob;
+    ptot -= f->ppstemimm + f->ppstemmob;
     ptot = MAX(0.0, ptot);
     
     /* allocate remaining P to flexible-ratio pools */
@@ -330,11 +301,10 @@ void np_allocation(control *c, fluxes *f, params *p, state *s, double ncbnew,
 }
 
 void cut_back_production(control *c, fluxes *f, params *p, state *s,
-                        double tot, double xcbnew, 
-                        double xcwimm, double xcwnew) {
+                        double tot, double xcwimm, double xcwnew) {
 
     double lai_inc, conv;
-    double pcbnew, pcwimm, pcwnew;
+    double pcwimm, pcwnew;
     /* default is we don't need to recalculate the water balance,
        however if we cut back on NPP due to available N and P below then we do
        need to do this */
@@ -352,8 +322,7 @@ void cut_back_production(control *c, fluxes *f, params *p, state *s,
                    f->deadleaves * s->lai / s->shoot);
     }
 
-    f->npp *= tot / (f->npstemimm + f->npstemmob + \
-                      f->npbranch);
+    f->npp *= tot / (f->npstemimm + f->npstemmob);
     
     /* add diagnostic statement if needed */
     if (c->diagnosis) {
@@ -363,17 +332,14 @@ void cut_back_production(control *c, fluxes *f, params *p, state *s,
     /* need to adjust growth values accordingly as well */
     f->cpleaf = f->npp * f->alleaf;
     f->cproot = f->npp * f->alroot;
-    f->cpbranch = f->npp * f->albranch;
     f->cpstem = f->npp * f->alstem;
 
 
 
     if (c->pcycle) {
-        f->ppbranch = f->npp * f->albranch * xcbnew;
         f->ppstemimm = f->npp * f->alstem * xcwimm;
         f->ppstemmob = f->npp * f->alstem * (xcwnew - xcwimm);
     } else {
-        f->npbranch = f->npp * f->albranch * xcbnew;
         f->npstemimm = f->npp * f->alstem * xcwimm;
         f->npstemmob = f->npp * f->alstem * (xcwnew - xcwimm);
     }
@@ -474,8 +440,6 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
         allocation fraction for shoot
     alroot : float
         allocation fraction for fine roots
-    albranch : float
-        allocation fraction for branches
     alstem : float
         allocation fraction for stem
 
@@ -488,14 +452,12 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
 
     f->alleaf = p->c_alloc_f;
     
-    f->albranch = p->c_alloc_b;
-
     f->alroot = p->c_alloc_r;
     
     f->alstem = p->c_alloc_s;
     
     /* Total allocation should be one, if not print warning */
-    total_alloc = f->alroot + f->alleaf + f->albranch + f->alstem;
+    total_alloc = f->alroot + f->alleaf + f->alstem;
     
     /* add diagnostic statement if needed */
     if (c->diagnosis) {
@@ -517,7 +479,6 @@ void carbon_allocation(control *c, fluxes *f, params *p, state *s,
     double days_left;
     f->cpleaf = f->npp * f->alleaf;        // per yr
     f->cproot = f->npp * f->alroot;
-    f->cpbranch = f->npp * f->albranch;
     f->cpstem = f->npp * f->alstem;
 
     /* update leaf area [m2 m-2] */
@@ -554,7 +515,6 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s) {
     */
     s->shoot += f->cpleaf - f->deadleaves;
     s->root += f->cproot - f->deadroots;
-    s->branch += f->cpbranch - f->deadbranch;
     s->stem += f->cpstem - f->deadstems;
 
     /*
@@ -563,14 +523,11 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s) {
     s->shootn += f->npleaf - p->fdecay * s->shootn;
     s->shootp += f->ppleaf - p->fdecay * s->shootp;
     
-    s->branchn += f->npbranch - p->bdecay * s->branchn;
     s->rootn += f->nproot - p->rdecay * s->rootn;
     
     s->stemnimm += f->npstemimm - p->wdecay * s->stemnimm;
     s->stemnmob += (f->npstemmob - p->wdecay * s->stemnmob - p->retransmob * s->stemnmob);
     s->stemn = s->stemnimm + s->stemnmob;
-
-    s->branchp += f->ppbranch - p->bdecay * s->branchp;
 
     s->rootp += f->pproot - p->rdecay * s->rootp;
 
@@ -676,15 +633,6 @@ void precision_control(fluxes *f, state *s) {
         s->shootp = 0.0;
     }
 
-    if (s->branch < tolerance) {
-        f->deadbranch += s->branch;
-        f->deadbranchn += s->branchn;
-        f->deadbranchp += s->branchp;
-        s->branch = 0.0;
-        s->branchn = 0.0;
-        s->branchp = 0.0;
-    }
-
     if (s->root < tolerance) {
         f->deadrootn += s->rootn;
         f->deadrootp += s->rootp;
@@ -754,11 +702,10 @@ double nitrogen_retrans(control *c, fluxes *f, params *p, state *s) {
         N retranslocated plant matter
 
     */
-    double leafretransn,rootretransn,branchretransn,stemretransn;
+    double leafretransn,rootretransn,stemretransn;
 
     leafretransn = p->fretransn * p->fdecay * s->shootn;
     rootretransn = p->rretrans * p->rdecay * s->rootn;
-    branchretransn = p->bretrans * p->bdecay * s->branchn;
     stemretransn = (p->wretrans * p->wdecay * s->stemnmob + p->retransmob *
       s->stemnmob);
     
@@ -766,9 +713,8 @@ double nitrogen_retrans(control *c, fluxes *f, params *p, state *s) {
     f->leafretransn = leafretransn;
     f->rootretransn = rootretransn;
     f->stemretransn = stemretransn;
-    f->branchretransn = branchretransn;
-    
-    return (leafretransn + rootretransn + branchretransn + stemretransn);
+
+    return (leafretransn + rootretransn + stemretransn);
 }
 
 double phosphorus_retrans(control *c, fluxes *f, params *p, state *s) {
@@ -788,11 +734,10 @@ double phosphorus_retrans(control *c, fluxes *f, params *p, state *s) {
         P retrans : float
         P retranslocated plant matter
     */
-    double leafretransp,rootretransp,branchretransp,stemretransp;
+    double leafretransp,rootretransp,stemretransp;
 
     leafretransp = p->fretransp * p->fdecay * s->shootp;
     rootretransp = p->rretrans * p->rdecay * s->rootp;
-    branchretransp = p->bretrans * p->bdecay * s->branchp;
     stemretransp = (p->wretrans * p->wdecay * s->stempmob + p->retransmob *
       s->stempmob);
     
@@ -801,9 +746,8 @@ double phosphorus_retrans(control *c, fluxes *f, params *p, state *s) {
     f->leafretransp = leafretransp;
     f->rootretransp = rootretransp;
     f->stemretransp = stemretransp;
-    f->branchretransp = branchretransp;
 
-    return (leafretransp + rootretransp + branchretransp + stemretransp);
+    return (leafretransp + rootretransp + stemretransp);
 }
 
 double calculate_nuptake(control *c, params *p, state *s) {

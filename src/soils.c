@@ -267,12 +267,12 @@ void partition_plant_litter(control *c, fluxes *f, params *p) {
 
     double leaf_material, wood_material;
     /*
-     * Surface (leaves, branches, stem) Litter
+     * Surface (leaves, stem) Litter
      */
 
     /* ...to the structural pool*/
     leaf_material = f->deadleaves * (1.0 - p->fmleaf);
-    wood_material = f->deadbranch + f->deadstems;
+    wood_material = f->deadstems;
     f->surf_struct_litter = leaf_material + wood_material;         
 
     /* ...to the metabolic pool */
@@ -527,7 +527,7 @@ void n_inputs_from_plant_litter(fluxes *f, params *p, double *nsurf,
     */
 
     /* surface and soil inputs (faeces n goes to abovgrd litter pools) */
-    *nsurf = f->deadleafn + f->deadbranchn + f->deadstemn;
+    *nsurf = f->deadleafn + f->deadstemn;
     *nsoil = f->deadrootn;
 
     return;
@@ -1053,7 +1053,7 @@ void p_inputs_from_plant_litter(fluxes *f, params *p, double *psurf,
     */
 
     /* surface and soil inputs (faeces p goes to abovgrd litter pools) */
-    *psurf = f->deadleafp + f->deadbranchp + f->deadstemp;
+    *psurf = f->deadleafp + f->deadstemp;
     *psoil = f->deadrootp;
 
     return;
@@ -1571,7 +1571,7 @@ void precision_control_soil_p(fluxes *f, state *s, params *p) {
     /* Detect very low values in state variables and force to zero to
     avoid rounding and overflow errors */
 
-    double tolerance = 1E-08, excess;
+    double tolerance = 1E-10, excess;
 
     if (s->metabsurfp < tolerance) {
         excess = s->metabsurfp;

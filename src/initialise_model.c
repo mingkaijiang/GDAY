@@ -46,9 +46,6 @@ void initialise_params(params *p) {
     p->actncmin = 0.066667;
     p->actpcmax = 0.033333;
     p->actpcmin = 0.0125;
-    p->bdecay = 0.02;
-    p->bretrans = 0.0;
-    p->c_alloc_b = 0.1;       
     p->c_alloc_f = 0.2;       
     p->c_alloc_r = 0.2;       
     p->c_alloc_s = 0.5;
@@ -78,7 +75,6 @@ void initialise_params(params *p) {
     p->ligroot = 0.22;
     p->ligshoot = 0.24;
     p->liteffnc = 0.0;     
-    p->ncbnewz = 0.003;
     p->ndep_in = 0.001;
     p->nfix_in = 0.001;
     p->lue0 = 1.4;                /* maximum LUE in kg C GJ-1 */
@@ -100,7 +96,6 @@ void initialise_params(params *p) {
     p->passncmin = 0.1;
     p->passpcmax = 0.05;
     p->passpcmin = 0.005;
-    p->pcbnewz = 0.0003;
     p->pcmaxf = 0.004;       /* guess value */
     p->pcmaxr = 0.004;       /* guess value */
     p->pcrfac = 0.8;
@@ -180,35 +175,29 @@ void initialise_fluxes(fluxes *f) {
     /* Annual C production */
     f->cpleaf = 0.0;
     f->cproot = 0.0;
-    f->cpbranch = 0.0;
     f->cpstem = 0.0;
 
     /* Annual N production */
     f->npleaf = 0.0;
     f->nproot = 0.0;
-    f->npbranch = 0.0;
     f->npstemimm = 0.0;
     f->npstemmob = 0.0;
     
     /* Annual P production */
     f->ppleaf = 0.0;
     f->pproot = 0.0;
-    f->ppbranch = 0.0;
     f->ppstemimm = 0.0;
     f->ppstemmob = 0.0;
 
     /* dying stuff */
     f->deadleaves = 0.0;   /* Leaf litter C production (t/ha/yr) */
     f->deadroots = 0.0;    /* Root litter C production (t/ha/yr) */
-    f->deadbranch = 0.0;   /* Branch litter C production (t/ha/yr) */
     f->deadstems = 0.0;    /* Stem litter C production (t/ha/yr) */
     f->deadleafn = 0.0;    /* Leaf litter N production (t/ha/yr) */
     f->deadrootn = 0.0;    /* Root litter N production (t/ha/yr) */
-    f->deadbranchn = 0.0;  /* Branch litter N production (t/ha/yr) */
     f->deadstemn = 0.0;    /* Stem litter N production (t/ha/yr) */
     f->deadleafp = 0.0;    /* Leaf litter P production (t/ha/yr) */
     f->deadrootp = 0.0;    /* Root litter P production (t/ha/yr) */
-    f->deadbranchp = 0.0;  /* Branch litter P production (t/ha/yr) */
     f->deadstemp = 0.0;    /* Stem litter P production (t/ha/yr) */
 
     /* retranslocation */
@@ -218,9 +207,7 @@ void initialise_fluxes(fluxes *f) {
     f->rootretransp = 0.0;
     f->stemretransn = 0.0;
     f->stemretransp = 0.0;
-    f->branchretransn = 0.0;
-    f->branchretransp = 0.0;
-
+    
     /* C N & P Surface litter */
     f->surf_struct_litter = 0.0;
     f->surf_metab_litter = 0.0;
@@ -302,7 +289,6 @@ void initialise_fluxes(fluxes *f) {
     /* C allocated fracs  */
     f->alleaf = 0.0;
     f->alroot = 0.0;
-    f->albranch = 0.0;
     f->alstem = 0.0;
 
     /* Misc stuff */
@@ -327,9 +313,6 @@ void initialise_state(state *s) {
     s->activesoil = 2.53010543182;
     s->activesoiln = 0.833516379296;
     s->activesoilp = 0.04600192;          /* based on active soil pool C/P ratio of 55 from Parton et al., 1989, Ecology of arable land. */
-    s->branch = 14.5137000708;
-    s->branchn = 0.0442890661217;
-    s->branchp = 0.00580548;
     s->inorgn = 0.0274523714275;
     s->inorgp = 0.0205;
     s->inorgavlp = 0.096;               /* lab p + sorb p */

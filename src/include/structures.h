@@ -38,9 +38,6 @@ typedef struct {
     double activesoil;                  /* active C som pool (t/ha) */
     double activesoiln;                 /* active N som pool (t/ha) */
     double activesoilp;                 /* active P som pool (t/ha) */
-    double branch;                      /* branch c (t/ha) */
-    double branchn;                     /* branch n (t/ha) */
-    double branchp;                     /* branch p (t/ha) */
     double inorgn;                      /* Inorganic soil N pool - dynamic (t/ha) */
     double inorgp;                      /* Inorganic soil P pool - dynamic (t/ha) */
     double inorgavlp;                   /* Inorganic soil P pool - available mineral P = lab + sorbed (t/ha) */
@@ -92,9 +89,6 @@ typedef struct {
     double c_to_alloc_root;
     double n_to_alloc_root;
     double p_to_alloc_root;
-    double c_to_alloc_branch;
-    double n_to_alloc_branch;
-    double p_to_alloc_branch;
     double c_to_alloc_stem;
     double n_to_alloc_stemmob;
     double n_to_alloc_stemimm;
@@ -127,9 +121,6 @@ typedef struct {
     double actncmin;                        /* Active pool (=1/15) N:C of new SOM - when Nmin=Nmin0 [units: gN/gC]. Based on forest version of CENTURY (Parton et al. 1993), see Appendix, McMurtrie 2001, Tree Physiology. */
     double actpcmax;                        /* Active pool (=1/30) P:C ratio of new SOM - maximum [units: gP/gC]. Based on forest version of CENTURY (Parton et al. 1993) */
     double actpcmin;                        /* Active pool (=1/80) P:C of new SOM - when Pmin=Pmin0 [units: gP/gC]. Based on forest version of CENTURY (Parton et al. 1993) */
-    double bdecay;                          /* branch and large root turnover rate (1/yr) */
-    double bretrans;                        /* branch retranslocation coefficient for N and P */
-    double c_alloc_b;                       /* allocation to branches at branch n_crit and p_crit. */
     double c_alloc_f;                       /* allocation to leaves at leaf n_crit and p_crit. */
     double c_alloc_r;                       /* allocation to roots at root n_crit and p_crit. */
     double c_alloc_s;                       /* allocation to stem at zero stem n/c and p/c. */
@@ -161,7 +152,6 @@ typedef struct {
     double ligshoot;                        /* lignin-to-biomass ratio in leaf litter; Values from White et al. DBF = 0.18; ENF = 0.24l; GRASS = 0.09; Shrub = 0.15 - Value in smith et al. 2013 = 0.2, note subtly difference in eqn C9. */
     double liteffnc;
     double lue0;                            /* maximum LUE in kg C GJ-1 */
-    double ncbnewz;                         /* N alloc param: new branch N C at zero leaf N C */
     double ncmaxf;                          /* max N:C ratio of foliage in old stand, if the same as young=no effect */
     double nref;                            /* leaf nc for saturation of photosynthesis */
     double ncmaxr;                          /* max N:C ratio of roots */
@@ -182,7 +172,6 @@ typedef struct {
     double passncmin;                       /* Passive pool (=1/10) N:C of new SOM - when Nmin=Nmin0 [units: gN/gC]. Based on forest version of CENTURY (Parton et al. 1993), see Appendix, McMurtrie 2001, Tree Physiology. */
     double passpcmax;                       /* Passive pool (=1/20) P:C ratio of new SOM - maximum [units: gP/gC] */
     double passpcmin;                       /* Passive pool (=1/200) P:C of new SOM - when Pmin=Pmin0 [units: gP/gC] */
-    double pcbnewz;                         /* P alloc param: new branch P C at zero leaf P C */
     double pcmaxf;                          /* max P:C ratio of foliage in old stand, if the same as young=no effect */
     double pcmaxr;                          /* max P:C ratio of roots */
     double pcrfac;                          /* P:C of fine root prodp / P:C c of leaf prodp */
@@ -286,35 +275,29 @@ typedef struct {
     /* daily C production */
     double cpleaf;
     double cproot;
-    double cpbranch;
     double cpstem;
 
     /* daily N production */
     double npleaf;
     double nproot;
-    double npbranch;
     double npstemimm;
     double npstemmob;
 
     /* daily P production */
     double ppleaf;
     double pproot;
-    double ppbranch;
     double ppstemimm;
     double ppstemmob;
 
     /* dying stuff */
     double deadleaves;      /* Leaf litter C production (t/ha/yr) */
     double deadroots;       /* Root litter C production (t/ha/yr) */
-    double deadbranch;      /* Branch litter C production (t/ha/yr) */
     double deadstems;       /* Stem litter C production (t/ha/yr) */
     double deadleafn;       /* Leaf litter N production (t/ha/yr) */
     double deadrootn;       /* Root litter N production (t/ha/yr) */
-    double deadbranchn;     /* Branch litter N production (t/ha/yr) */
     double deadstemn;       /* Stem litter N production (t/ha/yr) */
     double deadleafp;       /* Leaf litter P production (t/ha/yr) */
     double deadrootp;       /* Root litter P production (t/ha/yr) */
-    double deadbranchp;     /* Branch litter P production (t/ha/yr) */
     double deadstemp;       /* Stem litter P production (t/ha/yr) */
 
     /* retranslocation */
@@ -324,8 +307,6 @@ typedef struct {
     double rootretransp;
     double stemretransn;
     double stemretransp;
-    double branchretransn;
-    double branchretransp;
 
 
     /* C, N & P Surface litter */
@@ -409,7 +390,6 @@ typedef struct {
     /* C allocated fracs  */
     double alleaf;             /* allocation to leaf */
     double alroot;             /* allocation to fine root */
-    double albranch;           /* allocation to branch */
     double alstem;             /* allocation to stems */
 
     /* Misc stuff */

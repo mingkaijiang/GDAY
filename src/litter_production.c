@@ -32,18 +32,15 @@ void calculate_litterfall(control *c, fluxes *f, params *p, state *s) {
     /* C litter production */
     f->deadroots = p->rdecay * s->root;
     f->deadstems = p->wdecay * s->stem;
-    f->deadbranch = p->bdecay * s->branch;
 
     f->deadleaves = p->fdecay * s->shoot;
     
     /* N litter production */
     f->deadleafn = f->deadleaves * ncflit;
-    f->deadbranchn = p->bdecay * s->branchn * (1.0 - p->bretrans);
-    
+
     /* P litter production */
     f->deadleafp = f->deadleaves * pcflit;
-    f->deadbranchp = p->bdecay * s->branchp * (1.0 - p->bretrans);
-    
+
     /* Assuming fraction is retranslocated before senescence, i.e. a fracion
        of nutrients is stored within the plant */
     f->deadrootn = f->deadroots * ncrlit;
