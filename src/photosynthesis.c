@@ -20,8 +20,6 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
     Modifies mate_C3_photosynthesis using a simplier approach 
     
     */
-    
-    // fprintf(stderr, "npp in simple photo 1 %f\n", f->npp);
     double lue_avg, conv1, conv2;
     
     /* Covert PAR units (umol PAR MJ-1) */
@@ -31,7 +29,7 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
     /* lue in umol C umol-1 PAR */
     lue_avg = lue_simplified(p, s, m->Ca);
     
-    /* absorbed photosynthetically active radiation (umol m-2 s-1) */
+    /* absorbed photosynthetically active radiation (umol m-2 m-1) */
     if (float_eq(s->lai, 0.0))
       f->apar = 0.0;
     else
@@ -49,11 +47,11 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
     
     f->gpp_gCm2 = f->npp_gCm2 / p->cue;
     
-    /* g C m-2 to tonnes hectare-1 yr-1 */
+    /* g C m-2 to tonnes hectare-1 m-1 */
     f->gpp = f->gpp_gCm2 * G_AS_TONNES / M2_AS_HA;
     f->npp = f->npp_gCm2 * G_AS_TONNES / M2_AS_HA;
     
-    /* save apar in MJ m-2 yr-1 */
+    /* save apar in MJ m-2 m-1 */
     f->apar *= UMOL_2_JOL * J_TO_MJ;
     
     /* add diagnostic statement if needed */
@@ -70,10 +68,6 @@ double lue_simplified(params *p, state *s, double co2) {
      * New LUE function replacing epsilon function for a simplified calculation
      * of LUE
      * 
-     * Calculations:
-     *   CaResp = 1.632 * (co2-60.9) / (co2+121.8)    ##RCO2
-     *   Nresp = min(df/Nref, 1)                      ##Rate-limiting effect of low N
-     *   return(LUE0 * CaResp * Nresp)
      * 
      * Parameters:
      * Nref: leaf N:C for saturation of photosynthesis   

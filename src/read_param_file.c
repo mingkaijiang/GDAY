@@ -288,8 +288,6 @@ int handler(char *section, char *name, char *value, control *c,
         s->shootn = atof(value);
     } else if (MATCH("state", "shootp")) {
         s->shootp = atof(value);
-    } else if (MATCH("state", "sla")) {
-        s->sla = atof(value);
     } else if (MATCH("state", "slowsoil")) {
         s->slowsoil = atof(value);
     } else if (MATCH("state", "slowsoiln")) {

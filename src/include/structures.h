@@ -62,7 +62,6 @@ typedef struct {
     double shoot;                       /* shoot c (t/ha) */
     double shootn;                      /* shoot n (t/ha) */
     double shootp;                      /* shoot p (t/ha) */
-    double sla;                         /* specific leaf area */
     double slowsoil;                    /* slow C som pool (t/ha) */
     double slowsoiln;                   /* slow N som pool (t/ha) */
     double slowsoilp;                   /* slow P som pool (t/ha) */

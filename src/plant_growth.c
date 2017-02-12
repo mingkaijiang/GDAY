@@ -82,11 +82,14 @@ void carbon_annual_production(control *c, fluxes *f, met *m, params *p, state *s
     /* fIPAR - the fraction of intercepted PAR = IPAR/PAR incident at the
        top of the canopy, accounting for partial closure based on Jackson
        and Palmer (1979). */
+    
+    double lue_avg, conv1, conv2;
+  
     if (s->lai > 0.0)
-        s->fipar = 1.0 - exp(-p->kext * s->lai );
+        s->fipar = 1.0 - exp(-p->kext * s->lai);
     else
         s->fipar = 0.0;
-    
+ 
     /* Estimate photosynthesis */
     simple_photosynthesis(c, f, m, p, s);
 
@@ -477,7 +480,7 @@ void carbon_allocation(control *c, fluxes *f, params *p, state *s,
         leaf N:C as a fraction of 'Ncmaxf' (max 1.0)
     */
     double days_left;
-    f->cpleaf = f->npp * f->alleaf;        // per yr
+    f->cpleaf = f->npp * f->alleaf;        
     f->cproot = f->npp * f->alroot;
     f->cpstem = f->npp * f->alstem;
 

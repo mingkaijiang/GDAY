@@ -394,9 +394,6 @@ int ohandler(char *section, char *name, char *value, control *c, params *p,
     } else if (MATCH("state", "shootp")) {
         fprintf(c->ofp, "shootp = %.10f\n", s->shootp);
         *match = TRUE;
-    } else if (MATCH("state", "sla")) {
-        fprintf(c->ofp, "sla = %.10f\n", s->sla);
-        *match = TRUE;
     } else if (MATCH("state", "slowsoil")) {
         fprintf(c->ofp, "slowsoil = %.10f\n", s->slowsoil);
         *match = TRUE;

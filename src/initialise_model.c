@@ -334,7 +334,6 @@ void initialise_state(state *s) {
     s->shoot = 4.37991243755;
     s->shootn = 0.0978837857406; 
     s->shootp = 0.008759825;            /* Based on leaf C:P ratio of 500 from Crous et al., 2015, Plant Soil */
-    s->sla = 4.4;
     s->slowsoil = 46.8769593608;
     s->slowsoiln = 2.90664959452;
     s->slowsoilp = 0.3232894;           /* based on slow SOM pool C/P ratio of 145 from Parton et al., 1989, Ecology of arable land. */
