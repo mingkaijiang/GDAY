@@ -298,16 +298,8 @@ int handler(char *section, char *name, char *value, control *c,
         s->stem = atof(value);
     } else if (MATCH("state", "stemn")) {
         s->stemn = atof(value);
-    } else if (MATCH("state", "stemnimm")) {
-        s->stemnimm = atof(value);
-    } else if (MATCH("state", "stemnmob")) {
-        s->stemnmob = atof(value);
     } else if (MATCH("state", "stemp")) {
         s->stemp = atof(value);
-    } else if (MATCH("state", "stempimm")) {
-        s->stempimm = atof(value);
-    } else if (MATCH("state", "stempmob")) {
-        s->stempmob = atof(value);
     } else if (MATCH("state", "structsoil")) {
         s->structsoil = atof(value);
     } else if (MATCH("state", "structsoiln")) {
@@ -405,18 +397,10 @@ int handler(char *section, char *name, char *value, control *c,
         p->pcrfac = atof(value);
     } else if (MATCH("params", "pdep_in")) {
       p->pdep_in = atof(value);
-    } else if (MATCH("params", "ncwimmz")) {
-        p->ncwimmz = atof(value);
     } else if (MATCH("params", "ncwnewz")) {
         p->ncwnewz = atof(value);
-    } else if (MATCH("params", "pcwimmz")) {
-        p->pcwimmz = atof(value);
     } else if (MATCH("params", "pcwnewz")) {
         p->pcwnewz = atof(value);
-    } else if (MATCH("params", "nf_min")) {
-        p->nf_min = atof(value);
-    } else if (MATCH("params", "pf_min")) {
-        p->pf_min = atof(value);
     } else if (MATCH("params", "nmin0")) {
         p->nmin0 = atof(value);
     } else if (MATCH("params", "nmincrit")) {

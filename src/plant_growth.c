@@ -22,8 +22,8 @@ void calc_annual_growth(control *c, fluxes *f,
 {
    double dummy=0.0;
    double nitfac, pitfac, npitfac;
-   double ncwimm, ncwnew;
-   double pcwimm, pcwnew;
+   double ncwnew;
+   double pcwnew;
 
     /* calculate annual GPP/NPP, respiration and update water balance */
     carbon_annual_production(c, f, m, p, s);
@@ -58,11 +58,9 @@ void calc_annual_growth(control *c, fluxes *f,
     carbon_allocation(c, f, p, s, npitfac);
 
     calculate_cnp_wood_ratios(c, p, s, npitfac, nitfac, pitfac,
-                              &ncwimm, &ncwnew, 
-                              &pcwimm, &pcwnew);
+                              &ncwnew, &pcwnew);
     
-    np_allocation(c, f, p, s, ncwimm, ncwnew,
-                              pcwimm, pcwnew);
+    np_allocation(c, f, p, s,ncwnew, pcwnew);
     
     update_plant_state(c, f, p, s);
 
@@ -105,8 +103,7 @@ void carbon_annual_production(control *c, fluxes *f, met *m, params *p, state *s
 
 void calculate_cnp_wood_ratios(control *c, params *p, state *s,
                                double npitfac, double nitfac, double pitfac,
-                               double *ncwimm, double *ncwnew,
-                               double *pcwimm, double *pcwnew) {
+                               double *ncwnew, double *pcwnew) {
     /* Estimate the N:C and P:C ratio in the stem. Option to vary
     the N:C and P:C ratio of the stem following Jeffreys (1999) or keep it a fixed
     fraction
@@ -122,12 +119,8 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
 
     Returns:
     --------
-    ncwimm : float
-        N:C ratio of immobile stem
     ncwnew : float
         N:C ratio of mobile stem
-    pcwimm : float
-        P:C ratio of immobile stem
     pcwnew : float
         P:C ratio of mobile stem
 
@@ -143,32 +136,20 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
         /* fixed N:C in the stemwood */
         if (c->fixed_stem_nc) {
           
-            /* n:c ratio of stemwood - immobile pool and new ring */
-            *ncwimm = nitfac * p->ncwimmz;
-
             /* New stem ring N:C at critical leaf N:C (mobile) */
             *ncwnew = nitfac * p->ncwnewz;
 
         } else {
-        
-            *ncwimm = s->shootnc * p->ncwimmz * nitfac; 
-
             *ncwnew = s->shootnc * p->ncwnewz * nitfac;
         }
     } else {
         /* fixed N:C in the stemwood */
         if (c->fixed_stem_nc) {
         
-            /* n:c ratio of stemwood - immobile pool and new ring */
-            *ncwimm = npitfac * p->ncwimmz;
-        
             /* New stem ring N:C at critical leaf N:C (mobile) */
             *ncwnew = npitfac * p->ncwnewz;
         
         } else {
-           
-            *ncwimm = s->shootnc * p->ncwimmz * nitfac; 
-          
             *ncwnew = s->shootnc * p->ncwnewz * nitfac;
         }
     }
@@ -178,27 +159,18 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
         /* fixed P:C in the stemwood */
         if (c->fixed_stem_pc) {
         
-          *pcwimm = pitfac * p->pcwimmz;
-        
           *pcwnew = pitfac * p->pcwnewz;
         
         } else {
-        
-          *pcwimm = s->shootpc * p->pcwimmz * pitfac; 
-         
           *pcwnew = s->shootpc * p->pcwnewz * pitfac;
         }
     } else {
       /* fixed P:C in the stemwood */
         if (c->fixed_stem_pc) {
         
-          *pcwimm = npitfac * p->pcwimmz;
-
           *pcwnew = npitfac * p->pcwnewz;
         
         } else {
-          *pcwimm = s->shootpc * p->pcwimmz * nitfac; 
-        
           *pcwnew = s->shootpc * p->pcwnewz * nitfac;
         }
     }
@@ -207,8 +179,7 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
 }
 
 void np_allocation(control *c, fluxes *f, params *p, state *s, 
-                  double ncwimm, double ncwnew, 
-                  double pcwimm, double pcwnew) {
+                   double ncwnew, double pcwnew) {
     /*
         Nitrogen and phosphorus distribution - allocate available N and
         P (mineral) through system. N and P is first allocated to the woody
@@ -221,12 +192,8 @@ void np_allocation(control *c, fluxes *f, params *p, state *s,
 
         Parameters:
         -----------
-        ncwimm : float
-            N:C ratio of immobile stem
         ncwnew : float
             N:C ratio of mobile stem
-        pcwimm : float
-            P:C ratio of immobile stem
         pcwnew : float
             P:C ratio of mobile stem
         fdecay : float
@@ -261,31 +228,26 @@ void np_allocation(control *c, fluxes *f, params *p, state *s,
     ptot = MAX(0.0, f->puptake + f->retransp);
     
     /* allocate N to pools with fixed N:C ratios */
-    /* N flux into new ring (immobile component -> structural components) */
-    f->npstemimm = f->npp * f->alstem * ncwimm;
-    
-    /* N flux into new ring (mobile component -> can be retrans for new
-    woody tissue) */
-    f->npstemmob = f->npp * f->alstem * (ncwnew - ncwimm);
+    /* N flux into new ring */
+    f->npstem = f->npp * f->alstem * ncwnew;
 
     /* allocate P to pools with fixed P:C ratios */
-    f->ppstemimm = f->npp * f->alstem * pcwimm;
-    f->ppstemmob = f->npp * f->alstem * (pcwnew - pcwimm);
+    f->ppstem = f->npp * f->alstem * pcwnew;
 
     /* If we have allocated more N than we have avail, cut back C prodn */
-    arg = f->npstemimm + f->npstemmob;
+    arg = f->npstem;
     if (arg > ntot && c->fixleafnc == FALSE && c->ncycle) {
-      cut_back_production(c, f, p, s, ntot, ncwimm, ncwnew);
+      cut_back_production(c, f, p, s, ntot, ncwnew);
     }
     
     /* If we have allocated more P than we have avail, cut back C prodn */
-    arg = f->ppstemimm + f->ppstemmob;
+    arg = f->ppstem;
     if (arg > ptot && c->fixleafpc == FALSE && c->pcycle) {
-      cut_back_production(c, f, p, s, ptot, pcwimm, pcwnew);
+      cut_back_production(c, f, p, s, ptot, pcwnew);
     }
     
     /* Nitrogen reallocation to flexible-ratio pools */
-    ntot -= f->npstemimm + f->npstemmob;
+    ntot -= f->npstem;
     ntot = MAX(0.0, ntot);
     
     /* allocate remaining N to flexible-ratio pools */
@@ -293,7 +255,7 @@ void np_allocation(control *c, fluxes *f, params *p, state *s,
     f->nproot = ntot - f->npleaf;
     
     /* Phosphorus reallocation to flexible-ratio pools */
-    ptot -= f->ppstemimm + f->ppstemmob;
+    ptot -= f->ppstem;
     ptot = MAX(0.0, ptot);
     
     /* allocate remaining P to flexible-ratio pools */
@@ -304,10 +266,10 @@ void np_allocation(control *c, fluxes *f, params *p, state *s,
 }
 
 void cut_back_production(control *c, fluxes *f, params *p, state *s,
-                        double tot, double xcwimm, double xcwnew) {
+                        double tot, double xcwnew) {
 
     double lai_inc, conv;
-    double pcwimm, pcwnew;
+    double pcwnew;
     /* default is we don't need to recalculate the water balance,
        however if we cut back on NPP due to available N and P below then we do
        need to do this */
@@ -325,7 +287,7 @@ void cut_back_production(control *c, fluxes *f, params *p, state *s,
                    f->deadleaves * s->lai / s->shoot);
     }
 
-    f->npp *= tot / (f->npstemimm + f->npstemmob);
+    f->npp *= tot / f->npstem;
     
     /* add diagnostic statement if needed */
     if (c->diagnosis) {
@@ -340,11 +302,9 @@ void cut_back_production(control *c, fluxes *f, params *p, state *s,
 
 
     if (c->pcycle) {
-        f->ppstemimm = f->npp * f->alstem * xcwimm;
-        f->ppstemmob = f->npp * f->alstem * (xcwnew - xcwimm);
+        f->ppstem = f->npp * f->alstem * xcwnew;
     } else {
-        f->npstemimm = f->npp * f->alstem * xcwimm;
-        f->npstemmob = f->npp * f->alstem * (xcwnew - xcwimm);
+        f->npstem = f->npp * f->alstem * xcwnew;
     }
 
     /* Also need to recalculate GPP and thus Ra and return a flag
@@ -477,17 +437,11 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s) {
     
     s->rootn += f->nproot - p->rdecay * s->rootn;
     
-    s->stemnimm += f->npstemimm - p->wdecay * s->stemnimm;
-    s->stemnmob += (f->npstemmob - p->wdecay * s->stemnmob - p->retransmob * s->stemnmob);
-    s->stemn = s->stemnimm + s->stemnmob;
+    s->stemn += f->npstem - p->wdecay * s->stemn;
 
     s->rootp += f->pproot - p->rdecay * s->rootp;
 
-    s->stempimm += f->ppstemimm - p->wdecay * s->stempimm;
-
-    s->stempmob += (f->ppstemmob - p->wdecay * s->stempmob - p->retransmob * s->stempmob);
-    
-    s->stemp = s->stempimm + s->stempmob;
+    s->stemp += f->ppstem - p->wdecay * s->stemp;
 
     /*
      =============================
@@ -497,6 +451,73 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s) {
     
     /* If foliage or root N/C exceeds its max, then N uptake is cut back
     Similarly, of foliage or root P/C exceeds max, then P uptake is cut back */
+    
+    /* maximum leaf n:c and p:c ratios is function of stand age*/
+    ncmaxf = p->ncmaxf;
+    pcmaxf = p->pcmaxf;
+    
+    extrasn = 0.0;
+    
+    if (s->lai > 0.0) {
+      
+      if (s->shootn > (s->shoot * ncmaxf)) {
+        extrasn = s->shootn - s->shoot * ncmaxf;
+        
+        /* Ensure N uptake cannot be reduced below zero. */
+        if (extrasn >  f->nuptake)
+          extrasn = f->nuptake;
+        
+        s->shootn -= extrasn;
+        //f->nuptake -= extrasn;
+      }
+    }
+    
+    extrasp = 0.0;
+    if (s->lai > 0.0) {
+      
+      if (s->shootp > (s->shoot * pcmaxf)) {
+        extrasp = s->shootp - s->shoot * pcmaxf;
+        
+        /* Ensure P uptake cannot be reduced below zero. */
+        if (extrasp >  f->puptake)
+          extrasp = f->puptake;
+        
+        s->shootp -= extrasp;
+        //f->puptake -= extrasp;
+      }
+    }
+    
+    /* if root N:C ratio exceeds its max, then nitrogen uptake is cut
+    back. n.b. new ring n/c max is already set because it is related
+    to leaf n:c */
+    
+    /* max root n:c */
+    ncmaxr = ncmaxf * p->ncrfac;
+    extrarn = 0.0;
+    if (s->rootn > (s->root * ncmaxr)) {
+      extrarn = s->rootn - s->root * ncmaxr;
+      
+      /* Ensure N uptake cannot be reduced below zero. */
+      if ((extrasn + extrarn) > f->nuptake)
+        extrarn = f->nuptake - extrasn;
+      
+      s->rootn -= extrarn;
+      f->nuptake -= (extrarn+extrasn);
+    }
+    
+    /* max root p:c */
+    pcmaxr = pcmaxf * p->pcrfac;
+    extrarp = 0.0;
+    if (s->rootp > (s->root * pcmaxr)) {
+      extrarp = s->rootp - s->root * pcmaxr;
+      
+      /* Ensure P uptake cannot be reduced below zero. */
+      if ((extrasp + extrarp) > f->puptake)
+        extrarp = f->puptake - extrasp;
+      
+      s->rootp -= extrarp;
+      f->puptake -= (extrarp + extrasp);
+    }
     
     return;
 }
@@ -536,38 +557,9 @@ void precision_control(fluxes *f, state *s) {
         s->stem = 0.001;
         s->stemn = 0.00004;
         s->stemp = 0.000003;
-        s->stemnimm = 0.00004;
-        s->stemnmob = 0.0;
-        s->stempimm = 0.000003;
-        s->stempmob = 0.0;
     }
 
-    /* need separate one as this will become very small if there is no
-       mobile stem N/P */
     
-    /*
-    if (s->stemnmob < tolerance) {
-        f->deadstemn += s->stemnmob;
-        s->stemnmob = 0.0;
-    }
-
-    if (s->stemnimm < tolerance) {
-        f->deadstemn += s->stemnimm;
-        s->stemnimm = 0.00004;
-    }
-
-    if (s->stempmob < tolerance) {
-      f->deadstemp += s->stempmob;
-      s->stempmob = 0.0;
-    }
-
-    if (s->stempimm < tolerance) {
-      f->deadstemp += s->stempimm;
-      s->stempimm = 0.000003;
-
-    }
-
-     */
     return;
 }
 
@@ -593,8 +585,7 @@ double nitrogen_retrans(control *c, fluxes *f, params *p, state *s) {
 
     leafretransn = p->fretransn * p->fdecay * s->shootn;
     rootretransn = p->rretrans * p->rdecay * s->rootn;
-    stemretransn = (p->wretrans * p->wdecay * s->stemnmob + p->retransmob *
-      s->stemnmob);
+    stemretransn = (p->wretrans * p->wdecay * s->stemn);
     
     /* store for NCEAS output */
     f->leafretransn = leafretransn;
@@ -625,8 +616,7 @@ double phosphorus_retrans(control *c, fluxes *f, params *p, state *s) {
 
     leafretransp = p->fretransp * p->fdecay * s->shootp;
     rootretransp = p->rretrans * p->rdecay * s->rootp;
-    stemretransp = (p->wretrans * p->wdecay * s->stempmob + p->retransmob *
-      s->stempmob);
+    stemretransp = (p->wretrans * p->wdecay * s->stemp);
     
 
     /* store for NCEAS output */

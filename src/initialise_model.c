@@ -82,9 +82,7 @@ void initialise_params(params *p) {
     p->nref = 0.04;
     p->ncmaxr = 0.03;
     p->ncrfac = 0.8;
-    p->ncwimmz = 0.003;
     p->ncwnewz = 0.003;
-    p->nf_min = 0.005;
     p->nmin0 = 0.0;
     p->nmincrit = 2.0;
     p->nuptakez = 0.0;
@@ -99,10 +97,8 @@ void initialise_params(params *p) {
     p->pcmaxf = 0.004;       /* guess value */
     p->pcmaxr = 0.004;       /* guess value */
     p->pcrfac = 0.8;
-    p->pcwimmz = 0.0003;
     p->pcwnewz = 0.0003;
     p->pdep_in = 0.0004;
-    p->pf_min = 0.0002;      /* based on P:C ratio of 5000, guess value */
     p->pmin0 = 0.0;
     p->pmincrit = 2.0;       /* Based on CENTURY VARAT1(2,3) = 2 value */
     p->prateloss = 0.005;    
@@ -180,14 +176,12 @@ void initialise_fluxes(fluxes *f) {
     /* Annual N production */
     f->npleaf = 0.0;
     f->nproot = 0.0;
-    f->npstemimm = 0.0;
-    f->npstemmob = 0.0;
-    
+    f->npstem = 0.0;
+
     /* Annual P production */
     f->ppleaf = 0.0;
     f->pproot = 0.0;
-    f->ppstemimm = 0.0;
-    f->ppstemmob = 0.0;
+    f->ppstem = 0.0;
 
     /* dying stuff */
     f->deadleaves = 0.0;   /* Leaf litter C production (t/ha/yr) */
@@ -339,11 +333,7 @@ void initialise_state(state *s) {
     s->slowsoilp = 0.3232894;           /* based on slow SOM pool C/P ratio of 145 from Parton et al., 1989, Ecology of arable land. */
     s->stem = 87.6580936643;
     s->stemn = 0.263722246902;
-    s->stemnimm = 0.263336697464;
-    s->stemnmob = 0.00038554943772;
     s->stemp = 0.02921933;              /* Yang et al. 2016, Biogeosciences, Table S1, wood C:P = 3000 */
-    s->stempimm = 0.02921933;           
-    s->stempmob = 0.0;        
     s->structsoil = 0.917128200367;
     s->structsoiln = 0.00611418800245;
     s->structsoilp = 0.001834256;       /* based on structural pool C/P ratio of 500 from Parton et al., 1989, Ecology of arable land. */

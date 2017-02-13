@@ -67,8 +67,8 @@ void write_output_header(control *c, params *p, FILE **fp) {
 
     /* C, N and P growth */
     fprintf(*fp, "cpleaf,cpstem,cproot,");
-    fprintf(*fp, "npleaf,npstemimm,npstemmob,nproot,");
-    fprintf(*fp, "ppleaf,ppstemimm,ppstemmob,pproot,");
+    fprintf(*fp, "npleaf,npstem,nproot,");
+    fprintf(*fp, "ppleaf,ppstem,pproot,");
 
 
     /* N stuff */
@@ -170,10 +170,10 @@ void write_annual_outputs_ascii(control *c, fluxes *f, state *s, int year, int m
     /* C N and P growth */
     fprintf(c->ofp, "%.10f,%.10f,%.10f,",
                     f->cpleaf,f->cpstem,f->cproot);
-    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,",
-                    f->npleaf,f->npstemimm,f->npstemmob,f->nproot);
-    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,",
-                    f->ppleaf,f->ppstemimm,f->ppstemmob,f->pproot);
+    fprintf(c->ofp, "%.10f,%.10f,%.10f,",
+                    f->npleaf,f->npstem,f->nproot);
+    fprintf(c->ofp, "%.10f,%.10f,%.10f,",
+                    f->ppleaf,f->ppstem,f->pproot);
 
     /* N stuff */
     fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,%.10f,",
@@ -409,20 +409,8 @@ int ohandler(char *section, char *name, char *value, control *c, params *p,
     } else if (MATCH("state", "stemn")) {
         fprintf(c->ofp, "stemn = %.10f\n", s->stemn);
         *match = TRUE;
-    } else if (MATCH("state", "stemnimm")) {
-        fprintf(c->ofp, "stemnimm = %.10f\n", s->stemnimm);
-        *match = TRUE;
-    } else if (MATCH("state", "stemnmob")) {
-        fprintf(c->ofp, "stemnmob = %.10f\n", s->stemnmob);
-        *match = TRUE;
     } else if (MATCH("state", "stemp")) {
         fprintf(c->ofp, "stemp = %.10f\n", s->stemp);
-        *match = TRUE;
-    } else if (MATCH("state", "stempimm")) {
-        fprintf(c->ofp, "stempimm = %.10f\n", s->stempimm);
-        *match = TRUE;
-    } else if (MATCH("state", "stempmob")) {
-        fprintf(c->ofp, "stempmob = %.10f\n", s->stempmob);
         *match = TRUE;
     } else if (MATCH("state", "structsoil")) {
         fprintf(c->ofp, "structsoil = %.10f\n", s->structsoil);

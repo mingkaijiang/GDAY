@@ -22,12 +22,11 @@ void    precision_control(fluxes *, state *);
 void    carbon_annual_production(control *, fluxes *, met *m, params *, state *);
 
 void    calculate_cnp_wood_ratios(control *c, params *, state *, double, double,
-                                  double, double *, 
-                                  double *, double *,double *);
+                                  double, double *, double *);
 
 /* N stuff */
 void    np_allocation(control *c, fluxes *, params *, state *, double,
-                     double, double, double);
+                     double);
 double calculate_nuptake(control *, params *, state *);
 
 double nitrogen_retrans(control *, fluxes *, params *, state *);
@@ -38,6 +37,6 @@ double calculate_puptake(control *, params *, state *, fluxes *);
 double phosphorus_retrans(control *, fluxes *, params *, state *);
 
 void cut_back_production(control *, fluxes *, params *, state *, double,
-                        double, double);
+                        double);
 
 #endif /* PLANT_GROWTH */

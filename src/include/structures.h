@@ -67,11 +67,7 @@ typedef struct {
     double slowsoilp;                   /* slow P som pool (t/ha) */
     double stem;
     double stemn;                       /* Stem N (t/ha) = stemnimm + stemnmob */
-    double stemnimm;
-    double stemnmob;
     double stemp;                       /* Stem P (t/ha) = stempimm + stempmob */
-    double stempimm;
-    double stempmob;
     double structsoil;                  /* soil structural c (t/ha) */
     double structsoiln;                 /* soil structural n (t/ha) */
     double structsoilp;                 /* soil structural p (t/ha) */
@@ -82,18 +78,6 @@ typedef struct {
     double rootnc;                      /* root pn ratio */
     double shootpc;                     /* shoot pc ratio */
     double rootpc;                      /* root pc ratio */
-    double c_to_alloc_shoot;
-    double n_to_alloc_shoot;
-    double p_to_alloc_shoot;
-    double c_to_alloc_root;
-    double n_to_alloc_root;
-    double p_to_alloc_root;
-    double c_to_alloc_stem;
-    double n_to_alloc_stemmob;
-    double n_to_alloc_stemimm;
-    double p_to_alloc_stemmob;
-    double p_to_alloc_stemimm;
-    double anpp;                    /* aboveground NPP */
     double litterc;                 /* litter carbon */
     double littern;                 /* litter nitrogen */
     double litterp;                 /* litter phosphorus */
@@ -155,11 +139,9 @@ typedef struct {
     double nref;                            /* leaf nc for saturation of photosynthesis */
     double ncmaxr;                          /* max N:C ratio of roots */
     double ncrfac;                          /* N:C of fine root prodn / N:C of leaf prodn */
-    double ncwimmz;                         /* N alloc param: Immobile stem N C at zero leaf N C */
     double ncwnewz;                         /* N alloc param: New stem ring N:C at zero leaf N:C (mobile) */
     double ndep_in;                         /* annual version ndep t/ha/yr */
     double nfix_in;                         /* annual version nfix t/ha/yr */
-    double nf_min;                          /* leaf N:C minimum N concentration which allows productivity */
     double nmin0;                           /* mineral N pool corresponding to Actnc0,etc (g/m2) */
     double nmincrit;                        /* Critical mineral N pool at max soil N:C (g/m2) (Parton et al 1993, McMurtrie et al 2001). */
     double nuptakez;                        /* constant N uptake per year (1/yr) */
@@ -174,10 +156,8 @@ typedef struct {
     double pcmaxf;                          /* max P:C ratio of foliage in old stand, if the same as young=no effect */
     double pcmaxr;                          /* max P:C ratio of roots */
     double pcrfac;                          /* P:C of fine root prodp / P:C c of leaf prodp */
-    double pcwimmz;                         /* P alloc param: Immobile stem P C at zero leaf P C */
     double pcwnewz;                         /* P alloc param: New stem ring P:C at zero leaf P:C (mobile) */
     double pdep_in;                         /* Annual version p deposition t/ha/yr */
-    double pf_min;                          /* leaf P:C minimum P concentration which allows productivity */
     double pmin0;                           /* mineral P pool corresponding to Actpc0,etc (g/m2) */
     double pmincrit;                        /* Critical mineral P pool at max soil P:C (g/m2) */
     double prateloss;                       /* Rate of P loss from mineral P pool (/yr), Ref Wang et al., 2007, GB1018 */
@@ -279,14 +259,12 @@ typedef struct {
     /* daily N production */
     double npleaf;
     double nproot;
-    double npstemimm;
-    double npstemmob;
+    double npstem;
 
     /* daily P production */
     double ppleaf;
     double pproot;
-    double ppstemimm;
-    double ppstemmob;
+    double ppstem;
 
     /* dying stuff */
     double deadleaves;      /* Leaf litter C production (t/ha/yr) */

@@ -406,8 +406,6 @@ void reset_all_n_pools_and_fluxes(fluxes *f, state *s) {
     */
     s->shootn = 0.0;
     s->rootn = 0.0;
-    s->stemnimm = 0.0;
-    s->stemnmob = 0.0;
     s->structsurfn = 0.0;
     s->metabsurfn = 0.0;
     s->structsoiln = 0.0;
@@ -417,8 +415,6 @@ void reset_all_n_pools_and_fluxes(fluxes *f, state *s) {
     s->passivesoiln = 0.0;
     s->inorgn = 0.0;
     s->stemn = 0.0;
-    s->stemnimm = 0.0;
-    s->stemnmob = 0.0;
 
     /*
     ** Fluxes
@@ -432,8 +428,7 @@ void reset_all_n_pools_and_fluxes(fluxes *f, state *s) {
     f->nmineralisation = 0.0;
     f->npleaf = 0.0;
     f->nproot = 0.0;
-    f->npstemimm = 0.0;
-    f->npstemmob = 0.0;
+    f->npstem = 0.0;
     f->deadleafn = 0.0;
     f->deadrootn = 0.0;
     f->deadstemn = 0.0;
@@ -471,8 +466,6 @@ void reset_all_p_pools_and_fluxes(fluxes *f, state *s) {
     */
     s->shootp = 0.0;
     s->rootp = 0.0;
-    s->stempimm = 0.0;
-    s->stempmob = 0.0;
     s->structsurfp = 0.0;
     s->metabsurfp = 0.0;
     s->structsoilp = 0.0;
@@ -486,8 +479,6 @@ void reset_all_p_pools_and_fluxes(fluxes *f, state *s) {
     s->inorgoccp = 0.0;
     s->inorgparp = 0.0;
     s->stemp = 0.0;
-    s->stempimm = 0.0;
-    s->stempmob = 0.0;
 
     /*
     ** Fluxes
@@ -501,8 +492,7 @@ void reset_all_p_pools_and_fluxes(fluxes *f, state *s) {
     f->pmineralisation = 0.0;
     f->ppleaf = 0.0;
     f->pproot = 0.0;
-    f->ppstemimm = 0.0;
-    f->ppstemmob = 0.0;
+    f->ppstem = 0.0;
     f->deadleafp = 0.0;
     f->deadrootp = 0.0;
     f->deadstemp = 0.0;

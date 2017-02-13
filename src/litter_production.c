@@ -47,13 +47,11 @@ void calculate_litterfall(control *c, fluxes *f, params *p, state *s) {
 
     f->deadrootp = f->deadroots * pcrlit;
 
-    /* N in stemwood litter - only mobile n is retranslocated */
-    f->deadstemn = p->wdecay * (s->stemnimm + s->stemnmob * \
-    (1.0 - p->wretrans));
+    /* N in stemwood litter */
+    f->deadstemn = p->wdecay * (s->stemn * (1.0 - p->wretrans));
 
     /* P in stemwood litter - only mobile p is retranslocated */
-    f->deadstemp = p->wdecay * (s->stempimm + s->stempmob * \
-    (1.0 - p->wretrans));
+    f->deadstemp = p->wdecay * (s->stemp * (1.0 - p->wretrans));
         
     return;
 
