@@ -230,9 +230,7 @@ int handler(char *section, char *name, char *value, control *c,
             fprintf(stderr, "Unknown print option: %s\n", temp);
             exit(EXIT_FAILURE);
         }
-    } else if (MATCH("control", "use_eff_nc")) {
-        c->use_eff_nc = atoi(value);
-    }
+    } 
 
 
     /*
@@ -373,8 +371,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->ligroot = atof(value);
     } else if (MATCH("params", "ligshoot")) {
         p->ligshoot = atof(value);
-    } else if (MATCH("params", "liteffnc")) {
-        p->liteffnc = atof(value);
     } else if (MATCH("params", "ndep_in")) {
       p->ndep_in = atof(value);
     } else if (MATCH("params", "nfix_in")) {

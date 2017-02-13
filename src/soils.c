@@ -204,14 +204,10 @@ double ratio_of_litternc_to_live_leafnc(control *c, fluxes *f, params *p) {
     */
     double nc_leaf_litter;
 
-    if (c->use_eff_nc){
-        nc_leaf_litter = p->liteffnc * (1.0 - p->fretransn);
+    if (float_eq(f->deadleaves, 0.0)){
+      nc_leaf_litter = 0.0;
     } else {
-        if (float_eq(f->deadleaves, 0.0)){
-            nc_leaf_litter = 0.0;
-        } else {
-            nc_leaf_litter = f->deadleafn / f->deadleaves;
-        }
+      nc_leaf_litter = f->deadleafn / f->deadleaves;
     }
     
     return (nc_leaf_litter);
@@ -228,16 +224,12 @@ double ratio_of_litternc_to_live_rootnc(control *c, fluxes *f, params *p) {
     */
     double nc_root_litter;
 
-    if (c->use_eff_nc){
-        nc_root_litter = p->liteffnc * p->ncrfac;
-    } else {
-        if (float_eq(f->deadroots, 0.0)){
-            nc_root_litter = 0.0;
-        } else{
-            nc_root_litter = f->deadrootn / f->deadroots;
-        }
+    if (float_eq(f->deadroots, 0.0)){
+      nc_root_litter = 0.0;
+    } else{
+      nc_root_litter = f->deadrootn / f->deadroots;
     }
-
+  
     return (nc_root_litter);
 }
 

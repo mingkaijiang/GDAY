@@ -20,8 +20,6 @@
 void calc_annual_growth(control *c, fluxes *f, 
                      met *m, nrutil *nr, params *p, state *s)
 {
-   double dummy=0.0;
-   double nitfac, pitfac, npitfac;
    double ncwnew;
    double pcwnew;
 
@@ -30,35 +28,15 @@ void calc_annual_growth(control *c, fluxes *f,
     
     f->npp_photo = f->npp;
     f->gpp_photo = f->gpp;
-    
-    // leaf N:C as a fraction of Ncmaxyoung, i.e. the max N:C ratio of
-    //foliage in young stand, and leaf P:C as a fraction of Pcmaxyoung
-    //nitfac = MIN(1.0, s->shootnc / p->ncmaxf);
-    //pitfac = MIN(1.0, s->shootpc / p->pcmaxf);
-    
-    /* add diagnostic statement if needed */
-    if (c->diagnosis) {
-    }
-    
-    /* checking for pcycle control parameter */
-    //if (c->pcycle == TRUE) {
-    //    npitfac = MIN(nitfac, pitfac);
-    //} else {
-    //    npitfac = nitfac;
-    //}
-    nitfac = 1.0;
-    pitfac = 1.0;
-    npitfac = 1.0;
 
     /* figure out the C allocation fractions */
     /* annual allocation ...*/
-    calc_carbon_allocation_fracs(c, f, p, s, npitfac);
+    calc_carbon_allocation_fracs(c, f, p, s);
 
     /* Distribute new C, N and P through the system */
-    carbon_allocation(c, f, p, s, npitfac);
+    carbon_allocation(c, f, p, s);
 
-    calculate_cnp_wood_ratios(c, p, s, npitfac, nitfac, pitfac,
-                              &ncwnew, &pcwnew);
+    calculate_cnp_wood_ratios(c, p, s, &ncwnew, &pcwnew);
     
     np_allocation(c, f, p, s,ncwnew, pcwnew);
     
@@ -102,7 +80,6 @@ void carbon_annual_production(control *c, fluxes *f, met *m, params *p, state *s
 }
 
 void calculate_cnp_wood_ratios(control *c, params *p, state *s,
-                               double npitfac, double nitfac, double pitfac,
                                double *ncwnew, double *pcwnew) {
     /* Estimate the N:C and P:C ratio in the stem. Option to vary
     the N:C and P:C ratio of the stem following Jeffreys (1999) or keep it a fixed
@@ -131,48 +108,23 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
       atmospheric carbon dioxide. PhD.
     */
 
-    /* calculate N:C ratios */
-    if (nitfac < npitfac) {
-        /* fixed N:C in the stemwood */
-        if (c->fixed_stem_nc) {
-          
-            /* New stem ring N:C at critical leaf N:C (mobile) */
-            *ncwnew = nitfac * p->ncwnewz;
-
-        } else {
-            *ncwnew = s->shootnc * p->ncwnewz * nitfac;
-        }
+    /* fixed N:C in the stemwood */
+    if (c->fixed_stem_nc) {
+      
+      /* New stem ring N:C at critical leaf N:C (mobile) */
+      *ncwnew = p->ncwnewz;
+      
     } else {
-        /* fixed N:C in the stemwood */
-        if (c->fixed_stem_nc) {
-        
-            /* New stem ring N:C at critical leaf N:C (mobile) */
-            *ncwnew = npitfac * p->ncwnewz;
-        
-        } else {
-            *ncwnew = s->shootnc * p->ncwnewz * nitfac;
-        }
+      *ncwnew = s->shootnc * p->ncwnewz;
     }
 
-    /* calculate P:C ratios */
-    if (pitfac < npitfac) {
-        /* fixed P:C in the stemwood */
-        if (c->fixed_stem_pc) {
-        
-          *pcwnew = pitfac * p->pcwnewz;
-        
-        } else {
-          *pcwnew = s->shootpc * p->pcwnewz * pitfac;
-        }
+    /* fixed P:C in the stemwood */
+    if (c->fixed_stem_pc) {
+      
+      *pcwnew = p->pcwnewz;
+      
     } else {
-      /* fixed P:C in the stemwood */
-        if (c->fixed_stem_pc) {
-        
-          *pcwnew = npitfac * p->pcwnewz;
-        
-        } else {
-          *pcwnew = s->shootpc * p->pcwnewz * nitfac;
-        }
+      *pcwnew = s->shootpc * p->pcwnewz;
     }
 
     return;
@@ -233,7 +185,7 @@ void np_allocation(control *c, fluxes *f, params *p, state *s,
 
     /* allocate P to pools with fixed P:C ratios */
     f->ppstem = f->npp * f->alstem * pcwnew;
-
+    
     /* If we have allocated more N than we have avail, cut back C prodn */
     arg = f->npstem;
     if (arg > ntot && c->fixleafnc == FALSE && c->ncycle) {
@@ -300,7 +252,6 @@ void cut_back_production(control *c, fluxes *f, params *p, state *s,
     f->cpstem = f->npp * f->alstem;
 
 
-
     if (c->pcycle) {
         f->ppstem = f->npp * f->alstem * xcwnew;
     } else {
@@ -336,8 +287,7 @@ void cut_back_production(control *c, fluxes *f, params *p, state *s,
     return;
 }
 
-void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
-                                  double npitfac) {
+void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s) {
     /* Carbon allocation fractions to move photosynthate through the plant.
 
     Parameters:
@@ -371,16 +321,10 @@ void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
     /* Total allocation should be one, if not print warning */
     total_alloc = f->alroot + f->alleaf + f->alstem;
     
-    /* add diagnostic statement if needed */
-    if (c->diagnosis) {
-    }
-    
-    
     return;
 }
 
-void carbon_allocation(control *c, fluxes *f, params *p, state *s,
-                       double npitfac) {
+void carbon_allocation(control *c, fluxes *f, params *p, state *s) {
     /* C distribution - allocate available C through system
 
     Parameters:
@@ -388,7 +332,6 @@ void carbon_allocation(control *c, fluxes *f, params *p, state *s,
     npitfac : float
         leaf N:C as a fraction of 'Ncmaxf' (max 1.0)
     */
-    double days_left;
     f->cpleaf = f->npp * f->alleaf;        
     f->cproot = f->npp * f->alroot;
     f->cpstem = f->npp * f->alstem;

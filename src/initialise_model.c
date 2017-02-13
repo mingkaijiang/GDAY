@@ -26,7 +26,6 @@ void initialise_control(control *c) {
     c->nuptake_model = 1;           /* 0=constant uptake, 1=func of N inorgn, 2=depends on rate of soil N availability */
     c->puptake_model = 1;           /* 0=constant uptake, 1=func of P inorgp, 2=depends on rate of soil P availability */
     c->print_options = ANNUAL;      /* ANNUAL=every timestep, END=end of run */
-    c->use_eff_nc = 0;              /* use constant leaf n:c for  metfrac s */
     c->spin_up = FALSE;             /* Spin up to a steady state? If False it just runs the model */
 
     /* Internal calculated */
@@ -74,7 +73,6 @@ void initialise_params(params *p) {
     p->krp = 0.01;        /* Wang et al. 2007 Global Biogeochemical Cycles, Kp Michaelis-Menten constant for plant P uptake [g P m-2] */
     p->ligroot = 0.22;
     p->ligshoot = 0.24;
-    p->liteffnc = 0.0;     
     p->ndep_in = 0.001;
     p->nfix_in = 0.001;
     p->lue0 = 1.4;                /* maximum LUE in kg C GJ-1 */
@@ -156,7 +154,6 @@ void initialise_fluxes(fluxes *f) {
     f->ngross = 0.0;                /* N gross mineralisation */
     f->nimmob = 0.0;                /* N immobilisation in SOM */
     f->nlittrelease = 0.0;          /* N rel litter = struct + metab */
-    f->activelossf = 0.0;           /* frac of active C -> CO2 */
     f->nmineralisation = 0.0;
 
     /* P fluxes */

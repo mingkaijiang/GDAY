@@ -23,7 +23,6 @@ typedef struct {
     int   nuptake_model;
     int   puptake_model;
     int   print_options;
-    int   use_eff_nc;
     int   num_months;
     int   total_num_months;
     char  git_code_ver[STRING_LENGTH];
@@ -133,7 +132,6 @@ typedef struct {
     double krp;                             /* P uptake coefficent */
     double ligroot;                         /* lignin-to-biomass ratio in root litter; Values from White et al. = 0.22  - Value in Smith et al. 2013 = 0.16, note subtly difference in eqn C9. */
     double ligshoot;                        /* lignin-to-biomass ratio in leaf litter; Values from White et al. DBF = 0.18; ENF = 0.24l; GRASS = 0.09; Shrub = 0.15 - Value in smith et al. 2013 = 0.2, note subtly difference in eqn C9. */
-    double liteffnc;
     double lue0;                            /* maximum LUE in kg C GJ-1 */
     double ncmaxf;                          /* max N:C ratio of foliage in old stand, if the same as young=no effect */
     double nref;                            /* leaf nc for saturation of photosynthesis */
@@ -239,7 +237,6 @@ typedef struct {
     double ngross;          /* N gross mineralisation */
     double nimmob;          /* N immobilisation in SOM */
     double nlittrelease;    /* N rel litter = struct + metab */
-    double activelossf;     /* frac of active C -> CO2 */
     double nmineralisation;
 
     /* p */

@@ -14,15 +14,13 @@
 /* C stuff */
 void    calc_annual_growth(control *, fluxes *, met *,
                         nrutil *, params *, state *);
-void    carbon_allocation(control *, fluxes *, params *, state *, double);
-void    calc_carbon_allocation_fracs(control *c, fluxes *, params *, state *,
-                                     double);
+void    carbon_allocation(control *, fluxes *, params *, state *);
+void    calc_carbon_allocation_fracs(control *c, fluxes *, params *, state *);
 void    update_plant_state(control *, fluxes *, params *, state *);
 void    precision_control(fluxes *, state *);
 void    carbon_annual_production(control *, fluxes *, met *m, params *, state *);
 
-void    calculate_cnp_wood_ratios(control *c, params *, state *, double, double,
-                                  double, double *, double *);
+void    calculate_cnp_wood_ratios(control *c, params *, state *, double *, double *);
 
 /* N stuff */
 void    np_allocation(control *c, fluxes *, params *, state *, double,
