@@ -100,8 +100,7 @@ int main(int argc, char **argv)
     
     
     /* set initial lai */
-    s->lai = MAX(0.01, (p->sla * M2_AS_HA / KG_AS_TONNES /
-                          p->cfracts * s->shoot));
+    s->lai = MAX(0.01, (p->sla * M2_AS_HA / KG_AS_TONNES / p->cfracts * s->shoot));
     
     /* model runs */
     if (c->spin_up) {
@@ -691,11 +690,11 @@ void correct_rate_constants(params *p, int output) {
     //p->prateuptake *= NMONTHS_IN_YR;
     //p->rateloss *= NMONTHS_IN_YR;
     //p->prateloss *= NMONTHS_IN_YR;
-    p->fretransn *= NMONTHS_IN_YR;
-    p->fretransp *= NMONTHS_IN_YR;
-    p->rretrans *= NMONTHS_IN_YR;
-    p->wretrans *= NMONTHS_IN_YR;
-    p->retransmob *= NMONTHS_IN_YR;
+    //p->fretransn *= NMONTHS_IN_YR;
+    //p->fretransp *= NMONTHS_IN_YR;
+    //p->rretrans *= NMONTHS_IN_YR;
+    //p->wretrans *= NMONTHS_IN_YR;
+    //p->retransmob *= NMONTHS_IN_YR;
     p->fdecay *= NMONTHS_IN_YR;
     p->rdecay *= NMONTHS_IN_YR;
     p->wdecay *= NMONTHS_IN_YR;
@@ -716,11 +715,11 @@ void correct_rate_constants(params *p, int output) {
     //p->prateuptake /= NMONTHS_IN_YR;
     //p->rateloss /= NMONTHS_IN_YR;
     //p->prateloss /= NMONTHS_IN_YR;
-    p->fretransn /= NMONTHS_IN_YR;
-    p->fretransp /= NMONTHS_IN_YR;
-    p->rretrans /= NMONTHS_IN_YR;
-    p->wretrans /= NMONTHS_IN_YR;
-    p->retransmob /= NMONTHS_IN_YR;
+    //p->fretransn /= NMONTHS_IN_YR;
+    //p->fretransp /= NMONTHS_IN_YR;
+    //p->rretrans /= NMONTHS_IN_YR;
+    //p->wretrans /= NMONTHS_IN_YR;
+    //p->retransmob /= NMONTHS_IN_YR;
     p->fdecay /= NMONTHS_IN_YR;
     p->rdecay /= NMONTHS_IN_YR;
     p->wdecay /= NMONTHS_IN_YR;

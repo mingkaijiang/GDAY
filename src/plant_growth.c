@@ -376,57 +376,6 @@ void cut_back_production(control *c, fluxes *f, params *p, state *s,
     return;
 }
 
-double calculate_growth_stress_limitation(params *p, state *s, control *c) {
-    //
-    // Calculate level of stress due to nitrogen, phosphorus or water
-    // availability
-    //
-    double nlim, plim, current_limitation, nutrient_lim;
-    double nc_opt = 0.04;
-    double pc_opt = 0.004;
-
-    /* N limitation based on leaf NC ratio */
-    if (s->shootnc < p->nf_min) {
-        nlim = 0.0;
-    } else if (s->shootnc < nc_opt && s->shootnc > p->nf_min) {
-        nlim = 1.0 - ((nc_opt - s->shootnc) / (nc_opt - p->nf_min));
-    } else {
-        nlim = 1.0;
-    }
-
-    /*
-     * Limitation by nutrients. Water constraint is
-     * implicit, in that, water stress results in an increase of root mass,
-     * which are assumed to spread horizontally within the rooting zone.
-     * So in effect, building additional root mass doesnt alleviate the
-     * water limitation within the model. However, it does more
-     * accurately reflect an increase in root C production at a water
-     * limited site. This implementation is also consistent with other
-     * approaches, e.g. LPJ. In fact I dont see much evidence for models
-     * that have a flexible bucket depth. Minimum constraint is limited to
-     * 0.1, following Zaehle et al. 2010 (supp), eqn 18.
-     */
-    current_limitation = MAX(0.1, nlim);
-
-    if(c->pcycle == TRUE) {
-        /* P limitation based on leaf PC ratio */
-        if (s->shootpc < p->pf_min) {
-            plim = 0.0;
-        } else if (s->shootpc < pc_opt && s->shootpc > p->pf_min) {
-            plim = 1.0 - ((pc_opt - s->shootpc) / (pc_opt - p->pf_min));
-        } else {
-            plim = 1.0;
-        }
-        nutrient_lim = MIN(nlim, plim);
-        current_limitation = MAX(0.1,nutrient_lim);
-    }
-    
-    fprintf(stderr, "nlim %f, plim %f\n", nlim, plim);
-    
-    return (current_limitation);
-}
-
-
 void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s,
                                   double npitfac) {
     /* Carbon allocation fractions to move photosynthate through the plant.
@@ -549,74 +498,6 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s) {
     /* If foliage or root N/C exceeds its max, then N uptake is cut back
     Similarly, of foliage or root P/C exceeds max, then P uptake is cut back */
     
-    /* maximum leaf n:c and p:c ratios is function of stand age*/
-    ncmaxf = p->ncmaxf;
-    pcmaxf = p->pcmaxf;
-    
-    extrasn = 0.0;
-    
-    if (s->lai > 0.0) {
-      
-      if (s->shootn > (s->shoot * ncmaxf)) {
-        extrasn = s->shootn - s->shoot * ncmaxf;
-        
-        /* Ensure N uptake cannot be reduced below zero. */
-        if (extrasn >  f->nuptake)
-          extrasn = f->nuptake;
-        
-        s->shootn -= extrasn;
-        //f->nuptake -= extrasn;
-      }
-    }
-    
-    extrasp = 0.0;
-    if (s->lai > 0.0) {
-      
-      if (s->shootp > (s->shoot * pcmaxf)) {
-        extrasp = s->shootp - s->shoot * pcmaxf;
-        
-        /* Ensure P uptake cannot be reduced below zero. */
-        if (extrasp >  f->puptake)
-          extrasp = f->puptake;
-        
-        s->shootp -= extrasp;
-        //f->puptake -= extrasp;
-      }
-    }
-    
-    /* if root N:C ratio exceeds its max, then nitrogen uptake is cut
-    back. n.b. new ring n/c max is already set because it is related
-    to leaf n:c */
-    
-    /* max root n:c */
-    ncmaxr = ncmaxf * p->ncrfac;
-    extrarn = 0.0;
-    if (s->rootn > (s->root * ncmaxr)) {
-      extrarn = s->rootn - s->root * ncmaxr;
-      
-      /* Ensure N uptake cannot be reduced below zero. */
-      if ((extrasn + extrarn) > f->nuptake)
-        extrarn = f->nuptake - extrasn;
-      
-      s->rootn -= extrarn;
-      f->nuptake -= (extrarn+extrasn);
-    }
-    
-    /* max root p:c */
-    pcmaxr = pcmaxf * p->pcrfac;
-    extrarp = 0.0;
-    if (s->rootp > (s->root * pcmaxr)) {
-      extrarp = s->rootp - s->root * pcmaxr;
-      
-      /* Ensure P uptake cannot be reduced below zero. */
-      if ((extrasp + extrarp) > f->puptake)
-        extrarp = f->puptake - extrasp;
-      
-      s->rootp -= extrarp;
-      f->puptake -= (extrarp + extrasp);
-    }
-    
-
     return;
 }
 
@@ -663,6 +544,8 @@ void precision_control(fluxes *f, state *s) {
 
     /* need separate one as this will become very small if there is no
        mobile stem N/P */
+    
+    /*
     if (s->stemnmob < tolerance) {
         f->deadstemn += s->stemnmob;
         s->stemnmob = 0.0;
@@ -684,6 +567,7 @@ void precision_control(fluxes *f, state *s) {
 
     }
 
+     */
     return;
 }
 
