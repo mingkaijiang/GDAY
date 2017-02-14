@@ -253,8 +253,7 @@ void spin_up_annual(control *c, fluxes *f, met *m,
     /* run simulation variables */
     int    year = 0; 
     int    moy = 0;
-    double npitfac;
-    
+
     /* Setup output file */
       /* Annual outputs */
       open_output_file(c, c->out_fname, &(c->ofp));

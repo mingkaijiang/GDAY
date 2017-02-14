@@ -25,9 +25,6 @@ void calc_annual_growth(control *c, fluxes *f,
 
     /* calculate annual GPP/NPP, respiration and update water balance */
     carbon_annual_production(c, f, m, p, s);
-    
-    f->npp_photo = f->npp;
-    f->gpp_photo = f->gpp;
 
     /* figure out the C allocation fractions */
     /* annual allocation ...*/

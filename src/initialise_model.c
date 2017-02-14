@@ -137,8 +137,6 @@ void initialise_fluxes(fluxes *f) {
     f->npp_gCm2 = 0.0;
     f->gpp = 0.0;
     f->npp = 0.0;
-    f->npp_photo = 0.0;
-    f->gpp_photo = 0.0;
     f->nep = 0.0;
     f->auto_resp = 0.0;
     f->hetero_resp = 0.0;
