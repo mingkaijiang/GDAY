@@ -3,8 +3,8 @@
 *
 * Simple version for quasi-equilibrium analysis
 * 
-* This version runs at annual timestep by using met forcing data averaged annually
-* and fluxes summed at the end of each year.
+* This version runs at monthly timestep by using met forcing data averaged annually
+* 
 *
 * Paramaeter descriptions are in gday.h
 *
@@ -684,7 +684,6 @@ void correct_rate_constants(params *p, int output) {
     //p->fretransp *= NMONTHS_IN_YR;
     //p->rretrans *= NMONTHS_IN_YR;
     //p->wretrans *= NMONTHS_IN_YR;
-    //p->retransmob *= NMONTHS_IN_YR;
     p->fdecay *= NMONTHS_IN_YR;
     p->rdecay *= NMONTHS_IN_YR;
     p->wdecay *= NMONTHS_IN_YR;
@@ -709,7 +708,6 @@ void correct_rate_constants(params *p, int output) {
     //p->fretransp /= NMONTHS_IN_YR;
     //p->rretrans /= NMONTHS_IN_YR;
     //p->wretrans /= NMONTHS_IN_YR;
-    //p->retransmob /= NMONTHS_IN_YR;
     p->fdecay /= NMONTHS_IN_YR;
     p->rdecay /= NMONTHS_IN_YR;
     p->wdecay /= NMONTHS_IN_YR;

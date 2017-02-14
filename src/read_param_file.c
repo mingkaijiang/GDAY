@@ -429,10 +429,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->prescribed_leaf_NC = atof(value);
     } else if (MATCH("params", "prescribed_leaf_PC")) {
         p->prescribed_leaf_PC = atof(value);
-    } else if (MATCH("params", "prime_y")) {
-        p->prime_y = atof(value);
-    } else if (MATCH("params", "prime_z")) {
-        p->prime_z = atof(value);
     } else if (MATCH("params", "rateloss")) {
         p->rateloss = atof(value);
     } else if (MATCH("params", "prateloss")) {
@@ -445,8 +441,6 @@ int handler(char *section, char *name, char *value, control *c,
         p->rdecay = atof(value);
     } else if (MATCH("params", "rretrans")) {
       p->rretrans = atof(value);
-    } else if (MATCH("params", "retransmob")) {
-      p->retransmob = atof(value);
     } else if (MATCH("params", "sla")) {
         p->sla = atof(value);
     } else if (MATCH("params", "slowncmax")) {

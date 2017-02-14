@@ -1276,7 +1276,7 @@ void calc_p_net_mineralisation(control *c, fluxes *f) {
     /*
         P Net mineralisation from microbial activity
     */
-    f->pmineralisation = f->pgross - f->pimmob + f->plittrelease;
+      f->pmineralisation = f->pgross - f->pimmob + f->plittrelease;
   
   /* add diagnostic statement if needed */
   if (c->diagnosis) {
@@ -1390,23 +1390,22 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
     s->structsoilp += (f->p_soil_struct_litter -
                       (f->p_soil_struct_to_slow +
                        f->p_soil_struct_to_active));
-
+    
     s->structsurfp += pc_limit(f, s->structsurf, s->structsurfp,
                                1.0/p->structcp, 1.0/p->structcp);
+    
     s->structsoilp += pc_limit(f, s->structsoil, s->structsoilp,
                                1.0/p->structcp, 1.0/p->structcp);
-
 
     /* pcmin & pcmax from Parton 1989 fig 2 */
     s->metabsurfp += f->p_surf_metab_litter - f->p_surf_metab_to_active;
     s->metabsurfp += pc_limit(f, s->metabsurf, s->metabsurfp,
                               1.0/150.0, 1.0/80.0);
-
+    
     /* pcmin & pcmax from Parton 1989 fig 2 */
     s->metabsoilp += (f->p_soil_metab_litter - f->p_soil_metab_to_active);
     s->metabsoilp += pc_limit(f, s->metabsoil, s->metabsoilp,
                               1.0/150.0, 1.0/80.0);
-
 
     /* When nothing is being added to the metabolic pools, there is the
     potential scenario with the way the model works for tiny bits to be
@@ -1529,11 +1528,17 @@ double pc_limit(fluxes *f, double cpool, double ppool, double pcmin,
     } else if (ppool < pmin) {
         /* fix */
         fix = pmin - ppool;
+      
+        if (f->plittrelease < fix) {
+            fix = f->plittrelease;
+        } 
+        
         f->plittrelease -= fix;
         return (fix);
     } else {
         return (0.0);
     }
+    
 }
 
 double pc_flux(double cflux, double pflux, double pc_ratio) {
@@ -1563,7 +1568,7 @@ void precision_control_soil_p(fluxes *f, state *s, params *p) {
     /* Detect very low values in state variables and force to zero to
     avoid rounding and overflow errors */
 
-    double tolerance = 1E-10, excess;
+    double tolerance = 1E-18, excess;
 
     if (s->metabsurfp < tolerance) {
         excess = s->metabsurfp;

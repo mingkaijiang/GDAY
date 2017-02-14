@@ -54,7 +54,6 @@ typedef struct {
     double passivesoil;                 /* passive C som pool (t/ha) */
     double passivesoiln;                /* passive N som pool (t/ha) */
     double passivesoilp;                /* passive P som pool (t/ha) */
-    double prev_sma;
     double root;                        /* root c (t/ha) */
     double rootn;                       /* root n (t/ha) */
     double rootp;                       /* root p (t/ha) */
@@ -167,19 +166,16 @@ typedef struct {
     double rateuptake;                      /* Rate of N uptake from mineral N pool (/yr) from here? http://face.ornl.gov/Finzi-PNAS.pdf Seems to correspond to very low NPP values */
     double rdecay;                          /* root turnover rate (1/yr) */
     double rretrans;                        /* root retranslocation coefficient */
-    double retransmob;                      /* mobilized wood retranslocation coefficient */
     double sla;                             /* specific leaf area (m2 one-sided/kg DW) */
     double slowncmax;                       /* Slow pool (=1/15) N:C ratio of new SOM - maximum [units: gN/gC]. Based on forest version of CENTURY (Parton et al. 1993), see Appendix, McMurtrie 2001, Tree Physiology. */
     double slowncmin;                       /* Slow pool (=1/40) N:C of new SOM - when Nmin=Nmin0" [units: gN/gC]. Based on forest version of CENTURY (Parton et al. 1993), see Appendix, McMurtrie 2001, Tree Physiology. */
     double slowpcmax;                       /* Slow pool (=1/90) P:C ratio of new SOM - maximum [units: gP/gC]. */
     double slowpcmin;                       /* Slow pool (=1/200) P:C of new SOM - when Pmin=Pmin0" [units: gP/gC]. */
     double structcn;                        /* C:N ratio of structural bit of litter input */
-    double structcp;                        /* C:P ratio of structural bit of litter input, Ref Attiwill 1980, Aus. J. Bot. 28, 199-222 Table 9 sum of branch, stem, sap and heartwood; */
+    double structcp;                        /* C:P ratio of structural bit of litter input, Ref Parton 1989 Figure 2; */
     double tsoil_in;                        /* annual version tsoil [degree C] */
     double wdecay;                          /* wood turnover rate (1/yr) */
     double wretrans;                        /* wood retranslocation coefficient */
-    double prime_y;
-    double prime_z;
 
 } params;
 

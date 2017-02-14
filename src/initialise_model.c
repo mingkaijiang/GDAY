@@ -108,7 +108,6 @@ void initialise_params(params *p) {
     p->rateuptake = 2.7;
     p->rdecay = 0.33333;
     p->rretrans = 0.0; 
-    p->retransmob = 0.0;
     p->sla = 4.4;
     p->slowncmax = 0.066666;
     p->slowncmin = 0.025;
