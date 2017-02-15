@@ -134,13 +134,10 @@ typedef struct {
     double lue0;                            /* maximum LUE in kg C GJ-1 */
     double ncmaxf;                          /* max N:C ratio of foliage in old stand, if the same as young=no effect */
     double nref;                            /* leaf nc for saturation of photosynthesis */
-    double ncmaxr;                          /* max N:C ratio of roots */
     double ncrfac;                          /* N:C of fine root prodn / N:C of leaf prodn */
     double ncwnewz;                         /* N alloc param: New stem ring N:C at zero leaf N:C (mobile) */
     double ndep_in;                         /* annual version ndep t/ha/yr */
     double nfix_in;                         /* annual version nfix t/ha/yr */
-    double nmin0;                           /* mineral N pool corresponding to Actnc0,etc (g/m2) */
-    double nmincrit;                        /* Critical mineral N pool at max soil N:C (g/m2) (Parton et al 1993, McMurtrie et al 2001). */
     double nuptakez;                        /* constant N uptake per year (1/yr) */
     double p_rate_par_weather;              /* parent P material weathering rate [yr-1] */
     double passivesoilnz;
@@ -151,12 +148,9 @@ typedef struct {
     double passpcmax;                       /* Passive pool (=1/20) P:C ratio of new SOM - maximum [units: gP/gC] */
     double passpcmin;                       /* Passive pool (=1/200) P:C of new SOM - when Pmin=Pmin0 [units: gP/gC] */
     double pcmaxf;                          /* max P:C ratio of foliage in old stand, if the same as young=no effect */
-    double pcmaxr;                          /* max P:C ratio of roots */
     double pcrfac;                          /* P:C of fine root prodp / P:C c of leaf prodp */
     double pcwnewz;                         /* P alloc param: New stem ring P:C at zero leaf P:C (mobile) */
     double pdep_in;                         /* Annual version p deposition t/ha/yr */
-    double pmin0;                           /* mineral P pool corresponding to Actpc0,etc (g/m2) */
-    double pmincrit;                        /* Critical mineral P pool at max soil P:C (g/m2) */
     double prateloss;                       /* Rate of P loss from mineral P pool (/yr), Ref Wang et al., 2007, GB1018 */
     double prateuptake;                     /* Rate of P uptake from mineral P pool (/yr), guess value */
     double prescribed_leaf_NC;              /* If the N-Cycle is switched off this needs to be set, e.g. 0.03 */
@@ -213,8 +207,6 @@ typedef struct {
 typedef struct {
     double gpp_gCm2;
     double npp_gCm2;
-    double gpp_am;
-    double gpp_pm;
     double gpp;
     double npp;
     double nep;

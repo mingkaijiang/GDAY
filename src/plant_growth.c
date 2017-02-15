@@ -260,14 +260,9 @@ void cut_back_production(control *c, fluxes *f, params *p, state *s,
     f->gpp = f->npp / p->cue;
     conv = G_AS_TONNES / M2_AS_HA;
     f->gpp_gCm2 = f->gpp / conv;
-    
-    // following two lines commented out for simplified version */
-    f->gpp_am = f->gpp_gCm2 / 2.0;
-    f->gpp_pm = f->gpp_gCm2 / 2.0;
 
     /* New respiration flux */
     f->auto_resp =  f->gpp - f->npp;
-    //recalc_wb = TRUE;
 
     /* Now reduce LAI for down-regulated growth. */
     /* update leaf area [m2 m-2] */
@@ -408,7 +403,7 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s) {
           extrasn = f->nuptake;
         
         s->shootn -= extrasn;
-        //f->nuptake -= extrasn;
+        f->nuptake -= extrasn;
       }
     }
     
@@ -423,7 +418,7 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s) {
           extrasp = f->puptake;
         
         s->shootp -= extrasp;
-        //f->puptake -= extrasp;
+        f->puptake -= extrasp;
       }
     }
     
@@ -494,9 +489,9 @@ void precision_control(fluxes *f, state *s) {
         f->deadstems += s->stem;
         f->deadstemn += s->stemn;
         f->deadstemp += s->stemp;
-        s->stem = 0.001;
-        s->stemn = 0.00004;
-        s->stemp = 0.000003;
+        //s->stem = 0.001;
+        //s->stemn = 0.00004;
+        //s->stemp = 0.000003;
     }
 
     

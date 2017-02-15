@@ -381,12 +381,8 @@ int handler(char *section, char *name, char *value, control *c,
         p->ncmaxf = atof(value);
     } else if (MATCH("params", "nref")) {
       p->nref = atof(value);
-    } else if (MATCH("params", "ncmaxr")) {
-        p->ncmaxr = atof(value);
     } else if (MATCH("params", "pcmaxf")) {
         p->pcmaxf = atof(value);
-    } else if (MATCH("params", "pcmaxr")) {
-        p->pcmaxr = atof(value);
     } else if (MATCH("params", "ncrfac")) {
         p->ncrfac = atof(value);
     } else if (MATCH("params", "pcrfac")) {
@@ -397,16 +393,8 @@ int handler(char *section, char *name, char *value, control *c,
         p->ncwnewz = atof(value);
     } else if (MATCH("params", "pcwnewz")) {
         p->pcwnewz = atof(value);
-    } else if (MATCH("params", "nmin0")) {
-        p->nmin0 = atof(value);
-    } else if (MATCH("params", "nmincrit")) {
-        p->nmincrit = atof(value);
     } else if (MATCH("params", "nuptakez")) {
         p->nuptakez = atof(value);
-    } else if (MATCH("params", "pmin0")) {
-        p->pmin0 = atof(value);
-    } else if (MATCH("params", "pmincrit")) {
-        p->pmincrit = atof(value);
     } else if (MATCH("params", "puptakez")) {
       p->puptakez = atof(value);
     } else if (MATCH("params", "p_rate_par_weather")) {

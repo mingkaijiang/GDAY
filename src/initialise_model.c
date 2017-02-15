@@ -78,11 +78,8 @@ void initialise_params(params *p) {
     p->lue0 = 1.4;                /* maximum LUE in kg C GJ-1 */
     p->ncmaxf = 0.05;
     p->nref = 0.04;
-    p->ncmaxr = 0.03;
     p->ncrfac = 0.8;
     p->ncwnewz = 0.003;
-    p->nmin0 = 0.0;
-    p->nmincrit = 2.0;
     p->nuptakez = 0.0;
     p->p_rate_par_weather = 0.001;
     p->passivesoilnz = 1.0;
@@ -93,12 +90,9 @@ void initialise_params(params *p) {
     p->passpcmax = 0.05;
     p->passpcmin = 0.005;
     p->pcmaxf = 0.004;       /* guess value */
-    p->pcmaxr = 0.004;       /* guess value */
     p->pcrfac = 0.8;
     p->pcwnewz = 0.0003;
     p->pdep_in = 0.0004;
-    p->pmin0 = 0.0;
-    p->pmincrit = 2.0;       /* Based on CENTURY VARAT1(2,3) = 2 value */
     p->prateloss = 0.005;    
     p->prateuptake = 365.0;
     p->prescribed_leaf_NC = 0.03;

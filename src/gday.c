@@ -248,8 +248,7 @@ void spin_up_annual(control *c, fluxes *f, met *m,
     double prev_soiln = 99999.9;
     double prev_plantp = 99999.9;
     double prev_soilp = 99999.9;
-    int i, cntrl_flag;
-    
+
     /* run simulation variables */
     int    year = 0; 
     int    moy = 0;
@@ -675,14 +674,14 @@ void correct_rate_constants(params *p, int output) {
   /* adjust rate constants for the number of months in years */
   
   if (output) {
-    //p->rateuptake *= NMONTHS_IN_YR;
-    //p->prateuptake *= NMONTHS_IN_YR;
-    //p->rateloss *= NMONTHS_IN_YR;
-    //p->prateloss *= NMONTHS_IN_YR;
-    //p->fretransn *= NMONTHS_IN_YR;
-    //p->fretransp *= NMONTHS_IN_YR;
-    //p->rretrans *= NMONTHS_IN_YR;
-    //p->wretrans *= NMONTHS_IN_YR;
+    p->rateuptake *= NMONTHS_IN_YR;
+    p->prateuptake *= NMONTHS_IN_YR;
+    p->rateloss *= NMONTHS_IN_YR;
+    p->prateloss *= NMONTHS_IN_YR;
+    p->fretransn *= NMONTHS_IN_YR;
+    p->fretransp *= NMONTHS_IN_YR;
+    p->rretrans *= NMONTHS_IN_YR;
+    p->wretrans *= NMONTHS_IN_YR;
     p->fdecay *= NMONTHS_IN_YR;
     p->rdecay *= NMONTHS_IN_YR;
     p->wdecay *= NMONTHS_IN_YR;
@@ -699,14 +698,14 @@ void correct_rate_constants(params *p, int output) {
     //p->nuptakez *= NMONTHS_IN_YR;
     //p->puptakez *= NMONTHS_IN_YR;
   } else {
-    //p->rateuptake /= NMONTHS_IN_YR;
-    //p->prateuptake /= NMONTHS_IN_YR;
-    //p->rateloss /= NMONTHS_IN_YR;
-    //p->prateloss /= NMONTHS_IN_YR;
-    //p->fretransn /= NMONTHS_IN_YR;
-    //p->fretransp /= NMONTHS_IN_YR;
-    //p->rretrans /= NMONTHS_IN_YR;
-    //p->wretrans /= NMONTHS_IN_YR;
+    p->rateuptake /= NMONTHS_IN_YR;
+    p->prateuptake /= NMONTHS_IN_YR;
+    p->rateloss /= NMONTHS_IN_YR;
+    p->prateloss /= NMONTHS_IN_YR;
+    p->fretransn /= NMONTHS_IN_YR;
+    p->fretransp /= NMONTHS_IN_YR;
+    p->rretrans /= NMONTHS_IN_YR;
+    p->wretrans /= NMONTHS_IN_YR;
     p->fdecay /= NMONTHS_IN_YR;
     p->rdecay /= NMONTHS_IN_YR;
     p->wdecay /= NMONTHS_IN_YR;

@@ -473,7 +473,7 @@ void calculate_nsoil_flows(control *c, fluxes *f, params *p, state *s) {
 
     /* Fraction of C lost due to microbial respiration */
     double frac_microb_resp = 0.85 - (0.68 * p->finesoil);
-    double nsurf, nsoil, active_nc_slope, slow_nc_slope, passive_nc_slope;
+    double nsurf, nsoil;
 
     n_inputs_from_plant_litter(f, p, &nsurf, &nsoil);
     partition_plant_litter_n(c, f, p, nsurf, nsoil);
@@ -490,15 +490,13 @@ void calculate_nsoil_flows(control *c, fluxes *f, params *p, state *s) {
     calculate_n_mineralisation(c, f);
     
     /* calculate N immobilisation */
-    calculate_n_immobilisation(f, p, s, &(f->nimmob), &active_nc_slope,
-                               &slow_nc_slope, &passive_nc_slope);
+    calculate_n_immobilisation(f, p, s, &(f->nimmob));
     
     /* calculate N net mineralisation */
     calc_n_net_mineralisation(c, f);
     
     /* Update model soil N pools */
-    calculate_npools(c, f, p, s, active_nc_slope, slow_nc_slope,
-                     passive_nc_slope);
+    calculate_npools(c, f, p, s);
 
     return;
 }
@@ -659,17 +657,12 @@ void calculate_n_mineralisation(control *c, fluxes *f) {
                   f->n_slow_to_active + f->n_slow_to_passive +
                   f->n_passive_to_active);
   
-  /* add diagnostic statement if needed */
-  if (c->diagnosis) {
-  }
   
 
     return;
 }
 
-void calculate_n_immobilisation(fluxes *f, params *p, state *s, double *nimmob,
-                                double *active_nc_slope, double *slow_nc_slope,
-                                double *passive_nc_slope) {
+void calculate_n_immobilisation(fluxes *f, params *p, state *s, double *nimmob) {
     /* N immobilised in new soil organic matter, the reverse of
     mineralisation. Micro-organisms in the soil compete with plants for N.
     Immobilisation is the process by which nitrate and ammonium are taken up
@@ -698,33 +691,20 @@ void calculate_n_immobilisation(fluxes *f, params *p, state *s, double *nimmob,
     nimob : float
         N immobilsed
     */
-    double nmin, arg1, arg2, arg3, numer1, numer2, denom;
-
-    /* N:C new SOM - active, slow and passive */
-    *active_nc_slope = calculate_nc_slope(p, p->actncmax, p->actncmin);
-    *slow_nc_slope = calculate_nc_slope(p, p->slowncmax, p->slowncmin);
-    *passive_nc_slope = calculate_nc_slope(p, p->passncmax, p->passncmin);
-
-    /* convert units */
-    nmin = p->nmin0 / M2_AS_HA * G_AS_TONNES;
+    double arg1, arg2, arg3, numer1, numer2;
     
-    arg1 = (p->passncmin - *passive_nc_slope * nmin) * f->c_into_passive;
-    arg2 = (p->slowncmin - *slow_nc_slope * nmin) * f->c_into_slow;
-    arg3 = f->c_into_active * (p->actncmin - *active_nc_slope * nmin);
+    arg1 = p->passncmin * f->c_into_passive;
+    arg2 = p->slowncmin  * f->c_into_slow;
+    arg3 = p->actncmin * f->c_into_active;
     numer1 = arg1 + arg2 + arg3;
 
     arg1 = f->c_into_passive * p->passncmax;
     arg2 = f->c_into_slow * p->slowncmax;
     arg3 = f->c_into_active * p->actncmax;
     numer2 = arg1 + arg2 + arg3;
-
-    arg1 = f->c_into_passive * *passive_nc_slope;
-    arg2 = f->c_into_slow * *slow_nc_slope;
-    arg3 = f->c_into_active * *active_nc_slope;
-    denom = arg1 + arg2 + arg3;
-
+    
     /* evaluate N immobilisation in new SOM */
-    *nimmob = numer1 + denom * s->inorgn;
+    *nimmob = numer1;
     if (*nimmob > numer2)
         *nimmob = numer2;
     
@@ -736,56 +716,15 @@ void calc_n_net_mineralisation(control *c, fluxes *f) {
     /* N Net mineralisation from microbial activity */
     f->nmineralisation = f->ngross - f->nimmob + f->nlittrelease;
   
-    /* add diagnostic statement if needed */
-    if (c->diagnosis) {
-    }
-  
-    
     return;
 }
 
-double calculate_nc_slope(params *p, double ncmax, double ncmin) {
-    /* Returns N:C ratio of the mineral pool slope
-
-    based on fig 4 of Parton et al 1993. Standard slow pool C:N is different
-    to the values in Parton. Bill quotes 12-20, whereas McMurtrie et al '01
-    use 10-40.
-
-    Parameters
-    ----------
-    ncmax : float
-        SOM pools maximum N:C
-    ncmin: float
-        SOM pools minimum N:C
-
-    Returns:
-    --------
-    value : float
-        SOM pool N:C ratio
-    */
-    double arg1, arg2, conv;
-
-    arg1 = ncmax - ncmin;
-    arg2 = p->nmincrit - p->nmin0;
-    conv = M2_AS_HA / G_AS_TONNES;
-
-    return (arg1 / arg2 * conv);
-}
-
-void calculate_npools(control *c, fluxes *f, params *p, state *s,
-                      double active_nc_slope, double slow_nc_slope,
-                      double passive_nc_slope) {
+void calculate_npools(control *c, fluxes *f, params *p, state *s) {
     /*
     Update N pools in the soil
 
     Parameters
     ----------
-    active_nc_slope : float
-        active NC slope
-    slow_nc_slope: float
-        slow NC slope
-    passive_nc_slope : float
-        passive NC slope
 
     */
     double n_into_active, n_out_of_active, n_into_slow, n_out_of_slow,
@@ -845,10 +784,9 @@ void calculate_npools(control *c, fluxes *f, params *p, state *s,
 
     /* N:C of the SOM pools increases linearly btw prescribed min and max
        values as the Nconc of the soil increases. */
-    arg = s->inorgn - p->nmin0 / M2_AS_HA * G_AS_TONNES;
-
+ 
     /* active */
-    active_nc = p->actncmin + active_nc_slope * arg;
+    active_nc = p->actncmin;
     if (active_nc > p->actncmax)
         active_nc = p->actncmax;
 
@@ -858,7 +796,7 @@ void calculate_npools(control *c, fluxes *f, params *p, state *s,
     s->activesoiln += n_into_active + fixn - n_out_of_active;
 
     /* slow */
-    slow_nc = p->slowncmin + slow_nc_slope * arg;
+    slow_nc = p->slowncmin;
     if (slow_nc > p->slowncmax)
         slow_nc = p->slowncmax;
 
@@ -868,7 +806,7 @@ void calculate_npools(control *c, fluxes *f, params *p, state *s,
     s->slowsoiln += n_into_slow + fixn - n_out_of_slow;
 
     /* passive, update passive pool only if passiveconst=0 */
-    pass_nc = p->passncmin + passive_nc_slope * arg;
+    pass_nc = p->passncmin;
     if (pass_nc > p->passncmax)
         pass_nc = p->passncmax;
 
@@ -882,12 +820,6 @@ void calculate_npools(control *c, fluxes *f, params *p, state *s,
        unstable if rateuptake is large */
     s->inorgn += f->ninflow + f->nmineralisation - f->nloss - f->nuptake;  
     
-    /* add diagnostic statement if needed */
-    if (c->diagnosis) {
-    }
-    
-    
-
     return;
 }
 
@@ -987,7 +919,7 @@ void calculate_psoil_flows(control *c, fluxes *f, params *p, state *s) {
 
     /* Fraction of C lost due to microbial respiration */
     double frac_microb_resp = 0.85 - (0.68 * p->finesoil);
-    double psurf, psoil, active_pc_slope, slow_pc_slope, passive_pc_slope;
+    double psurf, psoil;
 
     p_inputs_from_plant_litter(f, p, &psurf, &psoil);
     partition_plant_litter_p(c, f, p, psurf, psoil);
@@ -1007,8 +939,7 @@ void calculate_psoil_flows(control *c, fluxes *f, params *p, state *s) {
     calculate_p_mineralisation(f);
 
     /* calculate P immobilisation */
-    calculate_p_immobilisation(f, p, s, &(f->pimmob), &active_pc_slope,
-                             &slow_pc_slope, &passive_pc_slope);
+    calculate_p_immobilisation(f, p, s, &(f->pimmob));
 
     /* calculate P net mineralisation*/
     calc_p_net_mineralisation(c, f);
@@ -1019,8 +950,7 @@ void calculate_psoil_flows(control *c, fluxes *f, params *p, state *s) {
     calculate_p_avl_to_ssorb(s, f, p);
 
     /* Update model soil P pools */
-    calculate_ppools(c, f, p, s, active_pc_slope, slow_pc_slope,
-                     passive_pc_slope);
+    calculate_ppools(c, f, p, s);
     
     /* add diagnostic statement if needed */
     if (c->diagnosis) {
@@ -1209,9 +1139,7 @@ void calculate_p_mineralisation(fluxes *f) {
     return;
 }
 
-void calculate_p_immobilisation(fluxes *f, params *p, state *s, double *pimmob,
-                                double *active_pc_slope, double *slow_pc_slope,
-                                double *passive_pc_slope) {
+void calculate_p_immobilisation(fluxes *f, params *p, state *s, double *pimmob) {
     /* P immobilised in new soil organic matter, the reverse of
     mineralisation. Micro-organisms in the soil compete with plants for P.
     Immobilisation occurs when plant available P forms are consumed by microbes, turning
@@ -1239,19 +1167,11 @@ void calculate_p_immobilisation(fluxes *f, params *p, state *s, double *pimmob,
     pimob : float
     P immobilsed
     */
-    double pmin, arg1, arg2, arg3, numer1, numer2, denom;
+    double arg1, arg2, arg3, numer1, numer2;
 
-    /* P:C new SOM - active, slow and passive */
-    *active_pc_slope = calculate_pc_slope(p, p->actpcmax, p->actpcmin);
-    *slow_pc_slope = calculate_pc_slope(p, p->slowpcmax, p->slowpcmin);
-    *passive_pc_slope = calculate_pc_slope(p, p->passpcmax, p->passpcmin);
-
-    /* convert units */
-    pmin = p->pmin0 / M2_AS_HA * G_AS_TONNES;
-
-    arg1 = (p->passpcmin - *passive_pc_slope * pmin) * f->c_into_passive;
-    arg2 = (p->slowpcmin - *slow_pc_slope * pmin) * f->c_into_slow;
-    arg3 = f->c_into_active * (p->actpcmin - *active_pc_slope * pmin);
+    arg1 = p->passpcmin * f->c_into_passive;
+    arg2 = p->slowpcmin * f->c_into_slow;
+    arg3 =p->actpcmin * f->c_into_active;
     numer1 = arg1 + arg2 + arg3;
 
     arg1 = f->c_into_passive * p->passpcmax;
@@ -1259,13 +1179,8 @@ void calculate_p_immobilisation(fluxes *f, params *p, state *s, double *pimmob,
     arg3 = f->c_into_active * p->actpcmax;
     numer2 = arg1 + arg2 + arg3;
 
-    arg1 = f->c_into_passive * *passive_pc_slope;
-    arg2 = f->c_into_slow * *slow_pc_slope;
-    arg3 = f->c_into_active * *active_pc_slope;
-    denom = arg1 + arg2 + arg3;
-
     /* evaluate P immobilisation in new SOM */
-    *pimmob = numer1 + denom * s->inorgavlp;
+    *pimmob = numer1;
     if (*pimmob > numer2)
         *pimmob = numer2;
 
@@ -1285,33 +1200,6 @@ void calc_p_net_mineralisation(control *c, fluxes *f) {
 
     return;
 }
-
-double calculate_pc_slope(params *p, double pcmax, double pcmin) {
-    /* Returns P:C ratio of the mineral pool slope
-    Need to check back for good relationships; Currently using olde NC relationship
-    based on Parton et al., 1993
-
-    Parameters
-    ----------
-    pcmax : float
-    SOM pools maximum P:C
-    pcmin: float
-    SOM pools minimum P:C
-
-    Returns:
-    --------
-    value : float
-    SOM pool P:C ratio
-    */
-    double arg1, arg2, conv;
-
-    arg1 = pcmax - pcmin;
-    arg2 = p->pmincrit - p->pmin0;
-    conv = M2_AS_HA / G_AS_TONNES;
-
-    return (arg1 / arg2 * conv);
-}
-
 
 void calculate_p_avl_to_ssorb(state *s, fluxes *f, params *p) {
   
@@ -1350,20 +1238,12 @@ void calculate_p_ssorb_to_occ(state *s, fluxes *f, params *p) {
 }
 
 
-void calculate_ppools(control *c, fluxes *f, params *p, state *s,
-                      double active_pc_slope, double slow_pc_slope,
-                      double passive_pc_slope) {
+void calculate_ppools(control *c, fluxes *f, params *p, state *s) {
     /*
         Update P pools in the soil
 
         Parameters
         ----------
-        active_pc_slope : float
-            active PC slope
-        slow_pc_slope: float
-            slow PC slope
-        passive_pc_slope : float
-            passive PC slope
 
     */
 
@@ -1429,10 +1309,9 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
 
     // P:C of the SOM pools increases linearly btw prescribed min and max
     // values as the Pconc of the soil increases.
-    arg = s->inorgavlp - p->pmin0 / M2_AS_HA * G_AS_TONNES;
-
+    
     /* active */
-    active_pc = p->actpcmin + active_pc_slope * arg;
+    active_pc = p->actpcmin;
     if (active_pc > p->actpcmax)
         active_pc = p->actpcmax;
 
@@ -1442,7 +1321,7 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
     s->activesoilp += p_into_active + fixp - p_out_of_active;
 
     /* slow */
-    slow_pc = p->slowpcmin + slow_pc_slope * arg;
+    slow_pc = p->slowpcmin;
     if (slow_pc > p->slowpcmax)
         slow_pc = p->slowpcmax;
 
@@ -1452,7 +1331,7 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s,
     s->slowsoilp += p_into_slow + fixp - p_out_of_slow;
 
     /* passive, update passive pool only if passiveconst=0 */
-    pass_pc = p->passpcmin + passive_pc_slope * arg;
+    pass_pc = p->passpcmin;
     if (pass_pc > p->passpcmax)
         pass_pc = p->passpcmax;
 
