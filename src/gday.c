@@ -239,9 +239,9 @@ void spin_up_annual(control *c, fluxes *f, met *m,
     * Murty, D and McMurtrie, R. E. (2000) Ecological Modelling, 134,
     185-205, specifically page 196.
     */
-    double tol_c = 5E-02;
-    double tol_n = 5E-02;
-    double tol_p = 5E-02;
+    double tol_c = 1E-04;
+    double tol_n = 1E-04;
+    double tol_p = 1E-04;
     double prev_plantc = 99999.9;
     double prev_soilc = 99999.9;
     double prev_plantn = 99999.9;
@@ -314,8 +314,8 @@ void spin_up_annual(control *c, fluxes *f, met *m,
                 if (c->pcycle) {
                   /* Have we reached a steady state? */
                   fprintf(stderr,
-                          "Spinup: Iteration %d, moy %d, Plant C %f, Leaf NC %f, Leaf PC %f, Soil C %f, Soil N %f, Soil P %f, Passivesoil %f\n",
-                          year, moy, s->plantc, s->shootnc, s->shootpc, s->soilc, s->soiln, s->soilp, s->passivesoil);
+                          "Spinup: Iteration %d, moy %d, Plant C %f, Leaf NC %f, Leaf PC %f, Soil C %f, Soil N %f, Soil P %f, LAI %f\n",
+                          year, moy, s->plantc, s->shootnc, s->shootpc, s->soilc, s->soiln, s->soilp, s->lai);
                 } else if (c->ncycle) {
                   /* Have we reached a steady state? */
                   fprintf(stderr,
@@ -681,14 +681,14 @@ void correct_rate_constants(params *p, int output) {
   /* adjust rate constants for the number of months in years */
   
   if (output) {
-    p->rateuptake *= NMONTHS_IN_YR;
-    p->prateuptake *= NMONTHS_IN_YR;
-    p->rateloss *= NMONTHS_IN_YR;
-    p->prateloss *= NMONTHS_IN_YR;
-    p->fretransn *= NMONTHS_IN_YR;
-    p->fretransp *= NMONTHS_IN_YR;
-    p->rretrans *= NMONTHS_IN_YR;
-    p->wretrans *= NMONTHS_IN_YR;
+    //p->rateuptake *= NMONTHS_IN_YR;
+    //p->prateuptake *= NMONTHS_IN_YR;
+    //p->rateloss *= NMONTHS_IN_YR;
+    //p->prateloss *= NMONTHS_IN_YR;
+    //p->fretransn *= NMONTHS_IN_YR;
+    //p->fretransp *= NMONTHS_IN_YR;
+    //p->rretrans *= NMONTHS_IN_YR;
+    //p->wretrans *= NMONTHS_IN_YR;
     p->fdecay *= NMONTHS_IN_YR;
     p->rdecay *= NMONTHS_IN_YR;
     p->wdecay *= NMONTHS_IN_YR;
@@ -699,20 +699,20 @@ void correct_rate_constants(params *p, int output) {
     p->kdec5 *= NMONTHS_IN_YR;
     p->kdec6 *= NMONTHS_IN_YR;
     p->kdec7 *= NMONTHS_IN_YR;
-    p->k1 *= NMONTHS_IN_YR;
-    p->k2 *= NMONTHS_IN_YR;
-    p->k3 *= NMONTHS_IN_YR;
+    //p->k1 *= NMONTHS_IN_YR;
+    //p->k2 *= NMONTHS_IN_YR;
+    //p->k3 *= NMONTHS_IN_YR;
     //p->nuptakez *= NMONTHS_IN_YR;
     //p->puptakez *= NMONTHS_IN_YR;
   } else {
-    p->rateuptake /= NMONTHS_IN_YR;
-    p->prateuptake /= NMONTHS_IN_YR;
-    p->rateloss /= NMONTHS_IN_YR;
-    p->prateloss /= NMONTHS_IN_YR;
-    p->fretransn /= NMONTHS_IN_YR;
-    p->fretransp /= NMONTHS_IN_YR;
-    p->rretrans /= NMONTHS_IN_YR;
-    p->wretrans /= NMONTHS_IN_YR;
+    //p->rateuptake /= NMONTHS_IN_YR;
+    //p->prateuptake /= NMONTHS_IN_YR;
+    //p->rateloss /= NMONTHS_IN_YR;
+    //p->prateloss /= NMONTHS_IN_YR;
+    //p->fretransn /= NMONTHS_IN_YR;
+    //p->fretransp /= NMONTHS_IN_YR;
+    //p->rretrans /= NMONTHS_IN_YR;
+    //p->wretrans /= NMONTHS_IN_YR;
     p->fdecay /= NMONTHS_IN_YR;
     p->rdecay /= NMONTHS_IN_YR;
     p->wdecay /= NMONTHS_IN_YR;
@@ -723,9 +723,9 @@ void correct_rate_constants(params *p, int output) {
     p->kdec5 /= NMONTHS_IN_YR;
     p->kdec6 /= NMONTHS_IN_YR;
     p->kdec7 /= NMONTHS_IN_YR;
-    p->k1 /= NMONTHS_IN_YR;
-    p->k2 /= NMONTHS_IN_YR;
-    p->k3 /= NMONTHS_IN_YR;
+    //p->k1 /= NMONTHS_IN_YR;
+    //p->k2 /= NMONTHS_IN_YR;
+    //p->k3 /= NMONTHS_IN_YR;
     //p->nuptakez /= NMONTHS_IN_YR;
     //p->puptakez /= NMONTHS_IN_YR;
   }
