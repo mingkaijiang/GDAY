@@ -239,9 +239,9 @@ void spin_up_annual(control *c, fluxes *f, met *m,
     * Murty, D and McMurtrie, R. E. (2000) Ecological Modelling, 134,
     185-205, specifically page 196.
     */
-    double tol_c = 5E-04;
-    double tol_n = 5E-04;
-    double tol_p = 5E-04;
+    double tol_c = 5E-02;
+    double tol_n = 5E-02;
+    double tol_p = 5E-02;
     double prev_plantc = 99999.9;
     double prev_soilc = 99999.9;
     double prev_plantn = 99999.9;
@@ -314,8 +314,8 @@ void spin_up_annual(control *c, fluxes *f, met *m,
                 if (c->pcycle) {
                   /* Have we reached a steady state? */
                   fprintf(stderr,
-                          "Spinup: Iteration %d, moy %d, Plant C %f, Leaf NC %f, Leaf PC %f, Soil C %f, Soil N %f, Soil P %f, LAI %f\n",
-                          year, moy, s->plantc, s->shootnc, s->shootpc, s->soilc, s->soiln, s->soilp, s->lai);
+                          "Spinup: Iteration %d, moy %d, Plant C %f, Leaf NC %f, Leaf PC %f, Soil C %f, Soil N %f, Soil P %f, Passivesoil %f\n",
+                          year, moy, s->plantc, s->shootnc, s->shootpc, s->soilc, s->soiln, s->soilp, s->passivesoil);
                 } else if (c->ncycle) {
                   /* Have we reached a steady state? */
                   fprintf(stderr,
@@ -574,6 +574,13 @@ void year_end_calculations(control *c, params *p, state *s) {
     s->litterc = s->littercag + s->littercbg;
     s->plantc = s->root + s->shoot + s->stem;
     s->totalc = s->soilc + s->litterc + s->plantc;
+    
+    /* optional constant passive pool */
+    if (c->passiveconst) {
+      s->passivesoil = p->passivesoilz;
+      s->passivesoiln = p->passivesoilnz;
+      s->passivesoilp = p->passivesoilpz;
+    }
     
     return;
 }

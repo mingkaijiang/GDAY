@@ -217,6 +217,19 @@ int handler(char *section, char *name, char *value, control *c,
         c->nuptake_model = atoi(value);
     } else if (MATCH("control", "puptake_model")) {
         c->puptake_model = atoi(value);
+    } else if (MATCH("control", "passiveconst")) {
+      if (strcmp(temp, "False") == 0 ||
+          strcmp(temp, "FALSE") == 0 ||
+          strcmp(temp, "false") == 0)
+        c->passiveconst = FALSE;
+      else if (strcmp(temp, "True") == 0 ||
+               strcmp(temp, "TRUE") == 0 ||
+               strcmp(temp, "true") == 0)
+        c->passiveconst = TRUE;
+      else {
+        fprintf(stderr, "Unknown passiveconst option: %s\n", temp);
+        exit(EXIT_FAILURE);
+      }
     } else if (MATCH("control", "print_options")) {
         if (strcmp(temp, "Annual") == 0 ||
             strcmp(temp, "ANNUAL") == 0 ||

@@ -390,6 +390,14 @@ void calculate_soil_respiration(control *c, fluxes *f, params *p, state *s) {
     f->hetero_resp = (f->co2_to_air[0] + f->co2_to_air[1] + f->co2_to_air[2] +
                       f->co2_to_air[3] + f->co2_to_air[4] + f->co2_to_air[5] +
                       f->co2_to_air[6]);
+  
+    /* insert following line so value of respiration obeys c conservation if
+     assuming a fixed passive pool */
+    if (c->passiveconst == TRUE) {
+      f->hetero_resp = (f->hetero_resp + f->active_to_passive +
+        f->slow_to_passive - s->passivesoil *
+        p->decayrate[6]);
+    }
     
     return;
 }

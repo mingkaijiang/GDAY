@@ -22,6 +22,7 @@ typedef struct {
     int   num_years;
     int   nuptake_model;
     int   puptake_model;
+    int   passiveconst;
     int   print_options;
     int   num_months;
     int   total_num_months;
@@ -113,7 +114,7 @@ typedef struct {
     double finesoil;                        /* clay+silt fraction */
     double fmleaf;
     double fmroot;
-    double fretransn;                        /* foliage n retranslocation fraction - 46-57% in young E. globulus trees - see Corbeels et al 2005 ecological modelling 187, pg 463. Roughly 50% from review Aerts '96 */
+    double fretransn;                       /* foliage n retranslocation fraction - 46-57% in young E. globulus trees - see Corbeels et al 2005 ecological modelling 187, pg 463. Roughly 50% from review Aerts '96 */
     double fretransp;                       /* foliage p retranslocation fraction - 39.5-69 in Southern US FACE site - Finzi et al. 2001 Ecology  */
     double I0;                              /* annual version radiation MJ/m2/yr */
     double k1;                              /* P transfer rate coefficient from labile to secondary inorganic P pool */
