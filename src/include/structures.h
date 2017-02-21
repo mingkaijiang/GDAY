@@ -168,6 +168,10 @@ typedef struct {
     double slowpcmin;                       /* Slow pool (=1/200) P:C of new SOM - when Pmin=Pmin0" [units: gP/gC]. */
     double structcn;                        /* C:N ratio of structural bit of litter input */
     double structcp;                        /* C:P ratio of structural bit of litter input, Ref Parton 1989 Figure 2; */
+    double metabcpmax;                      /* Max C:P ratio of metabolic bit of litter input */
+    double metabcpmin;                      /* Min C:P ratio of metabolic bit of litter input */
+    double metabcnmax;                      /* Max C:N ratio of metabolic bit of litter input */
+    double metabcnmin;                      /* Min C:N ratio of metabolic bit of litter input */
     double tsoil_in;                        /* annual version tsoil [degree C] */
     double wdecay;                          /* wood turnover rate (1/yr) */
     double wretrans;                        /* wood retranslocation coefficient */

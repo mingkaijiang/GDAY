@@ -110,6 +110,10 @@ void initialise_params(params *p) {
     p->slowpcmin = 0.005;
     p->structcn = 150.0;
     p->structcp = 5500.0;
+    p->metabcnmax = 25.0;
+    p->metabcnmin = 10.0;
+    p->metabcpmax = 150.0;
+    p->metabcpmin = 80.0;
     p->tsoil_in = 15.0;
     p->wdecay = 0.02;
     p->wretrans = 0.0;

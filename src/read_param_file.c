@@ -456,6 +456,14 @@ int handler(char *section, char *name, char *value, control *c,
         p->structcn = atof(value);
     } else if (MATCH("params", "structcp")) {
         p->structcp = atof(value);
+    } else if (MATCH("params", "metabcnmax")) {
+      p->structcp = atof(value);
+    } else if (MATCH("params", "metabcnmin")) {
+      p->structcp = atof(value);
+    } else if (MATCH("params", "metabcpmax")) {
+      p->structcp = atof(value);
+    } else if (MATCH("params", "metabcpmin")) {
+      p->structcp = atof(value);
     } else if (MATCH("params", "tsoil_in")) {
       p->tsoil_in = atof(value);
     } else if (MATCH("params", "wdecay")) {

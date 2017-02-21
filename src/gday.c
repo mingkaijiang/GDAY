@@ -186,7 +186,7 @@ void run_sim(control *c, fluxes *f,  met_arrays *ma, met *m,
           if (c->pcycle == TRUE) {
             calculate_psoil_flows(c, f, p, s);
           }
-          
+
           /* Turn off all N calculations */
           if (c->ncycle == FALSE)
             reset_all_n_pools_and_fluxes(f, s);
@@ -336,6 +336,7 @@ void spin_up_annual(control *c, fluxes *f, met *m,
             
             /* continue at annual timestep */
             year += 1;
+            
             
       }     // if else statement end checking equilibrium;
     }       // while statement end;
@@ -699,9 +700,9 @@ void correct_rate_constants(params *p, int output) {
     p->kdec5 *= NMONTHS_IN_YR;
     p->kdec6 *= NMONTHS_IN_YR;
     p->kdec7 *= NMONTHS_IN_YR;
-    //p->k1 *= NMONTHS_IN_YR;
-    //p->k2 *= NMONTHS_IN_YR;
-    //p->k3 *= NMONTHS_IN_YR;
+    p->k1 *= NMONTHS_IN_YR;
+    p->k2 *= NMONTHS_IN_YR;
+    p->k3 *= NMONTHS_IN_YR;
     //p->nuptakez *= NMONTHS_IN_YR;
     //p->puptakez *= NMONTHS_IN_YR;
   } else {
@@ -723,9 +724,9 @@ void correct_rate_constants(params *p, int output) {
     p->kdec5 /= NMONTHS_IN_YR;
     p->kdec6 /= NMONTHS_IN_YR;
     p->kdec7 /= NMONTHS_IN_YR;
-    //p->k1 /= NMONTHS_IN_YR;
-    //p->k2 /= NMONTHS_IN_YR;
-    //p->k3 /= NMONTHS_IN_YR;
+    p->k1 /= NMONTHS_IN_YR;
+    p->k2 /= NMONTHS_IN_YR;
+    p->k3 /= NMONTHS_IN_YR;
     //p->nuptakez /= NMONTHS_IN_YR;
     //p->puptakez /= NMONTHS_IN_YR;
   }

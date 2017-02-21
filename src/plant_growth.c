@@ -187,12 +187,14 @@ void np_allocation(control *c, fluxes *f, params *p, state *s,
     arg = f->npstem;
     if (arg > ntot && c->fixleafnc == FALSE && c->ncycle) {
       cut_back_production(c, f, p, s, ntot, ncwnew);
+      fprintf(stderr, "in n cut back \n");
     }
     
     /* If we have allocated more P than we have avail, cut back C prodn */
     arg = f->ppstem;
     if (arg > ptot && c->fixleafpc == FALSE && c->pcycle) {
       cut_back_production(c, f, p, s, ptot, pcwnew);
+      fprintf(stderr, "in p cut back \n");
     }
     
     /* Nitrogen reallocation to flexible-ratio pools */
@@ -377,7 +379,7 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s) {
     s->rootp += f->pproot - p->rdecay * s->rootp;
 
     s->stemp += f->ppstem - p->wdecay * s->stemp;
-
+    
     /*
      =============================
      Enforce maximum N:C and P:C ratios.
