@@ -314,8 +314,8 @@ void spin_up_annual(control *c, fluxes *f, met *m,
                 if (c->pcycle) {
                   /* Have we reached a steady state? */
                   fprintf(stderr,
-                          "Spinup: Iteration %d, moy %d, Plant C %f, Leaf NC %f, Leaf PC %f, Soil C %f, Inorg N %f, Inorg Avlp %f, LAI %f\n",
-                          year, moy, s->plantc, s->shootnc, s->shootpc, s->soilc, s->inorgn, s->inorgavlp, s->lai);
+                          "Spinup: Iteration %d, moy %d, Plant C %f, Stem C %f, Leaf NC %f, Leaf PC %f, Passive C %f, NPP %f\n",
+                          year, moy, s->plantc, s->stem, s->shootnc, s->shootpc, s->passivesoil, f->npp);
                 } else if (c->ncycle) {
                   /* Have we reached a steady state? */
                   fprintf(stderr,
@@ -682,11 +682,11 @@ void correct_rate_constants(params *p, int output) {
   /* adjust rate constants for the number of months in years */
   
   if (output) {
-    //p->rateuptake *= NMONTHS_IN_YR;
-    //p->prateuptake *= NMONTHS_IN_YR;
-    //p->rateloss *= NMONTHS_IN_YR;
-    //p->prateloss *= NMONTHS_IN_YR;
-    //p->fretransn *= NMONTHS_IN_YR;
+    p->rateuptake *= NMONTHS_IN_YR;
+    p->prateuptake *= NMONTHS_IN_YR;
+    p->rateloss *= NMONTHS_IN_YR;
+    p->prateloss *= NMONTHS_IN_YR;
+    //p->fretransn *= NMONTHS_IN_YR;  // commented out because deadleaf nc should be half of leaf nc
     //p->fretransp *= NMONTHS_IN_YR;
     //p->rretrans *= NMONTHS_IN_YR;
     //p->wretrans *= NMONTHS_IN_YR;
@@ -706,10 +706,10 @@ void correct_rate_constants(params *p, int output) {
     //p->nuptakez *= NMONTHS_IN_YR;
     //p->puptakez *= NMONTHS_IN_YR;
   } else {
-    //p->rateuptake /= NMONTHS_IN_YR;
-    //p->prateuptake /= NMONTHS_IN_YR;
-    //p->rateloss /= NMONTHS_IN_YR;
-    //p->prateloss /= NMONTHS_IN_YR;
+    p->rateuptake /= NMONTHS_IN_YR;
+    p->prateuptake /= NMONTHS_IN_YR;
+    p->rateloss /= NMONTHS_IN_YR;
+    p->prateloss /= NMONTHS_IN_YR;
     //p->fretransn /= NMONTHS_IN_YR;
     //p->fretransp /= NMONTHS_IN_YR;
     //p->rretrans /= NMONTHS_IN_YR;

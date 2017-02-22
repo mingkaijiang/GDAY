@@ -1206,8 +1206,8 @@ void calc_p_net_mineralisation(control *c, fluxes *f) {
   if (c->diagnosis) {
   }
   
-  fprintf(stderr, "pmineralisation %f, pgross %f, pimmob %f, plittrelease %f\n",
-          f->pmineralisation, f->pgross, f->pimmob, f->plittrelease);
+  //fprintf(stderr, "pmineralisation %f, pgross %f, pimmob %f, plittrelease %f\n",
+  //        f->pmineralisation, f->pgross, f->pimmob, f->plittrelease);
 
     return;
 }
@@ -1289,8 +1289,6 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s) {
     s->structsoilp += pc_limit(f, s->structsoil, s->structsoilp,
                                1.0/p->structcp, 1.0/p->structcp);
     
-    fprintf(stderr, "plittrelease 1 %f\n", f->plittrelease);
-
     /* pcmin & pcmax from Parton 1989 fig 2 */
     s->metabsurfp += f->p_surf_metab_litter - f->p_surf_metab_to_active;
     s->metabsurfp += pc_limit(f, s->metabsurf, s->metabsurfp,
@@ -1298,13 +1296,13 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s) {
     
     /* pcmin & pcmax from Parton 1989 fig 2 */
     s->metabsoilp += (f->p_soil_metab_litter - f->p_soil_metab_to_active);
-    fprintf(stderr, "metabsoilp %f, p_soil_metab_litter %f, p_soil_metab_to_active %f\n", 
-            s->metabsoilp, f->p_soil_metab_litter, f->p_soil_metab_to_active);
+    //fprintf(stderr, "metabsoilp %f, p_soil_metab_litter %f, p_soil_metab_to_active %f\n", 
+    //        s->metabsoilp, f->p_soil_metab_litter, f->p_soil_metab_to_active);
     
     s->metabsoilp += pc_limit(f, s->metabsoil, s->metabsoilp,
                               1.0/p->metabcpmax, 1.0/p->metabcpmin);
     
-    fprintf(stderr, "plittrelease 2 %f, metabsoil %f, metabsoilp %f\n", s->metabsoil, s->metabsoilp, f->plittrelease);
+    //fprintf(stderr, "plittrelease 2 %f, metabsoil %f, metabsoilp %f\n", s->metabsoil, s->metabsoilp, f->plittrelease);
 
     /* When nothing is being added to the metabolic pools, there is the
     potential scenario with the way the model works for tiny bits to be
@@ -1372,8 +1370,6 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s) {
       tot_avl_out = f->puptake + f->ploss + f->p_avl_to_ssorb;
     }
     
-    fprintf(stderr, "tot_in %f, pmineralisation %f\n", tot_avl_in, f->pmineralisation);
-    
     s->inorgavlp += tot_avl_in - tot_avl_out;
     
     /* Daily increment of soil inorganic secondary P pool (strongly sorbed) */
@@ -1385,7 +1381,6 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s) {
       s->inorgssorbp += f->p_avl_to_ssorb - f->p_ssorb_to_occ - f->p_ssorb_to_avl;
     }
     
-
     /* Daily increment of soil inorganic occluded P pool */
     s->inorgoccp += f->p_ssorb_to_occ;
 
