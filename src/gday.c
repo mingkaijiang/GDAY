@@ -625,13 +625,13 @@ void spin_up_pools(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
             if (c->pcycle) {
                 /* Have we reached a steady state? */
                 fprintf(stderr,
-                        "Spinup: Plant C - %f, Soil C - %f, Soil N - %f, Soil P - %f\n",
-                        s->plantc, s->soilc, s->soiln, s->soilp);
+                        "Spinup: Plant C - %f, Soil C - %f, Soil N - %f, Soil P - %f, LAI - %f, GPP - %f\n",
+                        s->plantc, s->soilc, s->soiln, s->soilp, s->lai, f->gpp);
             } else {
               /* Have we reached a steady state? */
               fprintf(stderr,
-                      "Spinup: Plant C - %f, Soil C - %f\n",
-                      s->plantc, s->soilc);
+                      "Spinup: Plant C - %f, Soil C - %f, LAI - %f, GPP - %f\n",
+                      s->plantc, s->soilc, s->lai, f->gpp);
             }
         }
     }
