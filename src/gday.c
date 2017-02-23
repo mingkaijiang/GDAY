@@ -276,7 +276,6 @@ void spin_up_annual(control *c, fluxes *f, met *m,
             prev_soilp = s->soilp;
             
             for(moy = 0; moy < 12; moy++) {
-                
                 /* read in simple annual met data from parameter files */
                 unpack_met_data_simple(f, m, p);
                 
