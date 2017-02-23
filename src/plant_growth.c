@@ -187,14 +187,12 @@ void np_allocation(control *c, fluxes *f, params *p, state *s,
     arg = f->npstem;
     if (arg > ntot && c->fixleafnc == FALSE && c->ncycle) {
       cut_back_production(c, f, p, s, ntot, ncwnew);
-      fprintf(stderr, "in n cut back \n");
     }
     
     /* If we have allocated more P than we have avail, cut back C prodn */
     arg = f->ppstem;
     if (arg > ptot && c->fixleafpc == FALSE && c->pcycle) {
       cut_back_production(c, f, p, s, ptot, pcwnew);
-      fprintf(stderr, "in p cut back \n");
     }
     
     /* Nitrogen reallocation to flexible-ratio pools */
@@ -399,12 +397,13 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s) {
       
       if (s->shootn > (s->shoot * ncmaxf)) {
         extrasn = s->shootn - s->shoot * ncmaxf;
+        s->shootn -= extrasn;
         
         /* Ensure N uptake cannot be reduced below zero. */
-        if (extrasn >  f->nuptake)
+        if (extrasn >  f->nuptake) {
           extrasn = f->nuptake;
-        
-        s->shootn -= extrasn;
+        }
+        //s->shootn -= extrasn;
         f->nuptake -= extrasn;
       }
     }
@@ -414,12 +413,14 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s) {
       
       if (s->shootp > (s->shoot * pcmaxf)) {
         extrasp = s->shootp - s->shoot * pcmaxf;
+        s->shootp -= extrasp;
         
         /* Ensure P uptake cannot be reduced below zero. */
-        if (extrasp >  f->puptake)
+        if (extrasp >  f->puptake) {
           extrasp = f->puptake;
+        }
         
-        s->shootp -= extrasp;
+        //s->shootp -= extrasp;
         f->puptake -= extrasp;
       }
     }
@@ -433,13 +434,15 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s) {
     extrarn = 0.0;
     if (s->rootn > (s->root * ncmaxr)) {
       extrarn = s->rootn - s->root * ncmaxr;
+      s->rootn -= extrarn;
       
       /* Ensure N uptake cannot be reduced below zero. */
-      if ((extrasn + extrarn) > f->nuptake)
-        extrarn = f->nuptake - extrasn;
+      if (extrarn > f->nuptake) {
+          extrarn = f->nuptake;
+      }
       
-      s->rootn -= extrarn;
-      f->nuptake -= (extrarn+extrasn);
+      //s->rootn -= extrarn;
+      f->nuptake -= extrarn;
     }
     
     /* max root p:c */
@@ -447,13 +450,18 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s) {
     extrarp = 0.0;
     if (s->rootp > (s->root * pcmaxr)) {
       extrarp = s->rootp - s->root * pcmaxr;
+      s->rootp -= extrarp;
       
       /* Ensure P uptake cannot be reduced below zero. */
-      if ((extrasp + extrarp) > f->puptake)
-        extrarp = f->puptake - extrasp;
+      if (extrarp > f->puptake) {
+          extrarp = f->puptake;
+      }
+
+      //s->rootp -= extrarp;
+      f->puptake -= extrarp;
       
-      s->rootp -= extrarp;
-      f->puptake -= (extrarp + extrasp);
+      //fprintf(stderr, "rootp after taking out extrarp %f, puptake %f\n",
+       //       s->rootp, f->puptake);
     }
     
     return;

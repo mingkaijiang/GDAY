@@ -986,6 +986,9 @@ void p_inputs_from_plant_litter(fluxes *f, params *p, double *psurf,
     /* surface and soil inputs (faeces p goes to abovgrd litter pools) */
     *psurf = f->deadleafp + f->deadstemp;
     *psoil = f->deadrootp;
+    
+    //fprintf(stderr, "psoil in input %f, deadroot %f, deadleafp %f, deadleaves %f\n", 
+    //        f->deadrootp, f->deadroots, f->deadleafp, f->deadleaves);
 
     return;
 }
@@ -1023,6 +1026,9 @@ void partition_plant_litter_p(control *c, fluxes *f, params *p, double psurf,
     /* remaining P goes to metabolic pools */
     f->p_surf_metab_litter = psurf - f->p_surf_struct_litter;
     f->p_soil_metab_litter = psoil - f->p_soil_struct_litter;
+    
+    //fprintf(stderr, "p_soil_metab_litter %f, psoil %f, p_soil_struct_litter %f\n",
+    //        f->p_soil_metab_litter, psoil, f->p_soil_struct_litter);
 
     return;
 }
@@ -1274,6 +1280,8 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s) {
     /* P released or fixed from the P inorganic labile pool is incremented with
     each call to pc_limit and stored in f->plittrelease */
     f->plittrelease = 0.0;
+    
+    //fprintf(stderr, "plittrelease should be zero %f\n", f->plittrelease);
 
     s->structsurfp += (f->p_surf_struct_litter -
                       (f->p_surf_struct_to_slow +
@@ -1297,12 +1305,12 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s) {
     /* pcmin & pcmax from Parton 1989 fig 2 */
     s->metabsoilp += (f->p_soil_metab_litter - f->p_soil_metab_to_active);
     //fprintf(stderr, "metabsoilp %f, p_soil_metab_litter %f, p_soil_metab_to_active %f\n", 
-    //        s->metabsoilp, f->p_soil_metab_litter, f->p_soil_metab_to_active);
+     //       s->metabsoilp, f->p_soil_metab_litter, f->p_soil_metab_to_active);
     
     s->metabsoilp += pc_limit(f, s->metabsoil, s->metabsoilp,
                               1.0/p->metabcpmax, 1.0/p->metabcpmin);
     
-    //fprintf(stderr, "plittrelease 2 %f, metabsoil %f, metabsoilp %f\n", s->metabsoil, s->metabsoilp, f->plittrelease);
+    //fprintf(stderr, "plittrelease 2 %f, metabsoil %f, metabsoilp %f\n", f->plittrelease, s->metabsoil, s->metabsoilp);
 
     /* When nothing is being added to the metabolic pools, there is the
     potential scenario with the way the model works for tiny bits to be
