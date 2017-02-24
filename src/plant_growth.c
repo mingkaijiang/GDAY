@@ -65,13 +65,7 @@ void carbon_annual_production(control *c, fluxes *f, met *m, params *p, state *s
  
     /* Estimate photosynthesis */
     simple_photosynthesis(c, f, m, p, s);
-
-    /* Calculate plant respiration */
-    f->auto_resp = f->gpp * p->cue;
     
-    /* Calculate NPP */
-    f->npp_gCm2 = f->gpp_gCm2 * p->cue;
-    f->npp = f->npp_gCm2 * GRAM_C_2_TONNES_HA;     
 
     return;
 }

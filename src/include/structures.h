@@ -26,6 +26,7 @@ typedef struct {
     int   passiveconst;
     int   print_options;
     int   num_months;
+    int   respiration_model;    
     int   total_num_months;
     char  git_code_ver[STRING_LENGTH];
     int   spin_up;

@@ -37,6 +37,11 @@
 #define GRASSES 1
 #define ALLOMETRIC 2
 
+/* Respiration models */
+#define FIXED 0
+#define TEMPERATURE 1
+#define LEAFN 2
+
 /* Texture identifiers */
 #define SILT 0
 #define SAND 1

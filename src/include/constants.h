@@ -7,6 +7,7 @@
 
 #define MOL_2_MMOL 1000.0
 #define MMOL_2_MOL 1E-03
+#define NMOL_2_MOL 1E-09
 #define NDAYS_IN_YR 365.25
 #define NMONTHS_IN_YR 12.0
 #define DEG_TO_KELVIN 273.15
@@ -14,6 +15,7 @@
 #define SECS_IN_HOUR 3600.0
 #define UMOL_TO_MOL 1E-6
 #define MOL_C_TO_GRAMS_C 12.0
+#define MOL_N_TO_GRAMS_N 14.0
 #define G_AS_TONNES 1E-6
 #define M2_AS_HA 1E-4
 #define KG_AS_G 1E+3

@@ -256,7 +256,21 @@ int handler(char *section, char *name, char *value, control *c,
             fprintf(stderr, "Unknown print option: %s\n", temp);
             exit(EXIT_FAILURE);
         }
-    } 
+    } else if (MATCH("control", "respiration_model")) {
+      if (strcmp(temp, "FIXED") == 0||
+          strcmp(temp, "fixed") == 0)
+        c->respiration_model = FIXED;
+      else if (strcmp(temp, "TEMPERATURE") == 0||
+               strcmp(temp, "temperature") == 0)
+        c->respiration_model = TEMPERATURE;
+      else if (strcmp(temp, "LEAFN") == 0||
+               strcmp(temp, "leafn") == 0)
+        c->respiration_model = LEAFN;
+      else {
+        fprintf(stderr, "Unknown respiration model: %s\n", temp);
+        exit(EXIT_FAILURE);
+      }
+    }
 
 
     /*
