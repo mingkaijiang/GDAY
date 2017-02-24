@@ -32,6 +32,11 @@
 #define ANNUAL 0
 #define END 1
 
+/* Allocation models */
+#define FIXED 0
+#define GRASSES 1
+#define ALLOMETRIC 2
+
 /* Texture identifiers */
 #define SILT 0
 #define SAND 1

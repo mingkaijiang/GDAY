@@ -313,13 +313,13 @@ void spin_up_annual(control *c, fluxes *f, met *m,
                 if (c->pcycle) {
                   /* Have we reached a steady state? */
                   fprintf(stderr,
-                          "Spinup: Iteration %d, moy %d, Plant C %f, Stem C %f, Leaf NC %f, Leaf PC %f, Passive C %f, NPP %f\n",
-                          year, moy, s->plantc, s->stem, s->shootnc, s->shootpc, s->passivesoil, f->npp);
+                          "Spinup: Iteration %d, moy %d, Stem C %f, Leaf NC %f, Leaf PC %f, Passive C %f, NPP %f, Sapwood %f, Alleaf %f\n",
+                          year, moy, s->stem, s->shootnc, s->shootpc, s->passivesoil, f->npp, s->sapwood, f->alleaf);
                 } else if (c->ncycle) {
                   /* Have we reached a steady state? */
                   fprintf(stderr,
-                          "Spinup: Iteration %d, moy %d, Plant C %f, Active C %f, Slow C %f, Passive C %f, LAI %f, Inorg N %f\n",
-                          year, moy, s->plantc,s->activesoil, s->slowsoil, s->passivesoil, s->lai, s->inorgn);
+                          "Spinup: Iteration %d, moy %d, Plant C %f, Stem C %f, Leaf NC %f, Passive C %f, NPP %f\n",
+                          year, moy, s->plantc, s->stem, s->shootnc, s->passivesoil, f->npp);
                 } else {
                   /* Have we reached a steady state? */
                   fprintf(stderr,
@@ -692,6 +692,7 @@ void correct_rate_constants(params *p, int output) {
     p->fdecay *= NMONTHS_IN_YR;
     p->rdecay *= NMONTHS_IN_YR;
     p->wdecay *= NMONTHS_IN_YR;
+    p->sapturnover *= NMONTHS_IN_YR;
     p->kdec1 *= NMONTHS_IN_YR;
     p->kdec2 *= NMONTHS_IN_YR;
     p->kdec3 *= NMONTHS_IN_YR;
@@ -716,6 +717,7 @@ void correct_rate_constants(params *p, int output) {
     p->fdecay /= NMONTHS_IN_YR;
     p->rdecay /= NMONTHS_IN_YR;
     p->wdecay /= NMONTHS_IN_YR;
+    p->sapturnover /= NMONTHS_IN_YR;
     p->kdec1 /= NMONTHS_IN_YR;
     p->kdec2 /= NMONTHS_IN_YR;
     p->kdec3 /= NMONTHS_IN_YR;

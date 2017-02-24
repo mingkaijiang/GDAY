@@ -16,6 +16,7 @@ void initialise_control(control *c) {
     strcpy(c->out_fname, "*NOT SET*");
     strcpy(c->out_param_fname, "*NOT SET*");
 
+    c->alloc_model = ALLOMETRIC;    /* C allocation scheme: FIXED, GRASSES, ALLOMETRIC */
     c->fixed_stem_nc = TRUE;        /* False=vary stem N:C with foliage, True=fixed stem N:C */
     c->fixed_stem_pc = TRUE;        /* False=vary stem P:C with foliage, True=fixed stem P:C */
     c->diagnosis = FALSE;           /* print out variables for diagnosis */
@@ -46,18 +47,24 @@ void initialise_params(params *p) {
     p->actncmin = 0.066667;
     p->actpcmax = 0.033333;
     p->actpcmin = 0.0125;
-    p->c_alloc_f = 0.2;       
-    p->c_alloc_r = 0.2;       
-    p->c_alloc_s = 0.5;
+    p->c_alloc_fmax = 0.2;
+    p->c_alloc_fmin = 0.2;    
+    p->c_alloc_rmax = 0.2;
+    p->c_alloc_rmin = 0.2;
     p->cfracts = 0.5;
     p->cue = 0.5;
     p->co2_in = 350.0;
+    p->density = 420.0;
     p->fdecay = 0.59988;
     p->finesoil = 0.51;
     p->fmleaf = 0.0;
     p->fmroot = 0.0;
     p->fretransn = 0.5;
     p->fretransp = 0.6;
+    p->height0 = 5.0;
+    p->height1 = 30.0;
+    p->heighto = 4.826;
+    p->htpower = 0.35;
     p->I0 = 3000.0;
     p->k1 = 0.048;
     p->k2 = 0.001;
@@ -72,11 +79,17 @@ void initialise_params(params *p) {
     p->kext = 0.5;
     p->kr = 0.5;          /* this value is 1.0 in Wang et al. 2007 Global Biogeochemical Cycles, Kn Michaelis-Menten constant for plant N uptake [g P m-2] */
     p->krp = 0.01;        /* Wang et al. 2007 Global Biogeochemical Cycles, Kp Michaelis-Menten constant for plant P uptake [g P m-2] */
+    p->leafsap0 = 8000.0;
+    p->leafsap1 = 3060.0;
     p->ligroot = 0.22;
     p->ligshoot = 0.24;
     p->ndep_in = 0.001;
     p->nfix_in = 0.001;
     p->lue0 = 1.4;                /* maximum LUE in kg C GJ-1 */
+    p->metabcnmax = 25.0;
+    p->metabcnmin = 10.0;
+    p->metabcpmax = 150.0;
+    p->metabcpmin = 80.0;
     p->ncmaxf = 0.05;
     p->nref = 0.04;
     p->ncrfac = 0.8;
@@ -103,6 +116,7 @@ void initialise_params(params *p) {
     p->rateuptake = 2.7;
     p->rdecay = 0.33333;
     p->rretrans = 0.0; 
+    p->sapturnover = 0.1;
     p->sla = 4.4;
     p->slowncmax = 0.066666;
     p->slowncmin = 0.025;
@@ -110,10 +124,7 @@ void initialise_params(params *p) {
     p->slowpcmin = 0.005;
     p->structcn = 150.0;
     p->structcp = 5500.0;
-    p->metabcnmax = 25.0;
-    p->metabcnmin = 10.0;
-    p->metabcpmax = 150.0;
-    p->metabcpmin = 80.0;
+    p->targ_sens = 0.5;
     p->tsoil_in = 15.0;
     p->wdecay = 0.02;
     p->wretrans = 0.0;
@@ -186,6 +197,7 @@ void initialise_fluxes(fluxes *f) {
     f->deadleafp = 0.0;    /* Leaf litter P production (t/ha/yr) */
     f->deadrootp = 0.0;    /* Root litter P production (t/ha/yr) */
     f->deadstemp = 0.0;    /* Stem litter P production (t/ha/yr) */
+    f->deadsapwood = 0.0;
 
     /* retranslocation */
     f->leafretransn = 0.0;
@@ -300,6 +312,7 @@ void initialise_state(state *s) {
     s->activesoil = 2.53010543182;
     s->activesoiln = 0.833516379296;
     s->activesoilp = 0.04600192;          /* based on active soil pool C/P ratio of 55 from Parton et al., 1989, Ecology of arable land. */
+    s->canht = 23.0964973582;
     s->inorgn = 0.0274523714275;
     s->inorgp = 0.0205;
     s->inorgavlp = 0.096;               /* lab p + sorb p */
@@ -318,6 +331,7 @@ void initialise_state(state *s) {
     s->root = 3.92887790342;
     s->rootn = 0.076296932914;
     s->rootp = 0.00392888;              /* Yang et al. 2016, Biogeosciences, Table S1, fine root C:P = 1000 */
+    s->sapwood = 51.2600270003;
     s->shoot = 4.37991243755;
     s->shootn = 0.0978837857406; 
     s->shootp = 0.008759825;            /* Based on leaf C:P ratio of 500 from Crous et al., 2015, Plant Soil */

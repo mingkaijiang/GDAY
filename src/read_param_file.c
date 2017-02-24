@@ -148,6 +148,19 @@ int handler(char *section, char *name, char *value, control *c,
           fprintf(stderr, "Unknown fixed_stem_pc option: %s\n", temp);
           exit(EXIT_FAILURE);
       }
+    } else if (MATCH("control", "alloc_model")) {
+      if (strcmp(temp, "FIXED") == 0||
+          strcmp(temp, "fixed") == 0)
+        c->alloc_model = FIXED;
+      else if (strcmp(temp, "GRASSES") == 0 || strcmp(temp, "grasses") == 0)
+        c->alloc_model = GRASSES;
+      else if (strcmp(temp, "ALLOMETRIC") == 0 ||
+               strcmp(temp, "allometric") == 0)
+        c->alloc_model = ALLOMETRIC;
+      else {
+        fprintf(stderr, "Unknown alloc model: %s\n", temp);
+        exit(EXIT_FAILURE);
+      }
     } else if (MATCH("control", "diagnosis")) {
       if (strcmp(temp, "False") == 0 ||
           strcmp(temp, "FALSE") == 0 ||
@@ -255,6 +268,8 @@ int handler(char *section, char *name, char *value, control *c,
         s->activesoiln = atof(value);
     } else if (MATCH("state", "activesoilp")) {
         s->activesoilp = atof(value);
+    } else if (MATCH("state", "canht")) {
+      s->canht = atof(value);
     } else if (MATCH("state", "inorgn")) {
         s->inorgn = atof(value);
     } else if (MATCH("state", "inorgp")) {
@@ -293,6 +308,8 @@ int handler(char *section, char *name, char *value, control *c,
         s->rootn = atof(value);
     } else if (MATCH("state", "rootp")) {
         s->rootp = atof(value);
+    } else if (MATCH("state", "sapwood")) {
+      s->sapwood = atof(value);
     } else if (MATCH("state", "shoot")) {
         s->shoot = atof(value);
     } else if (MATCH("state", "shootn")) {
@@ -334,18 +351,22 @@ int handler(char *section, char *name, char *value, control *c,
         p->actpcmax = atof(value);
     } else if (MATCH("params", "actpcmin")) {
         p->actpcmin = atof(value);
-    } else if (MATCH("params", "c_alloc_f")) {
-        p->c_alloc_f = atof(value);
-    } else if (MATCH("params", "c_alloc_r")) {
-        p->c_alloc_r = atof(value);
-    } else if (MATCH("params", "c_alloc_s")) {
-        p->c_alloc_s = atof(value);
+    } else if (MATCH("params", "c_alloc_fmax")) {
+        p->c_alloc_fmax = atof(value);
+    } else if (MATCH("params", "c_alloc_fmin")) {
+      p->c_alloc_fmin = atof(value);
+    } else if (MATCH("params", "c_alloc_rmax")) {
+        p->c_alloc_rmax = atof(value);
+    } else if (MATCH("params", "c_alloc_rmin")) {
+      p->c_alloc_rmin = atof(value);
     } else if (MATCH("params", "cfracts")) {
         p->cfracts = atof(value);
     } else if (MATCH("params", "cue")) {
         p->cue = atof(value);
     } else if (MATCH("params", "co2_in")) {
       p->co2_in = atof(value);
+    } else if (MATCH("params", "density")) {
+      p->density = atof(value);
     } else if (MATCH("params", "fdecay")) {
         p->fdecay = atof(value);
     } else if (MATCH("params", "finesoil")) {
@@ -354,6 +375,14 @@ int handler(char *section, char *name, char *value, control *c,
         p->fretransn = atof(value);
     } else if (MATCH("params", "fretransp")) {
         p->fretransp = atof(value);
+    } else if (MATCH("params", "height0")) {
+      p->height0 = atof(value);
+    } else if (MATCH("params", "height1")) {
+      p->height1 = atof(value);
+    } else if (MATCH("params", "heighto")) {
+      p->heighto = atof(value);
+    } else if (MATCH("params", "htpower")) {
+      p->htpower = atof(value);
     } else if (MATCH("params", "I0")) {
       p->I0 = atof(value);
     } else if (MATCH("params", "k1")) {
@@ -384,10 +413,22 @@ int handler(char *section, char *name, char *value, control *c,
         p->ligroot = atof(value);
     } else if (MATCH("params", "ligshoot")) {
         p->ligshoot = atof(value);
+    } else if (MATCH("params", "leafsap0")) {
+      p->leafsap0 = atof(value);
+    } else if (MATCH("params", "leafsap1")) {
+      p->leafsap1 = atof(value);
     } else if (MATCH("params", "ndep_in")) {
       p->ndep_in = atof(value);
     } else if (MATCH("params", "nfix_in")) {
       p->nfix_in = atof(value);
+    } else if (MATCH("params", "metabcnmax")) {
+      p->structcp = atof(value);
+    } else if (MATCH("params", "metabcnmin")) {
+      p->structcp = atof(value);
+    } else if (MATCH("params", "metabcpmax")) {
+      p->structcp = atof(value);
+    } else if (MATCH("params", "metabcpmin")) {
+      p->structcp = atof(value);
     } else if (MATCH("params", "lue0")) {
       p->lue0 = atof(value);
     } else if (MATCH("params", "ncmaxf")) {
@@ -442,6 +483,8 @@ int handler(char *section, char *name, char *value, control *c,
         p->rdecay = atof(value);
     } else if (MATCH("params", "rretrans")) {
       p->rretrans = atof(value);
+    } else if (MATCH("params", "sapturnover")) {
+      p->sapturnover = atof(value);
     } else if (MATCH("params", "sla")) {
         p->sla = atof(value);
     } else if (MATCH("params", "slowncmax")) {
@@ -456,14 +499,8 @@ int handler(char *section, char *name, char *value, control *c,
         p->structcn = atof(value);
     } else if (MATCH("params", "structcp")) {
         p->structcp = atof(value);
-    } else if (MATCH("params", "metabcnmax")) {
-      p->structcp = atof(value);
-    } else if (MATCH("params", "metabcnmin")) {
-      p->structcp = atof(value);
-    } else if (MATCH("params", "metabcpmax")) {
-      p->structcp = atof(value);
-    } else if (MATCH("params", "metabcpmin")) {
-      p->structcp = atof(value);
+    } else if (MATCH("params", "targ_sens")) {
+      p->targ_sens = atof(value);
     } else if (MATCH("params", "tsoil_in")) {
       p->tsoil_in = atof(value);
     } else if (MATCH("params", "wdecay")) {

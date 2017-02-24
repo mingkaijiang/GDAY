@@ -32,8 +32,10 @@ void calculate_litterfall(control *c, fluxes *f, params *p, state *s) {
     /* C litter production */
     f->deadroots = p->rdecay * s->root;
     f->deadstems = p->wdecay * s->stem;
-
     f->deadleaves = p->fdecay * s->shoot;
+    
+    f->deadsapwood = (p->wdecay + p->sapturnover) * s->sapwood;
+    
     
     /* N litter production */
     f->deadleafn = f->deadleaves * ncflit;

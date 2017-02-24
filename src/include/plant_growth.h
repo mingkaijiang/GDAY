@@ -16,6 +16,7 @@ void    calc_annual_growth(control *, fluxes *, met *,
                         nrutil *, params *, state *);
 void    carbon_allocation(control *, fluxes *, params *, state *);
 void    calc_carbon_allocation_fracs(control *c, fluxes *, params *, state *);
+double  alloc_goal_seek(double, double, double, double);
 void    update_plant_state(control *, fluxes *, params *, state *);
 void    precision_control(fluxes *, state *);
 void    carbon_annual_production(control *, fluxes *, met *m, params *, state *);

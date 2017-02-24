@@ -12,6 +12,7 @@ typedef struct {
     char  out_fname[STRING_LENGTH];
     char  out_param_fname[STRING_LENGTH];
     char  git_hash[STRING_LENGTH];
+    int   alloc_model;
     int   diagnosis;
     int   fixed_stem_nc;
     int   fixed_stem_pc;
@@ -38,6 +39,7 @@ typedef struct {
     double activesoil;                  /* active C som pool (t/ha) */
     double activesoiln;                 /* active N som pool (t/ha) */
     double activesoilp;                 /* active P som pool (t/ha) */
+    double canht;                       /* canopy height (m) */
     double inorgn;                      /* Inorganic soil N pool - dynamic (t/ha) */
     double inorgp;                      /* Inorganic soil P pool - dynamic (t/ha) */
     double inorgavlp;                   /* Inorganic soil P pool - available mineral P = lab + sorbed (t/ha) */
@@ -58,6 +60,7 @@ typedef struct {
     double root;                        /* root c (t/ha) */
     double rootn;                       /* root n (t/ha) */
     double rootp;                       /* root p (t/ha) */
+    double sapwood;
     double shoot;                       /* shoot c (t/ha) */
     double shootn;                      /* shoot n (t/ha) */
     double shootp;                      /* shoot p (t/ha) */
@@ -103,19 +106,25 @@ typedef struct {
     double actncmin;                        /* Active pool (=1/15) N:C of new SOM - when Nmin=Nmin0 [units: gN/gC]. Based on forest version of CENTURY (Parton et al. 1993), see Appendix, McMurtrie 2001, Tree Physiology. */
     double actpcmax;                        /* Active pool (=1/30) P:C ratio of new SOM - maximum [units: gP/gC]. Based on forest version of CENTURY (Parton et al. 1993) */
     double actpcmin;                        /* Active pool (=1/80) P:C of new SOM - when Pmin=Pmin0 [units: gP/gC]. Based on forest version of CENTURY (Parton et al. 1993) */
-    double c_alloc_f;                       /* allocation to leaves at leaf n_crit and p_crit. */
-    double c_alloc_r;                       /* allocation to roots at root n_crit and p_crit. */
-    double c_alloc_s;                       /* allocation to stem at zero stem n/c and p/c. */
+    double c_alloc_fmax;                    /* allocation to leaves at leaf n_crit and p_crit. */    
+    double c_alloc_fmin;                    /* allocation to leaves at leaf n_crit and p_crit. */
+    double c_alloc_rmax;                    /* allocation to roots at root n_crit and p_crit. */
+    double c_alloc_rmin;                    /* allocation to roots at root n_crit and p_crit. */
     double cfracts;                         /* carbon fraction of dry biomass */
     double co2_in;                          /* annual version co2 concentration ppm */
     double cue;                             /* carbon use efficiency, or the ratio of NPP to GPP */
     double decayrate[7];
+    double density;                         /* sapwood density kg DM m-3 (trees) */
     double fdecay;                          /* foliage turnover rate (1/yr) */
     double finesoil;                        /* clay+silt fraction */
     double fmleaf;
     double fmroot;
     double fretransn;                       /* foliage n retranslocation fraction - 46-57% in young E. globulus trees - see Corbeels et al 2005 ecological modelling 187, pg 463. Roughly 50% from review Aerts '96 */
     double fretransp;                       /* foliage p retranslocation fraction - 39.5-69 in Southern US FACE site - Finzi et al. 2001 Ecology  */
+    double height0;                         /* Height when leaf:sap area ratio = leafsap0 (trees) */
+    double height1;                         /* Height when leaf:sap area ratio = leafsap1 (trees) */
+    double heighto;                         /* constant in avg tree height (m) - stem (t C/ha) reln */
+    double htpower;                         /* Exponent in avg tree height (m) - stem (t C/ha) reln */
     double I0;                              /* annual version radiation MJ/m2/yr */
     double k1;                              /* P transfer rate coefficient from labile to secondary inorganic P pool */
     double k2;                              /* P transfer rate coefficient from secondary inorganic P to labile P */
@@ -130,9 +139,15 @@ typedef struct {
     double kext;                            /* extinction coefficient for light  */
     double kr;                              /* N uptake coefficent (0.05 kg C m-2 to 0.5 tonnes/ha) see Silvia's PhD, Dewar and McM, 96. */
     double krp;                             /* P uptake coefficent */
+    double leafsap0;                        /* leaf area  to sapwood cross sectional area ratio when Height = Height0 (mm^2/mm^2) */
+    double leafsap1;                        /* leaf to sap area ratio when Height = Height1 (mm^2/mm^2) */
     double ligroot;                         /* lignin-to-biomass ratio in root litter; Values from White et al. = 0.22  - Value in Smith et al. 2013 = 0.16, note subtly difference in eqn C9. */
     double ligshoot;                        /* lignin-to-biomass ratio in leaf litter; Values from White et al. DBF = 0.18; ENF = 0.24l; GRASS = 0.09; Shrub = 0.15 - Value in smith et al. 2013 = 0.2, note subtly difference in eqn C9. */
     double lue0;                            /* maximum LUE in kg C GJ-1 */
+    double metabcpmax;                      /* Max C:P ratio of metabolic bit of litter input */
+    double metabcpmin;                      /* Min C:P ratio of metabolic bit of litter input */
+    double metabcnmax;                      /* Max C:N ratio of metabolic bit of litter input */
+    double metabcnmin;                      /* Min C:N ratio of metabolic bit of litter input */
     double ncmaxf;                          /* max N:C ratio of foliage in old stand, if the same as young=no effect */
     double nref;                            /* leaf nc for saturation of photosynthesis */
     double ncrfac;                          /* N:C of fine root prodn / N:C of leaf prodn */
@@ -161,6 +176,7 @@ typedef struct {
     double rateuptake;                      /* Rate of N uptake from mineral N pool (/yr) from here? http://face.ornl.gov/Finzi-PNAS.pdf Seems to correspond to very low NPP values */
     double rdecay;                          /* root turnover rate (1/yr) */
     double rretrans;                        /* root retranslocation coefficient */
+    double sapturnover;
     double sla;                             /* specific leaf area (m2 one-sided/kg DW) */
     double slowncmax;                       /* Slow pool (=1/15) N:C ratio of new SOM - maximum [units: gN/gC]. Based on forest version of CENTURY (Parton et al. 1993), see Appendix, McMurtrie 2001, Tree Physiology. */
     double slowncmin;                       /* Slow pool (=1/40) N:C of new SOM - when Nmin=Nmin0" [units: gN/gC]. Based on forest version of CENTURY (Parton et al. 1993), see Appendix, McMurtrie 2001, Tree Physiology. */
@@ -168,10 +184,7 @@ typedef struct {
     double slowpcmin;                       /* Slow pool (=1/200) P:C of new SOM - when Pmin=Pmin0" [units: gP/gC]. */
     double structcn;                        /* C:N ratio of structural bit of litter input */
     double structcp;                        /* C:P ratio of structural bit of litter input, Ref Parton 1989 Figure 2; */
-    double metabcpmax;                      /* Max C:P ratio of metabolic bit of litter input */
-    double metabcpmin;                      /* Min C:P ratio of metabolic bit of litter input */
-    double metabcnmax;                      /* Max C:N ratio of metabolic bit of litter input */
-    double metabcnmin;                      /* Min C:N ratio of metabolic bit of litter input */
+    double targ_sens;                       /* sensitivity of allocation (leaf/branch) to track the target, higher values = less responsive. */
     double tsoil_in;                        /* annual version tsoil [degree C] */
     double wdecay;                          /* wood turnover rate (1/yr) */
     double wretrans;                        /* wood retranslocation coefficient */
@@ -264,6 +277,7 @@ typedef struct {
     double deadleafp;       /* Leaf litter P production (t/ha/yr) */
     double deadrootp;       /* Root litter P production (t/ha/yr) */
     double deadstemp;       /* Stem litter P production (t/ha/yr) */
+    double deadsapwood;
 
     /* retranslocation */
     double leafretransn;    /* N retranslocation leaf */
