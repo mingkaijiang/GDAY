@@ -270,6 +270,17 @@ int handler(char *section, char *name, char *value, control *c,
         fprintf(stderr, "Unknown respiration model: %s\n", temp);
         exit(EXIT_FAILURE);
       }
+    } else if (MATCH("control", "passnc_calc")) {
+      if (strcmp(temp, "FIXED") == 0||
+          strcmp(temp, "fixed") == 0)
+        c->passnc_calc = FIXED;
+      else if (strcmp(temp, "INORGN") == 0||
+               strcmp(temp, "inorgn") == 0)
+        c->passnc_calc = INORGN;
+      else {
+        fprintf(stderr, "Unknown passnc_calc model: %s\n", temp);
+        exit(EXIT_FAILURE);
+      }
     }
 
 
@@ -436,13 +447,17 @@ int handler(char *section, char *name, char *value, control *c,
     } else if (MATCH("params", "nfix_in")) {
       p->nfix_in = atof(value);
     } else if (MATCH("params", "metabcnmax")) {
-      p->structcp = atof(value);
+      p->metabcnmax = atof(value);
     } else if (MATCH("params", "metabcnmin")) {
-      p->structcp = atof(value);
+      p->metabcnmin = atof(value);
     } else if (MATCH("params", "metabcpmax")) {
-      p->structcp = atof(value);
+      p->metabcpmax = atof(value);
     } else if (MATCH("params", "metabcpmin")) {
-      p->structcp = atof(value);
+      p->metabcpmin = atof(value);
+    } else if (MATCH("params", "n1")) {
+      p->n1 = atof(value);
+    } else if (MATCH("params", "n2")) {
+      p->n2 = atof(value);
     } else if (MATCH("params", "lue0")) {
       p->lue0 = atof(value);
     } else if (MATCH("params", "ncmaxf")) {

@@ -498,7 +498,7 @@ void calculate_nsoil_flows(control *c, fluxes *f, params *p, state *s) {
     calculate_n_mineralisation(c, f);
     
     /* calculate N immobilisation */
-    calculate_n_immobilisation(f, p, s, &(f->nimmob));
+    calculate_n_immobilisation(c, f, p, s, &(f->nimmob));
     
     /* calculate N net mineralisation */
     calc_n_net_mineralisation(c, f);
@@ -670,7 +670,7 @@ void calculate_n_mineralisation(control *c, fluxes *f) {
     return;
 }
 
-void calculate_n_immobilisation(fluxes *f, params *p, state *s, double *nimmob) {
+void calculate_n_immobilisation(control *c, fluxes *f, params *p, state *s, double *nimmob) {
     /* N immobilised in new soil organic matter, the reverse of
     mineralisation. Micro-organisms in the soil compete with plants for N.
     Immobilisation is the process by which nitrate and ammonium are taken up
@@ -700,16 +700,34 @@ void calculate_n_immobilisation(fluxes *f, params *p, state *s, double *nimmob) 
         N immobilsed
     */
     double arg1, arg2, arg3, numer1, numer2;
+    double passncmin, passncmax;
     
-    arg1 = p->passncmin * f->c_into_passive;
-    arg2 = p->slowncmin  * f->c_into_slow;
-    arg3 = p->actncmin * f->c_into_active;
-    numer1 = arg1 + arg2 + arg3;
-
-    arg1 = f->c_into_passive * p->passncmax;
-    arg2 = f->c_into_slow * p->slowncmax;
-    arg3 = f->c_into_active * p->actncmax;
-    numer2 = arg1 + arg2 + arg3;
+    if (c->passnc_calc == FIXED) {
+      arg1 = p->passncmin * f->c_into_passive;
+      arg2 = p->slowncmin  * f->c_into_slow;
+      arg3 = p->actncmin * f->c_into_active;
+      numer1 = arg1 + arg2 + arg3;
+      
+      arg1 = f->c_into_passive * p->passncmax;
+      arg2 = f->c_into_slow * p->slowncmax;
+      arg3 = f->c_into_active * p->actncmax;
+      numer2 = arg1 + arg2 + arg3;
+    } else if (c->passnc_calc == INORGN) {
+      
+      passncmin = p->n1 + p->n2 * s->inorgn;
+      passncmax = passncmin;
+      
+      arg1 = passncmin * f->c_into_passive;
+      arg2 = p->slowncmin  * f->c_into_slow;
+      arg3 = p->actncmin * f->c_into_active;
+      numer1 = arg1 + arg2 + arg3;
+      
+      arg1 = f->c_into_passive * passncmax;
+      arg2 = f->c_into_slow * p->slowncmax;
+      arg3 = f->c_into_active * p->actncmax;
+      numer2 = arg1 + arg2 + arg3;
+    }
+    
     
     /* evaluate N immobilisation in new SOM */
     *nimmob = numer1;
@@ -814,9 +832,14 @@ void calculate_npools(control *c, fluxes *f, params *p, state *s) {
     s->slowsoiln += n_into_slow + fixn - n_out_of_slow;
 
     /* passive, update passive pool only if passiveconst=0 */
-    pass_nc = p->passncmin;
-    if (pass_nc > p->passncmax)
-        pass_nc = p->passncmax;
+    if (c->passnc_calc == FIXED) {
+      pass_nc = p->passncmin;
+      if (pass_nc > p->passncmax)
+          pass_nc = p->passncmax;
+    } else if (c->passnc_calc == INORGN) {
+      pass_nc = p->n1 + p->n2 * s->inorgn;
+    }
+
 
     /* release N to Inorganic pool or fix N from the Inorganic pool in order
        to normalise the N:C ratio of a net flux */

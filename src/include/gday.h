@@ -47,6 +47,10 @@
 #define SAND 1
 #define CLAY 2
 
+/* PassNC_calc models */
+#define FIXED 0
+#define INORGN 1
+
 #include "structures.h"
 #include "initialise_model.h"
 #include "plant_growth.h"

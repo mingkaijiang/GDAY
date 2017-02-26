@@ -25,6 +25,7 @@ typedef struct {
     int   puptake_model;
     int   passiveconst;
     int   print_options;
+    int   passnc_calc;
     int   num_months;
     int   respiration_model;    
     int   total_num_months;
@@ -149,6 +150,8 @@ typedef struct {
     double metabcpmin;                      /* Min C:P ratio of metabolic bit of litter input */
     double metabcnmax;                      /* Max C:N ratio of metabolic bit of litter input */
     double metabcnmin;                      /* Min C:N ratio of metabolic bit of litter input */
+    double n1;                              /* linear regression intercept that controls the dependency of passive NC to inorgn */
+    double n2;                              /* linear regression coefficient that controls the dependency of passive NC to inorgn */
     double ncmaxf;                          /* max N:C ratio of foliage in old stand, if the same as young=no effect */
     double nref;                            /* leaf nc for saturation of photosynthesis */
     double ncrfac;                          /* N:C of fine root prodn / N:C of leaf prodn */
