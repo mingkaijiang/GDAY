@@ -161,6 +161,19 @@ int handler(char *section, char *name, char *value, control *c,
         fprintf(stderr, "Unknown alloc model: %s\n", temp);
         exit(EXIT_FAILURE);
       }
+    } else if (MATCH("control", "adjust_rtslow")) {
+        if (strcmp(temp, "False") == 0 ||
+            strcmp(temp, "FALSE") == 0 ||
+            strcmp(temp, "false") == 0)
+          c->adjust_rtslow = FALSE;
+        else if (strcmp(temp, "True") == 0 ||
+                 strcmp(temp, "TRUE") == 0 ||
+                 strcmp(temp, "true") == 0)
+          c->adjust_rtslow = TRUE;
+        else {
+          fprintf(stderr, "Unknown adjust_rtslow option: %s\n", temp);
+          exit(EXIT_FAILURE);
+        }
     } else if (MATCH("control", "diagnosis")) {
       if (strcmp(temp, "False") == 0 ||
           strcmp(temp, "FALSE") == 0 ||
@@ -172,6 +185,19 @@ int handler(char *section, char *name, char *value, control *c,
         c->diagnosis = TRUE;
       else {
         fprintf(stderr, "Unknown diagnosis option: %s\n", temp);
+        exit(EXIT_FAILURE);
+      }
+    } else if (MATCH("control", "exudation")) {
+      if (strcmp(temp, "False") == 0 ||
+          strcmp(temp, "FALSE") == 0 ||
+          strcmp(temp, "false") == 0)
+        c->exudation = FALSE;
+      else if (strcmp(temp, "True") == 0 ||
+               strcmp(temp, "TRUE") == 0 ||
+               strcmp(temp, "true") == 0)
+        c->exudation = TRUE;
+      else {
+        fprintf(stderr, "Unknown exudation option: %s\n", temp);
         exit(EXIT_FAILURE);
       }
     } else if (MATCH("control", "fixleafnc")) {
@@ -376,6 +402,10 @@ int handler(char *section, char *name, char *value, control *c,
         p->actpcmax = atof(value);
     } else if (MATCH("params", "actpcmin")) {
         p->actpcmin = atof(value);
+    } else if (MATCH("params", "a0rhizo")) {
+      p->a0rhizo = atof(value);
+    } else if (MATCH("params", "a1rhizo")) {
+      p->a1rhizo = atof(value);
     } else if (MATCH("params", "c_alloc_fmax")) {
         p->c_alloc_fmax = atof(value);
     } else if (MATCH("params", "c_alloc_fmin")) {
@@ -508,10 +538,16 @@ int handler(char *section, char *name, char *value, control *c,
         p->rateuptake = atof(value);
     } else if (MATCH("params", "prateuptake")) {
         p->prateuptake = atof(value);
+    } else if (MATCH("params", "prime_y")) {
+      p->prime_y = atof(value);
+    } else if (MATCH("params", "prime_z")) {
+      p->prime_z = atof(value);
     } else if (MATCH("params", "rdecay")) {
         p->rdecay = atof(value);
     } else if (MATCH("params", "rretrans")) {
       p->rretrans = atof(value);
+    } else if (MATCH("params", "root_exu_CUE")) {
+      p->root_exu_CUE = atof(value);
     } else if (MATCH("params", "sapturnover")) {
       p->sapturnover = atof(value);
     } else if (MATCH("params", "sla")) {

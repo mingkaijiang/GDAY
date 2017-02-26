@@ -17,6 +17,7 @@ void initialise_control(control *c) {
     strcpy(c->out_param_fname, "*NOT SET*");
 
     c->alloc_model = ALLOMETRIC;    /* C allocation scheme: FIXED, GRASSES, ALLOMETRIC */
+    c->exudation = TRUE;            /* Plant exudation */
     c->fixed_stem_nc = TRUE;        /* False=vary stem N:C with foliage, True=fixed stem N:C */
     c->fixed_stem_pc = TRUE;        /* False=vary stem P:C with foliage, True=fixed stem P:C */
     c->diagnosis = FALSE;           /* print out variables for diagnosis */
@@ -45,6 +46,8 @@ void initialise_params(params *p) {
     *** Default values for params structure.
     */
     int i;
+    p->a0rhizo = 0.05;
+    p->a1rhizo = 0.6;
     p->actncmax = 0.333333;
     p->actncmin = 0.066667;
     p->actpcmax = 0.033333;

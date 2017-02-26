@@ -12,8 +12,10 @@ typedef struct {
     char  out_fname[STRING_LENGTH];
     char  out_param_fname[STRING_LENGTH];
     char  git_hash[STRING_LENGTH];
+    int   adjust_rtslow;
     int   alloc_model;
     int   diagnosis;
+    int   exudation;
     int   fixed_stem_nc;
     int   fixed_stem_pc;
     int   fixleafnc;
@@ -104,6 +106,8 @@ typedef struct {
 } state;
 
 typedef struct {
+    double a0rhizo;                         /* minimum allocation to rhizodeposition [0.0-0.1] */
+    double a1rhizo;                         /* slope of allocation to rhizodeposition [0.2-1] */
     double actncmax;                        /* Active pool (=1/3) N:C ratio of new SOM - maximum [units: gN/gC]. Based on forest version of CENTURY (Parton et al. 1993), see Appendix, McMurtrie 2001, Tree Physiology. */
     double actncmin;                        /* Active pool (=1/15) N:C of new SOM - when Nmin=Nmin0 [units: gN/gC]. Based on forest version of CENTURY (Parton et al. 1993), see Appendix, McMurtrie 2001, Tree Physiology. */
     double actpcmax;                        /* Active pool (=1/30) P:C ratio of new SOM - maximum [units: gP/gC]. Based on forest version of CENTURY (Parton et al. 1993) */
@@ -176,10 +180,13 @@ typedef struct {
     double prescribed_leaf_NC;              /* If the N-Cycle is switched off this needs to be set, e.g. 0.03 */
     double prescribed_leaf_PC;              /* If the P-Cycle is switched off this needs to be set, e.g. 0.00249 */
     double puptakez;                        /* constant P uptake per year (1/yr) */
+    double prime_y;
+    double prime_z;
     double rateloss;                        /* Rate of N loss from mineral N pool (/yr) */
     double rateuptake;                      /* Rate of N uptake from mineral N pool (/yr) from here? http://face.ornl.gov/Finzi-PNAS.pdf Seems to correspond to very low NPP values */
     double rdecay;                          /* root turnover rate (1/yr) */
     double rretrans;                        /* root retranslocation coefficient */
+    double root_exu_CUE;                    /* root exudation carbon use efficiency */
     double sapturnover;
     double sla;                             /* specific leaf area (m2 one-sided/kg DW) */
     double slowncmax;                       /* Slow pool (=1/15) N:C ratio of new SOM - maximum [units: gN/gC]. Based on forest version of CENTURY (Parton et al. 1993), see Appendix, McMurtrie 2001, Tree Physiology. */
@@ -374,6 +381,14 @@ typedef struct {
     double alleaf;             /* allocation to leaf */
     double alroot;             /* allocation to fine root */
     double alstem;             /* allocation to stems */
+    
+    /* priming/exudation */
+    double root_exc;
+    double root_exn;
+    double co2_released_exud;
+    double factive;
+    double rtslow;
+    double rexc_cue;
 
     /* Misc stuff */
     double tfac_soil_decomp;
