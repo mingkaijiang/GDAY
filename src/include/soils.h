@@ -66,6 +66,7 @@ void   precision_control_soil_p(fluxes *, state *, params *);
 /* priming/exudation */
 void calc_root_exudation_uptake_of_C(fluxes *, params *, state *);
 void calc_root_exudation_uptake_of_N(fluxes *, state *);
+void calc_root_exudation_uptake_of_P(fluxes *, state *);
 void adjust_residence_time_of_slow_pool(fluxes *, params *);
 
 #endif /* SOILS_H */

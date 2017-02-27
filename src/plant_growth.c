@@ -61,14 +61,7 @@ void calc_root_exudation(control *c, fluxes *f, params *p, state *s) {
     CN_leaf = 0.0;
     frac_to_rexc = 0.0;
   } else {
-    
-    //if (c->deciduous_model) {
-      /* broadleaf */
-      CN_ref = 25.0;
-    //} else {
-      /* conifer */
-    //  CN_ref = 42.0;
-    //}
+     CN_ref = p->nref;
     
     /*
      ** The fraction of growth allocated to rhizodeposition, constrained
@@ -83,6 +76,7 @@ void calc_root_exudation(control *c, fluxes *f, params *p, state *s) {
   f->root_exc = frac_to_rexc * f->cproot;
   if (float_eq(f->cproot, 0.0)) {
     f->root_exn = 0.0;
+    f->root_exp = 0.0;
   } else {
     /*
      ** N flux associated with rhizodeposition is based on the assumption
@@ -90,6 +84,8 @@ void calc_root_exudation(control *c, fluxes *f, params *p, state *s) {
      ** growth
      */
     f->root_exn = f->root_exc * (f->nproot / f->cproot);
+    f->root_exp = f->root_exc * (f->pproot / f->cproot);
+    
   }
   
   /*
@@ -98,6 +94,7 @@ void calc_root_exudation(control *c, fluxes *f, params *p, state *s) {
    */
   f->cproot -= f->root_exc;
   f->nproot -= f->root_exn;
+  f->pproot -= f->root_exp;
   
   return;
 }

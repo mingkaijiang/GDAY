@@ -82,9 +82,10 @@ void calc_root_exudation_uptake_of_C(fluxes *f, params *p, state *s) {
   REXCUE determines which fraction of REXC enters the active pool as C
   (delta_Cact). The remaining fraction of REXC is respired as CO2.
   */
-  double active_CN, rex_NC, C_to_active_pool;
+  double active_CN, active_CP, rex_NC, rex_PC, C_to_active_pool;
   
   active_CN = s->activesoil / s->activesoiln;
+  active_CP = s->activesoil / s->activesoilp;
   
   if (p->root_exu_CUE < -0.5) {
     /*
@@ -95,10 +96,12 @@ void calc_root_exudation_uptake_of_C(fluxes *f, params *p, state *s) {
     
     if (float_eq(f->root_exc, 0.0)) {
       rex_NC = 0.0;
+      rex_PC = 0.0;
     } else {
       rex_NC = f->root_exn / f->root_exc;
+      rex_PC = f->root_exp / f->root_exc;
     }
-    f->rexc_cue = MAX(0.3, MIN(0.6, rex_NC * active_CN));
+    f->rexc_cue = MAX(0.3, MIN(0.6, MIN(rex_NC * active_CN, rex_PC * active_CP)));
   } else {
     f->rexc_cue = p->root_exu_CUE;
   }
@@ -1136,6 +1139,10 @@ void calculate_psoil_flows(control *c, fluxes *f, params *p, state *s) {
     calculate_p_ssorb_to_occ(s, f, p);
     calculate_p_avl_to_ssorb(s, f, p);
     
+    if (c->exudation) {
+      calc_root_exudation_uptake_of_P(f, s);
+    }
+    
     /* Update model soil P pools */
     calculate_ppools(c, f, p, s);
 
@@ -1145,6 +1152,57 @@ void calculate_psoil_flows(control *c, fluxes *f, params *p, state *s) {
   
     return;
 }
+
+
+void calc_root_exudation_uptake_of_P(fluxes *f, state *s) {
+  /* Follow N example
+  */
+  double P_available, active_PC, delta_Pact, P_miss, P_to_active_pool;
+  
+  P_available = s->inorglabp + (f->p_atm_dep + f->pmineralisation + f->p_ssorb_to_avl 
+                                  - f->p_avl_to_ssorb - f->ploss - f->puptake);
+  
+  active_PC = s->activesoilp / s->activesoil;
+  delta_Pact = f->root_exc * f->rexc_cue * active_PC;
+  
+  /*
+  ** Demand for P from exudation to meet the C:P ratio of the active pool,
+  ** given the amount of P you add.
+  */
+  P_miss = delta_Pact - f->root_exp;
+  
+  if (P_miss <= 0.0) {
+    /*
+    ** Root exudation includes more N than is needed by the microbes, the
+    ** excess is mineralised
+    */
+    f->pmineralisation -= P_miss;
+    P_to_active_pool = f->root_exp + P_miss;
+  } else {
+    /*
+    ** Not enough P in the soil to meet demand, so we are providing all
+    ** the P we have, which means that the C:P ratio of the active pool
+    ** changes.
+    */
+    if (P_miss > P_available) {
+      P_to_active_pool = f->root_exp + P_available;
+      f->pmineralisation -= P_available;
+    } else {
+      /*
+      ** Enough P to meet demand, so takes P from the mineralisation
+      ** and the active pool maintains the same C:P ratio.
+      */
+      P_to_active_pool = f->root_exp + P_miss;
+      f->pmineralisation -= P_miss;
+    }
+  }
+  
+  /* update active pool */
+  s->activesoilp += P_to_active_pool;
+  
+  return;
+}
+
 
 void p_inputs_from_plant_litter(fluxes *f, params *p, double *psurf,
                                 double *psoil) {
