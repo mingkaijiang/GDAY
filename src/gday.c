@@ -241,7 +241,7 @@ void spin_up_annual(control *c, fluxes *f, met *m,
     */
     double tol_c = 1E-06;
     double tol_n = 1E-06;
-    double tol_p = 1E-06;
+    double tol_p = 1E-04;
     double prev_plantc = 99999.9;
     double prev_soilc = 99999.9;
     double prev_plantn = 99999.9;

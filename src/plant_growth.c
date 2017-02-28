@@ -773,9 +773,8 @@ double calculate_puptake(control *c, params *p, state *s, fluxes *f) {
     if (c->puptake_model == 0) {
         /* Constant P uptake */
         //puptake = p->puptakez;
-        pleach = prateloss / (1.0 - prateloss); 
         pocc = (k3 / (k2 + k3)) * (k1 / (1.0 - k1));
-        puptake = (1.0008 - prateloss - pocc) * ( f->pmineralisation + f->p_atm_dep);
+        puptake = (1.00085 - prateloss - pocc) * ( f->pmineralisation + f->p_atm_dep);
         
     } else if (c->puptake_model == 1) {
         // evaluate puptake : proportional to lab P pool that is
