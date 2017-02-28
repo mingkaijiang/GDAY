@@ -296,15 +296,15 @@ int handler(char *section, char *name, char *value, control *c,
         fprintf(stderr, "Unknown respiration model: %s\n", temp);
         exit(EXIT_FAILURE);
       }
-    } else if (MATCH("control", "passnc_calc")) {
+    } else if (MATCH("control", "som_nc_calc")) {
       if (strcmp(temp, "FIXED") == 0||
           strcmp(temp, "fixed") == 0)
-        c->passnc_calc = FIXED;
+        c->som_nc_calc = FIXED;
       else if (strcmp(temp, "INORGN") == 0||
                strcmp(temp, "inorgn") == 0)
-        c->passnc_calc = INORGN;
+        c->som_nc_calc = INORGN;
       else {
-        fprintf(stderr, "Unknown passnc_calc model: %s\n", temp);
+        fprintf(stderr, "Unknown som_nc_calc model: %s\n", temp);
         exit(EXIT_FAILURE);
       }
     }

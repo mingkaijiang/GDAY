@@ -47,7 +47,7 @@
 #define SAND 1
 #define CLAY 2
 
-/* PassNC_calc models */
+/* som_nc_calc models */
 #define FIXED 0
 #define INORGN 1
 

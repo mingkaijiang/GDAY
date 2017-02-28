@@ -29,7 +29,7 @@ void initialise_control(control *c) {
     c->puptake_model = 1;           /* 0=constant uptake, 1=func of P inorgp, 2=depends on rate of soil P availability */
     c->passiveconst = FALSE;        /* hold passive pool at passivesoil */
     c->print_options = ANNUAL;      /* ANNUAL=every timestep, END=end of run */
-    c->passnc_calc = FIXED;         /* calculates passive NC ratio as a function of mineral N (1) or read from input (0) */
+    c->som_nc_calc = FIXED;         /* calculates SOM NC ratio as a function of mineral N (1) or read from input (0) */
     c->respiration_model = FIXED;   /* Plant respiration ... Fixed, TEMPERATURE or LEAFN */
     c->spin_up = FALSE;             /* Spin up to a steady state? If False it just runs the model */
 

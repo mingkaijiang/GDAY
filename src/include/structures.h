@@ -27,7 +27,7 @@ typedef struct {
     int   puptake_model;
     int   passiveconst;
     int   print_options;
-    int   passnc_calc;
+    int   som_nc_calc;
     int   num_months;
     int   respiration_model;    
     int   total_num_months;
