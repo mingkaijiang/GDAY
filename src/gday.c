@@ -313,8 +313,8 @@ void spin_up_annual(control *c, fluxes *f, met *m,
                 if (c->pcycle) {
                   /* Have we reached a steady state? */
                   fprintf(stderr,
-                          "Spinup: Iteration %d, moy %d, Passive C %f, Leaf NC %f, Leaf PC %f, NPP %f, PassiveNC %f, InorgN %f\n",
-                          year, moy, s->passivesoil, s->shootnc, s->shootpc, f->npp, s->passivesoiln/s->passivesoil, s->inorgn);
+                          "Spinup: Iteration %d, moy %d, Leaf NC %f, Leaf PC %f, NPP %f, InorgN %f, InorgavlP %f\n",
+                          year, moy, s->shootnc, s->shootpc, f->npp, s->inorgn, s->inorgavlp);
                 } else if (c->ncycle) {
                   /* Have we reached a steady state? */
                   fprintf(stderr,

@@ -227,8 +227,14 @@ void np_allocation(control *c, fluxes *f, params *p, state *s,
     }
 
     /* Mineralised P lost from the system by leaching */
-    f->ploss = p->prateloss * s->inorgavlp;
-  
+    if(c->puptake_model == 0) {
+      f->ploss = (p->prateloss * NMONTHS_IN_YR) * (f->p_atm_dep + f->pmineralisation);
+    } else if (c->puptake_model == 1) {
+      f->ploss = p->prateloss * s->inorgavlp;
+    } else if (c->puptake_model == 2) {
+      f->ploss = p->prateloss * s->inorgavlp;
+    }
+
     /* total nitrogen/phosphorus to allocate */
     ntot = MAX(0.0, f->nuptake + f->retransn);
     ptot = MAX(0.0, f->puptake + f->retransp);
@@ -243,12 +249,14 @@ void np_allocation(control *c, fluxes *f, params *p, state *s,
     /* If we have allocated more N than we have avail, cut back C prodn */
     arg = f->npstem;
     if (arg > ntot && c->fixleafnc == FALSE && c->ncycle) {
+      fprintf(stderr, "in cut back n \n");
       cut_back_production(c, f, p, s, ntot, ncwnew);
     }
     
     /* If we have allocated more P than we have avail, cut back C prodn */
     arg = f->ppstem;
     if (arg > ptot && c->fixleafpc == FALSE && c->pcycle) {
+      fprintf(stderr, "in cut back p \n");
       cut_back_production(c, f, p, s, ptot, pcwnew);
     }
     
@@ -756,11 +764,19 @@ double calculate_puptake(control *c, params *p, state *s, fluxes *f) {
         puptake : float
         P uptake
     */
-    double puptake, U0, Kr;
+    double puptake, U0, Kr, pocc, pleach;
+    double k1 = p->k1 * NMONTHS_IN_YR;
+    double k2 = p->k2 * NMONTHS_IN_YR;
+    double k3 = p->k3 * NMONTHS_IN_YR;
+    double prateloss = p->prateloss * NMONTHS_IN_YR;
 
     if (c->puptake_model == 0) {
         /* Constant P uptake */
-        puptake = p->puptakez;
+        //puptake = p->puptakez;
+        pleach = prateloss / (1.0 - prateloss); 
+        pocc = (k3 / (k2 + k3)) * (k1 / (1.0 - k1));
+        puptake = (1.0008 - prateloss - pocc) * ( f->pmineralisation + f->p_atm_dep);
+        
     } else if (c->puptake_model == 1) {
         // evaluate puptake : proportional to lab P pool that is
         // available to plant uptake
