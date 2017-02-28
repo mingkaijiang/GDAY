@@ -647,7 +647,7 @@ void adjust_residence_time_of_slow_pool(fluxes *f, params *p) {
   
   if (float_eq(f->factive, 0.0)) {
     /* Need to correct units of rate constant */
-    rt_slow_pool = 1.0 / (p->kdec6 * NDAYS_IN_YR);
+    rt_slow_pool = 1.0 / (p->kdec6 * NMONTHS_IN_YR);
   } else {
     rt_slow_pool = (1.0 / p->prime_y) / \
       MAX(0.3, (f->factive / (f->factive + p->prime_z)));
@@ -656,7 +656,7 @@ void adjust_residence_time_of_slow_pool(fluxes *f, params *p) {
     p->kdec6 = 1.0 / rt_slow_pool;
     
     /* rate constant needs to be per day inside GDAY */
-    p->kdec6 /= NDAYS_IN_YR;
+    p->kdec6 /= NMONTHS_IN_YR;
     
   }
   
@@ -858,9 +858,7 @@ void calculate_n_immobilisation(control *c, fluxes *f, params *p, state *s, doub
         N immobilsed
     */
     double arg1, arg2, arg3, numer1, numer2;
-    double passncmin, passncmax;
-    
-    if (c->passnc_calc == FIXED) {
+
       arg1 = p->passncmin * f->c_into_passive;
       arg2 = p->slowncmin  * f->c_into_slow;
       arg3 = p->actncmin * f->c_into_active;
@@ -870,22 +868,6 @@ void calculate_n_immobilisation(control *c, fluxes *f, params *p, state *s, doub
       arg2 = f->c_into_slow * p->slowncmax;
       arg3 = f->c_into_active * p->actncmax;
       numer2 = arg1 + arg2 + arg3;
-    } else if (c->passnc_calc == INORGN) {
-      
-      passncmin = p->n1 + p->n2 * s->inorgn;
-      passncmax = passncmin;
-      
-      arg1 = passncmin * f->c_into_passive;
-      arg2 = p->slowncmin  * f->c_into_slow;
-      arg3 = p->actncmin * f->c_into_active;
-      numer1 = arg1 + arg2 + arg3;
-      
-      arg1 = f->c_into_passive * passncmax;
-      arg2 = f->c_into_slow * p->slowncmax;
-      arg3 = f->c_into_active * p->actncmax;
-      numer2 = arg1 + arg2 + arg3;
-    }
-    
     
     /* evaluate N immobilisation in new SOM */
     *nimmob = numer1;
@@ -990,14 +972,9 @@ void calculate_npools(control *c, fluxes *f, params *p, state *s) {
     s->slowsoiln += n_into_slow + fixn - n_out_of_slow;
 
     /* passive, update passive pool only if passiveconst=0 */
-    if (c->passnc_calc == FIXED) {
       pass_nc = p->passncmin;
       if (pass_nc > p->passncmax)
           pass_nc = p->passncmax;
-    } else if (c->passnc_calc == INORGN) {
-      pass_nc = p->n1 + p->n2 * s->inorgn;
-    }
-
 
     /* release N to Inorganic pool or fix N from the Inorganic pool in order
        to normalise the N:C ratio of a net flux */
@@ -1159,7 +1136,7 @@ void calc_root_exudation_uptake_of_P(fluxes *f, state *s) {
   */
   double P_available, active_PC, delta_Pact, P_miss, P_to_active_pool;
   
-  P_available = s->inorglabp + (f->p_atm_dep + f->pmineralisation + f->p_ssorb_to_avl 
+  P_available = s->inorgavlp + (f->p_atm_dep + f->pmineralisation + f->p_ssorb_to_avl 
                                   - f->p_avl_to_ssorb - f->ploss - f->puptake);
   
   active_PC = s->activesoilp / s->activesoil;

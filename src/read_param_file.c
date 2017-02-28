@@ -484,10 +484,6 @@ int handler(char *section, char *name, char *value, control *c,
       p->metabcpmax = atof(value);
     } else if (MATCH("params", "metabcpmin")) {
       p->metabcpmin = atof(value);
-    } else if (MATCH("params", "n1")) {
-      p->n1 = atof(value);
-    } else if (MATCH("params", "n2")) {
-      p->n2 = atof(value);
     } else if (MATCH("params", "lue0")) {
       p->lue0 = atof(value);
     } else if (MATCH("params", "ncmaxf")) {

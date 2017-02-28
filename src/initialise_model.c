@@ -95,8 +95,6 @@ void initialise_params(params *p) {
     p->metabcnmin = 10.0;
     p->metabcpmax = 150.0;
     p->metabcpmin = 80.0;
-    p->n1 = 0.00001;
-    p->n2 = 1.0;
     p->ncmaxf = 0.05;
     p->nref = 0.04;
     p->ncrfac = 0.8;
