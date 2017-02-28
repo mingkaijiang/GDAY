@@ -239,9 +239,9 @@ void spin_up_annual(control *c, fluxes *f, met *m,
     * Murty, D and McMurtrie, R. E. (2000) Ecological Modelling, 134,
     185-205, specifically page 196.
     */
-    double tol_c = 1E-02;
-    double tol_n = 1E-02;
-    double tol_p = 1E-02;
+    double tol_c = 1E-06;
+    double tol_n = 1E-06;
+    double tol_p = 1E-06;
     double prev_plantc = 99999.9;
     double prev_soilc = 99999.9;
     double prev_plantn = 99999.9;
@@ -318,8 +318,8 @@ void spin_up_annual(control *c, fluxes *f, met *m,
                 } else if (c->ncycle) {
                   /* Have we reached a steady state? */
                   fprintf(stderr,
-                          "Spinup: Iteration %d, moy %d, Plant C %f, Stem C %f, Leaf NC %f, Passive C %f, NPP %f\n",
-                          year, moy, s->plantc, s->stem, s->shootnc, s->passivesoil, f->npp);
+                          "Spinup: Iteration %d, moy %d, Plant C %f, Leaf NC %f, Passive C %f, NPP %f, InorgN %f\n",
+                          year, moy, s->plantc, s->shootnc, s->passivesoil, f->npp, s->inorgn);
                 } else {
                   /* Have we reached a steady state? */
                   fprintf(stderr,
@@ -703,8 +703,8 @@ void correct_rate_constants(params *p, int output) {
     p->k1 *= NMONTHS_IN_YR;
     p->k2 *= NMONTHS_IN_YR;
     p->k3 *= NMONTHS_IN_YR;
-    //p->nuptakez *= NMONTHS_IN_YR;
-    //p->puptakez *= NMONTHS_IN_YR;
+    p->nuptakez *= NMONTHS_IN_YR;
+    p->puptakez *= NMONTHS_IN_YR;
   } else {
     p->rateuptake /= NMONTHS_IN_YR;
     p->prateuptake /= NMONTHS_IN_YR;
@@ -728,8 +728,8 @@ void correct_rate_constants(params *p, int output) {
     p->k1 /= NMONTHS_IN_YR;
     p->k2 /= NMONTHS_IN_YR;
     p->k3 /= NMONTHS_IN_YR;
-    //p->nuptakez /= NMONTHS_IN_YR;
-    //p->puptakez /= NMONTHS_IN_YR;
+    p->nuptakez /= NMONTHS_IN_YR;
+    p->puptakez /= NMONTHS_IN_YR;
   }
   
   return;

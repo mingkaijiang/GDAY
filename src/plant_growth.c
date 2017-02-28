@@ -212,11 +212,19 @@ void np_allocation(control *c, fluxes *f, params *p, state *s,
        the plant */
     f->retransn = nitrogen_retrans(c, f, p, s);
     f->retransp = phosphorus_retrans(c, f, p, s);
-    f->nuptake = calculate_nuptake(c, p, s);
+    
+    /* N and P uptake */
+    f->nuptake = calculate_nuptake(c, p, s, f);
     f->puptake = calculate_puptake(c, p, s, f);
     
     /* Mineralised nitrogen lost from the system by volatilisation/leaching */
-    f->nloss = p->rateloss * s->inorgn;
+    if(c->nuptake_model == 0) {
+      f->nloss = (p->rateloss * NMONTHS_IN_YR) * (f->ninflow + f->nmineralisation);
+    } else if (c->nuptake_model == 1) {
+      f->nloss = p->rateloss * s->inorgn;
+    } else if (c->nuptake_model == 2) {
+      f->nloss = p->rateloss * s->inorgn;
+    }
 
     /* Mineralised P lost from the system by leaching */
     f->ploss = p->prateloss * s->inorgavlp;
@@ -697,7 +705,7 @@ double phosphorus_retrans(control *c, fluxes *f, params *p, state *s) {
     return (leafretransp + rootretransp + stemretransp);
 }
 
-double calculate_nuptake(control *c, params *p, state *s) {
+double calculate_nuptake(control *c, params *p, state *s, fluxes *f) {
     /*
         N uptake depends on the rate at which soil mineral N is made
         available to the plants.
@@ -717,7 +725,8 @@ double calculate_nuptake(control *c, params *p, state *s) {
 
     if (c->nuptake_model == 0) {
         /* Constant N uptake */
-        nuptake = p->nuptakez;
+        //nuptake = p->nuptakez;
+        nuptake = (1.0 - (p->rateloss * NMONTHS_IN_YR)) * (f->nmineralisation + f->ninflow);
     } else if (c->nuptake_model == 1) {
         /* evaluate nuptake : proportional to dynamic inorganic N pool */
         nuptake = p->rateuptake * s->inorgn;

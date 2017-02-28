@@ -26,7 +26,7 @@ void    calculate_cnp_wood_ratios(control *c, params *, state *, double *, doubl
 /* N stuff */
 void    np_allocation(control *c, fluxes *, params *, state *, double,
                      double);
-double calculate_nuptake(control *, params *, state *);
+double calculate_nuptake(control *, params *, state *, fluxes *);
 
 double nitrogen_retrans(control *, fluxes *, params *, state *);
 
