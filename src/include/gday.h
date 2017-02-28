@@ -51,6 +51,10 @@
 #define FIXED 0
 #define INORGN 1
 
+/* som_pc_calc models */
+#define FIXED 0
+#define INORGAVLP 1
+
 #include "structures.h"
 #include "initialise_model.h"
 #include "plant_growth.h"

@@ -28,6 +28,7 @@ typedef struct {
     int   passiveconst;
     int   print_options;
     int   som_nc_calc;
+    int   som_pc_calc;
     int   num_months;
     int   respiration_model;    
     int   total_num_months;
@@ -159,6 +160,8 @@ typedef struct {
     double ncrfac;                          /* N:C of fine root prodn / N:C of leaf prodn */
     double ncwnewz;                         /* N alloc param: New stem ring N:C at zero leaf N:C (mobile) */
     double ndep_in;                         /* annual version ndep t/ha/yr */
+    double nmin0;                           /* mineral N pool corresponding to Actnc0,etc (g/m2) */
+    double nmincrit;                        /* Critical mineral N pool at max soil N:C (g/m2) (Parton et al 1993, McMurtrie et al 2001). */
     double nfix_in;                         /* annual version nfix t/ha/yr */
     double nuptakez;                        /* constant N uptake per year (1/yr) */
     double p_rate_par_weather;              /* parent P material weathering rate [yr-1] */
@@ -173,6 +176,8 @@ typedef struct {
     double pcrfac;                          /* P:C of fine root prodp / P:C c of leaf prodp */
     double pcwnewz;                         /* P alloc param: New stem ring P:C at zero leaf P:C (mobile) */
     double pdep_in;                         /* Annual version p deposition t/ha/yr */
+    double pmin0;                           /* mineral P pool corresponding to Actpc0,etc (g/m2) */
+    double pmincrit;                        /* Critical mineral P pool at max soil P:C (g/m2) */
     double prateloss;                       /* Rate of P loss from mineral P pool (/yr), Ref Wang et al., 2007, GB1018 */
     double prateuptake;                     /* Rate of P uptake from mineral P pool (/yr), guess value */
     double prescribed_leaf_NC;              /* If the N-Cycle is switched off this needs to be set, e.g. 0.03 */

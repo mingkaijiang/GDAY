@@ -307,6 +307,17 @@ int handler(char *section, char *name, char *value, control *c,
         fprintf(stderr, "Unknown som_nc_calc model: %s\n", temp);
         exit(EXIT_FAILURE);
       }
+    } else if (MATCH("control", "som_pc_calc")) {
+      if (strcmp(temp, "FIXED") == 0||
+          strcmp(temp, "fixed") == 0)
+        c->som_pc_calc = FIXED;
+      else if (strcmp(temp, "INORGAVLP") == 0||
+               strcmp(temp, "inorgavlp") == 0)
+        c->som_pc_calc = INORGAVLP;
+      else {
+        fprintf(stderr, "Unknown som_pc_calc model: %s\n", temp);
+        exit(EXIT_FAILURE);
+      }
     }
 
 
@@ -486,6 +497,10 @@ int handler(char *section, char *name, char *value, control *c,
       p->metabcpmin = atof(value);
     } else if (MATCH("params", "lue0")) {
       p->lue0 = atof(value);
+    } else if (MATCH("params", "nmin0")) {
+      p->nmin0 = atof(value);
+    } else if (MATCH("params", "nmincrit")) {
+      p->nmincrit = atof(value);
     } else if (MATCH("params", "ncmaxf")) {
         p->ncmaxf = atof(value);
     } else if (MATCH("params", "nref")) {
@@ -502,6 +517,10 @@ int handler(char *section, char *name, char *value, control *c,
         p->ncwnewz = atof(value);
     } else if (MATCH("params", "pcwnewz")) {
         p->pcwnewz = atof(value);
+    } else if (MATCH("params", "pmin0")) {
+      p->pmin0 = atof(value);
+    } else if (MATCH("params", "pmincrit")) {
+      p->pmincrit = atof(value);
     } else if (MATCH("params", "nuptakez")) {
         p->nuptakez = atof(value);
     } else if (MATCH("params", "puptakez")) {

@@ -30,6 +30,7 @@ void initialise_control(control *c) {
     c->passiveconst = FALSE;        /* hold passive pool at passivesoil */
     c->print_options = ANNUAL;      /* ANNUAL=every timestep, END=end of run */
     c->som_nc_calc = FIXED;         /* calculates SOM NC ratio as a function of mineral N (1) or read from input (0) */
+    c->som_pc_calc = FIXED;         /* calculates SOM PC ratio as a function of mineral AVL P (1) or read from input (0) */
     c->respiration_model = FIXED;   /* Plant respiration ... Fixed, TEMPERATURE or LEAFN */
     c->spin_up = FALSE;             /* Spin up to a steady state? If False it just runs the model */
 
@@ -99,6 +100,8 @@ void initialise_params(params *p) {
     p->nref = 0.04;
     p->ncrfac = 0.8;
     p->ncwnewz = 0.003;
+    p->nmin0 = 0.0;
+    p->nmincrit = 2.0;
     p->nuptakez = 0.0;
     p->p_rate_par_weather = 0.001;
     p->passivesoilnz = 1.0;
@@ -112,6 +115,8 @@ void initialise_params(params *p) {
     p->pcrfac = 0.8;
     p->pcwnewz = 0.0003;
     p->pdep_in = 0.0004;
+    p->pmin0 = 0.0;
+    p->pmincrit = 2.0;       /* Based on CENTURY VARAT1(2,3) = 2 value */
     p->prateloss = 0.005;    
     p->prateuptake = 365.0;
     p->prescribed_leaf_NC = 0.03;

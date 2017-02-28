@@ -35,7 +35,9 @@ void   nfluxes_from_active_pool(fluxes *, params *, state *, double);
 void   nfluxes_from_slow_pool(fluxes *, params *, state *s);
 void   nfluxes_from_passive_pool(fluxes *, params *, state *);
 void   calculate_n_mineralisation(control *, fluxes *);
-void   calculate_n_immobilisation(control *, fluxes *, params *, state *, double *);
+void   calculate_n_immobilisation(control *, fluxes *, params *, state *, double *,
+                                  double *, double *, double *);
+double calculate_nc_slope(params *, double, double);
 void   calc_n_net_mineralisation(control *, fluxes *);
 void   calculate_npools(control *c, fluxes *, params *, state *);
 double nc_limit(fluxes *, double, double, double, double);
@@ -53,7 +55,9 @@ void   pfluxes_from_slow_pool(fluxes *, params *, state *s);
 void   pfluxes_from_passive_pool(fluxes *, params *, state *);
 void   calculate_p_parent_fluxes(control *, fluxes *, params *, state *);
 void   calculate_p_mineralisation(fluxes *);
-void   calculate_p_immobilisation(fluxes *, params *, state *, double *);
+void   calculate_p_immobilisation(control *, fluxes *, params *, state *, double *,
+                                  double *, double *, double *);
+double calculate_pc_slope(params *, double, double);
 void   calculate_p_ssorb_to_avl(state *, fluxes *, params *, control *);
 void   calculate_p_avl_to_ssorb(state *, fluxes *, params *);
 void   calculate_p_ssorb_to_occ(state *, fluxes *, params *);
