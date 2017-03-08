@@ -219,7 +219,7 @@ void np_allocation(control *c, fluxes *f, params *p, state *s,
     
     /* Mineralised nitrogen lost from the system by volatilisation/leaching */
     if(c->nuptake_model == 0) {
-      f->nloss = (p->rateloss * NMONTHS_IN_YR) * (f->ninflow + f->nmineralisation);
+      f->nloss = (p->rateloss * NMONTHS_IN_YR) * s->inorgn;
     } else if (c->nuptake_model == 1) {
       f->nloss = p->rateloss * s->inorgn;
     } else if (c->nuptake_model == 2) {
@@ -228,7 +228,7 @@ void np_allocation(control *c, fluxes *f, params *p, state *s,
 
     /* Mineralised P lost from the system by leaching */
     if(c->puptake_model == 0) {
-      f->ploss = (p->prateloss * NMONTHS_IN_YR) * (f->p_atm_dep + f->pmineralisation);
+      f->ploss = (p->prateloss * NMONTHS_IN_YR) * s->inorgavlp; 
     } else if (c->puptake_model == 1) {
       f->ploss = p->prateloss * s->inorgavlp;
     } else if (c->puptake_model == 2) {
@@ -601,8 +601,6 @@ void update_plant_state(control *c, fluxes *f, params *p, state *s) {
       //s->rootp -= extrarp;
       f->puptake -= extrarp;
       
-      //fprintf(stderr, "rootp after taking out extrarp %f, puptake %f\n",
-       //       s->rootp, f->puptake);
     }
     
     return;
@@ -734,7 +732,7 @@ double calculate_nuptake(control *c, params *p, state *s, fluxes *f) {
     if (c->nuptake_model == 0) {
         /* Constant N uptake */
         //nuptake = p->nuptakez;
-        nuptake = (1.0 - (p->rateloss * NMONTHS_IN_YR)) * (f->nmineralisation + f->ninflow);
+        nuptake = (1.0 - (p->rateloss * NMONTHS_IN_YR)) * s->inorgn;
     } else if (c->nuptake_model == 1) {
         /* evaluate nuptake : proportional to dynamic inorganic N pool */
         nuptake = p->rateuptake * s->inorgn;
@@ -773,9 +771,10 @@ double calculate_puptake(control *c, params *p, state *s, fluxes *f) {
     if (c->puptake_model == 0) {
         /* Constant P uptake */
         //puptake = p->puptakez;
+        pleach = prateloss / (1.0 - prateloss);
         pocc = (k3 / (k2 + k3)) * (k1 / (1.0 - k1));
-        puptake = (1.00085 - prateloss - pocc) * ( f->pmineralisation + f->p_atm_dep);
-        
+        puptake = (1.0 - pleach - pocc - 0.109) * s->inorgavlp; 
+
     } else if (c->puptake_model == 1) {
         // evaluate puptake : proportional to lab P pool that is
         // available to plant uptake

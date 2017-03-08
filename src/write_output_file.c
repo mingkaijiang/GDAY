@@ -328,6 +328,9 @@ int ohandler(char *section, char *name, char *value, control *c, params *p,
     } else if (MATCH("state", "activesoilp")) {
         fprintf(c->ofp, "activesoilp = %.10f\n", s->activesoilp);
         *match = TRUE;
+    } else if (MATCH("state", "canht")) {
+      fprintf(c->ofp, "canht = %.10f\n", s->canht);
+      *match = TRUE;
     } else if (MATCH("state", "inorgn")) {
         fprintf(c->ofp, "inorgn = %.10f\n", s->inorgn);
         *match = TRUE;
@@ -385,6 +388,9 @@ int ohandler(char *section, char *name, char *value, control *c, params *p,
     } else if (MATCH("state", "rootp")) {
         fprintf(c->ofp, "rootp = %.10f\n", s->rootp);
         *match = TRUE;
+    } else if (MATCH("state", "sapwood")) {
+      fprintf(c->ofp, "sapwood = %.10f\n", s->sapwood);
+      *match = TRUE;
     } else if (MATCH("state", "shoot")) {
         fprintf(c->ofp, "shoot = %.10f\n", s->shoot);
         *match = TRUE;
@@ -430,7 +436,73 @@ int ohandler(char *section, char *name, char *value, control *c, params *p,
     } else if (MATCH("state", "structsurfp")) {
         fprintf(c->ofp, "structsurfp = %.10f\n", s->structsurfp);
         *match = TRUE;
-    }
+    } else if (MATCH("state", "shootnc")) {
+      fprintf(c->ofp, "shootnc = %.10f\n", s->shootnc);
+      *match = TRUE;
+    } else if (MATCH("state", "rootnc")) {
+      fprintf(c->ofp, "rootnc = %.10f\n", s->rootnc);
+      *match = TRUE;
+    } else if (MATCH("state", "shootpc")) {
+      fprintf(c->ofp, "shootpc = %.10f\n", s->shootpc);
+      *match = TRUE;
+    } else if (MATCH("state", "rootpc")) {
+      fprintf(c->ofp, "rootpc = %.10f\n", s->rootpc);
+      *match = TRUE;
+    } else if (MATCH("state", "litterc")) {
+      fprintf(c->ofp, "litterc = %.10f\n", s->litterc);
+      *match = TRUE;
+    } else if (MATCH("state", "littern")) {
+      fprintf(c->ofp, "littern = %.10f\n", s->littern);
+      *match = TRUE;
+    } else if (MATCH("state", "litterp")) {
+      fprintf(c->ofp, "litterp = %.10f\n", s->litterp);
+      *match = TRUE;
+    } else if (MATCH("state", "littercbg")) {
+      fprintf(c->ofp, "littercbg = %.10f\n", s->littercbg);
+      *match = TRUE;
+    } else if (MATCH("state", "littercag")) {
+      fprintf(c->ofp, "littercag = %.10f\n", s->littercag);
+      *match = TRUE;
+    } else if (MATCH("state", "litternbg")) {
+      fprintf(c->ofp, "litternbg = %.10f\n", s->litternbg);
+      *match = TRUE;
+    } else if (MATCH("state", "litternag")) {
+      fprintf(c->ofp, "litternag = %.10f\n", s->litternag);
+      *match = TRUE;
+    } else if (MATCH("state", "litterpbg")) {
+      fprintf(c->ofp, "litterpbg = %.10f\n", s->litterpbg);
+      *match = TRUE;
+    } else if (MATCH("state", "litterpag")) {
+      fprintf(c->ofp, "litterpag = %.10f\n", s->litterpag);
+      *match = TRUE;
+    } else if (MATCH("state", "plantc")) {
+      fprintf(c->ofp, "plantc = %.10f\n", s->plantc);
+      *match = TRUE;
+    } else if (MATCH("state", "plantn")) {
+      fprintf(c->ofp, "plantn = %.10f\n", s->plantn);
+      *match = TRUE;
+    } else if (MATCH("state", "plantp")) {
+      fprintf(c->ofp, "plantp = %.10f\n", s->plantp);
+      *match = TRUE;
+    }  else if (MATCH("state", "totalc")) {
+        fprintf(c->ofp, "totalc = %.10f\n", s->totalc);
+        *match = TRUE;
+    }  else if (MATCH("state", "totaln")) {
+      fprintf(c->ofp, "totaln = %.10f\n", s->totaln);
+      *match = TRUE;
+    }  else if (MATCH("state", "totalp")) {
+      fprintf(c->ofp, "totalp = %.10f\n", s->totalp);
+      *match = TRUE;
+    } else if (MATCH("state", "soilc")) {
+      fprintf(c->ofp, "soilc = %.10f\n", s->soilc);
+      *match = TRUE;
+    } else if (MATCH("state", "soiln")) {
+      fprintf(c->ofp, "soiln = %.10f\n", s->soiln);
+      *match = TRUE;
+    } else if (MATCH("state", "soilp")) {
+      fprintf(c->ofp, "soilp = %.10f\n", s->soilp);
+      *match = TRUE;
+    } 
 
     return (1);
 }
