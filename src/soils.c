@@ -66,13 +66,13 @@ void calculate_csoil_flows(control *c, fluxes *f, params *p, state *s,
     f->co2_rel_from_passive_pool = f->co2_to_air[6];
     
     if (c->exudation) {
-      calc_root_exudation_uptake_of_C(f, p, s);
+      calc_root_exudation_uptake_of_C(c, f, p, s);
     }
 
     return;
 }
 
-void calc_root_exudation_uptake_of_C(fluxes *f, params *p, state *s) {
+void calc_root_exudation_uptake_of_C(control *c, fluxes *f, params *p, state *s) {
   /* The amount of C which enters the active pool varies according to the
   CUE of SOM in response to root exudation (REXCUE). REXCUE determines
   the fraction of REXC that enters the active pool as C. The remaining
@@ -85,7 +85,13 @@ void calc_root_exudation_uptake_of_C(fluxes *f, params *p, state *s) {
   double active_CN, active_CP, rex_NC, rex_PC, C_to_active_pool;
   
   active_CN = s->activesoil / s->activesoiln;
-  active_CP = s->activesoil / s->activesoilp;
+  
+  if (c->pcycle) {
+    active_CP = s->activesoil / s->activesoilp;
+  } else {
+    active_CP = 0.0;
+  }
+  
   
   if (p->root_exu_CUE < -0.5) {
     /*
@@ -642,6 +648,9 @@ void adjust_residence_time_of_slow_pool(fluxes *f, params *p) {
   */
   double rt_slow_pool;
   
+  fprintf(stderr, "kdec6 1 %f, rt_slow_pool %f, rtslow %f\n",
+          p->kdec6, rt_slow_pool, f->rtslow);
+  
   /* total flux out of the factive pool */
   f->factive = (f->active_to_slow + f->active_to_passive + \
   f->co2_to_air[4] + f->co2_released_exud);
@@ -653,6 +662,9 @@ void adjust_residence_time_of_slow_pool(fluxes *f, params *p) {
     rt_slow_pool = (1.0 / p->prime_y) / \
       MAX(0.3, (f->factive / (f->factive + p->prime_z)));
     
+    
+    fprintf(stderr, "factive %f, (factive/(factive+prime_z)) %f, (1.0/prime_y) %f\n",
+            f->factive, (f->factive/(f->factive+p->prime_z)), (1.0/p->prime_y));
     /* GDAY uses decay rates rather than residence times... */
     p->kdec6 = 1.0 / rt_slow_pool;
     
@@ -663,6 +675,9 @@ void adjust_residence_time_of_slow_pool(fluxes *f, params *p) {
   
   /* Save for outputting purposes only */
   f->rtslow = rt_slow_pool;
+  
+  fprintf(stderr, "kdec6 2 %f, rt_slow_pool %f, rtslow %f\n",
+          p->kdec6, rt_slow_pool, f->rtslow);
   
   return;
 }

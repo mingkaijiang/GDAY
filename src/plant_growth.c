@@ -96,6 +96,9 @@ void calc_root_exudation(control *c, fluxes *f, params *p, state *s) {
   f->nproot -= f->root_exn;
   f->pproot -= f->root_exp;
   
+  /*fprintf(stderr, "calc_root_exudation cproot %f, nproot %f, pproot %f\n", 
+          f->cproot,  f->nproot, f->pproot);
+  */
   return;
 }
 
