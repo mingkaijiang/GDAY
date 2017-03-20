@@ -8,7 +8,7 @@
 void    initialise_soils_day(control *, fluxes *, params *, state *);
 void    calculate_water_balance(control *, fluxes *, met *, params *,
                                 state *, int, double, double, double);
-void    update_water_storage(control *, fluxes *, params *, state *, double,
+void    update_water_storage(control *, fluxes *, params *, state *,double,
                              double, double, double *, double *, double *,
                              double *);
 double  calc_canopy_evaporation(met *, params *, state *, double);
@@ -51,7 +51,7 @@ double  calc_bdn_layer_free_conduct(double, double, double, double);
 
 double  canopy_boundary_layer_conduct(params *, double, double, double, double);
 
-
-
+void    check_water_balance(control *, fluxes *, state *s, double, double,
+                            double, double, double, int);
 
 #endif /* WATER_BALANCE */

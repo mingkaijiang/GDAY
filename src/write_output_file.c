@@ -63,7 +63,7 @@ void write_output_header(control *c, FILE **fp) {
     */
 
     /* water*/
-    fprintf(*fp, "wtfac_root,wtfac_topsoil,pawater_root,");
+    fprintf(*fp, "wtfac_root,wtfac_topsoil,pawater_root,pawater_topsoil,");
 
     /* plant */
     fprintf(*fp, "shoot,lai,branch,stem,root,croot,");
@@ -180,8 +180,8 @@ void write_daily_outputs_ascii(control *c, fluxes *f, state *s, int year,
     */
 
     /* water*/
-    fprintf(c->ofp, "%.10f,%.10f,%.10f,",
-            s->wtfac_root,s->wtfac_topsoil,s->pawater_root);
+    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,",
+            s->wtfac_root,s->wtfac_topsoil,s->pawater_root, s->pawater_topsoil);
 
     /* plant */
     fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,",
@@ -322,6 +322,7 @@ void write_daily_outputs_binary(control *c, fluxes *f, state *s, int year,
     /* water */
     fwrite(&(s->wtfac_root), sizeof(double), 1, c->ofp);
     fwrite(&(s->pawater_root), sizeof(double), 1, c->ofp);
+    fwrite(&(s->pawater_topsoil), sizeof(double), 1, c->ofp);
     fwrite(&(f->transpiration), sizeof(double), 1, c->ofp);
     fwrite(&(f->soil_evap), sizeof(double), 1, c->ofp);
     fwrite(&(f->canopy_evap), sizeof(double), 1, c->ofp);
