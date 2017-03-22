@@ -91,15 +91,6 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
       
     }
     
-
-    
-
-    
-    /* add diagnostic statement if needed */
-    if (c->diagnosis) {
-      }
-
-    
     return;
   
 }

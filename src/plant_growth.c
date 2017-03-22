@@ -286,6 +286,9 @@ void cut_back_production_n(control *c, fluxes *f, params *p, state *s,
                         double tot, double ncwnew, double pcwnew) {
 
     double lai_inc, conv;
+    double shoot_biomass, leafn, resp;
+    double a = 0.645;   /* Reich et al. 2008 Ecol. Let. Table 1, Leaves */
+    double b = 1.66;    /* Reich et al. 2008 Ecol. Let. Table 1, Leaves */
     /* default is we don't need to recalculate the water balance,
        however if we cut back on NPP due to available N and P below then we do
        need to do this */
@@ -316,14 +319,7 @@ void cut_back_production_n(control *c, fluxes *f, params *p, state *s,
     } else {
         f->npstem = f->npp * f->alstem * ncwnew;
     }
-
-    f->gpp = f->npp / p->cue;
-    conv = G_AS_TONNES / M2_AS_HA;
-    f->gpp_gCm2 = f->gpp / conv;
-
-    /* New respiration flux */
-    f->auto_resp =  f->gpp - f->npp;
-
+    
     /* Now reduce LAI for down-regulated growth. */
     /* update leaf area [m2 m-2] */
     if (float_eq(s->shoot, 0.0)) {
@@ -335,6 +331,43 @@ void cut_back_production_n(control *c, fluxes *f, params *p, state *s,
         (KG_AS_TONNES * p->cfracts)) -
         f->deadleaves * s->lai / s->shoot);
     }
+    
+    /* calculate plant respiration */
+    if (c->respiration_model == FIXED) {
+      /* use cue to obtain gpp and auto_resp */
+      f->gpp = f->npp / p->cue;
+      conv = G_AS_TONNES / M2_AS_HA;
+      f->gpp_gCm2 = f->gpp / conv;
+      
+      /* New respiration flux */
+      f->auto_resp =  f->gpp - f->npp;
+      
+    } else if(c->respiration_model == TEMPERATURE) {
+      fprintf(stderr, "Not implemented yet");
+      exit(EXIT_FAILURE);
+    } else if (c->respiration_model == LEAFN) {
+      /* obtain leaf biomass in g/m2 */
+      shoot_biomass = s->lai / (p->sla * M2_AS_HA / (KG_AS_TONNES * p->cfracts)) / G_AS_TONNES * M2_AS_HA; 
+      
+      /* convert shootn from t/ha to mmol/m2 */
+      leafn = s->shootn / G_AS_TONNES * M2_AS_HA / MOL_N_TO_GRAMS_N * MOL_2_MMOL;
+      
+      /* calculate leafn in mmol [N] g-1 [shoot biomass] */
+      leafn = leafn / shoot_biomass;
+      
+      /* calculate leaf dark respiration in nmol g-1 s-1 */
+      resp = a * leafn * exp(b);
+      
+      /* convert respiration rate from mmol g-1 s-1 to t/ha/m */
+      /* 1: from nmol g-1 s-1 to g m-2 s-1 */
+      resp = resp * NMOL_2_MOL * MOL_C_TO_GRAMS_C * shoot_biomass;
+      
+      /* 2: from g m-2 s-1 to t ha-2 month-1 */
+      resp = resp * SECS_IN_HOUR * 24.0 * NDAYS_IN_YR / NMONTHS_IN_YR * G_AS_TONNES / M2_AS_HA;
+      
+      f->auto_resp = resp;
+      f->gpp = f->npp + f->auto_resp;
+    }
 
     return;
 }
@@ -343,6 +376,9 @@ void cut_back_production_p(control *c, fluxes *f, params *p, state *s,
                            double tot, double ncwnew, double pcwnew) {
   
   double lai_inc, conv;
+  double shoot_biomass, leafn, resp;
+  double a = 0.645;   /* Reich et al. 2008 Ecol. Let. Table 1, Leaves */
+  double b = 1.66;    /* Reich et al. 2008 Ecol. Let. Table 1, Leaves */
   /* default is we don't need to recalculate the water balance,
   however if we cut back on NPP due to available N and P below then we do
   need to do this */
@@ -369,13 +405,6 @@ void cut_back_production_p(control *c, fluxes *f, params *p, state *s,
   f->npstem = f->npp * f->alstem * ncwnew;
   f->ppstem = f->npp * f->alstem * pcwnew;
   
-  f->gpp = f->npp / p->cue;
-  conv = G_AS_TONNES / M2_AS_HA;
-  f->gpp_gCm2 = f->gpp / conv;
-  
-  /* New respiration flux */
-  f->auto_resp =  f->gpp - f->npp;
-  
   /* Now reduce LAI for down-regulated growth. */
   /* update leaf area [m2 m-2] */
   if (float_eq(s->shoot, 0.0)) {
@@ -386,6 +415,43 @@ void cut_back_production_p(control *c, fluxes *f, params *p, state *s,
       (p->sla * M2_AS_HA / \
       (KG_AS_TONNES * p->cfracts)) -
       f->deadleaves * s->lai / s->shoot);
+  }
+  
+  /* calculate plant respiration */
+  if (c->respiration_model == FIXED) {
+    /* use cue to obtain gpp and auto_resp */
+    f->gpp = f->npp / p->cue;
+    conv = G_AS_TONNES / M2_AS_HA;
+    f->gpp_gCm2 = f->gpp / conv;
+    
+    /* New respiration flux */
+    f->auto_resp =  f->gpp - f->npp;
+    
+  } else if(c->respiration_model == TEMPERATURE) {
+    fprintf(stderr, "Not implemented yet");
+    exit(EXIT_FAILURE);
+  } else if (c->respiration_model == LEAFN) {
+    /* obtain leaf biomass in g/m2 */
+    shoot_biomass = s->lai / (p->sla * M2_AS_HA / (KG_AS_TONNES * p->cfracts)) / G_AS_TONNES * M2_AS_HA; 
+    
+    /* convert shootn from t/ha to mmol/m2 */
+    leafn = s->shootn / G_AS_TONNES * M2_AS_HA / MOL_N_TO_GRAMS_N * MOL_2_MMOL;
+    
+    /* calculate leafn in mmol [N] g-1 [shoot biomass] */
+    leafn = leafn / shoot_biomass;
+    
+    /* calculate leaf dark respiration in nmol g-1 s-1 */
+    resp = a * leafn * exp(b);
+    
+    /* convert respiration rate from mmol g-1 s-1 to t/ha/m */
+    /* 1: from nmol g-1 s-1 to g m-2 s-1 */
+    resp = resp * NMOL_2_MOL * MOL_C_TO_GRAMS_C * shoot_biomass;
+    
+    /* 2: from g m-2 s-1 to t ha-2 month-1 */
+    resp = resp * SECS_IN_HOUR * 24.0 * NDAYS_IN_YR / NMONTHS_IN_YR * G_AS_TONNES / M2_AS_HA;
+    
+    f->auto_resp = resp;
+    f->gpp = f->npp + f->auto_resp;
   }
   
   return;
