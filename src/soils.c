@@ -1058,6 +1058,9 @@ void calculate_npools(control *c, fluxes *f, params *p, state *s) {
     fixn = nc_flux(f->c_into_passive, n_into_passive, pass_nc);
     s->passivesoiln += n_into_passive + fixn - n_out_of_passive;
     
+    //fprintf(stderr, "net inorgN = %f, tot_in %f\n", 
+    //        (f->nloss + f->nuptake - s->inorgn), (f->ninflow+f->nmineralisation));
+    
     /* Daily increment of soil inorganic N pool, diff btw in and effluxes
        (grazer urine n goes directly into inorganic pool) nb inorgn may be
        unstable if rateuptake is large */
@@ -1278,9 +1281,6 @@ void p_inputs_from_plant_litter(fluxes *f, params *p, double *psurf,
     *psurf = f->deadleafp + f->deadstemp;
     *psoil = f->deadrootp;
     
-    //fprintf(stderr, "psoil in input %f, deadroot %f, deadleafp %f, deadleaves %f\n", 
-    //        f->deadrootp, f->deadroots, f->deadleafp, f->deadleaves);
-
     return;
 }
 
@@ -1630,9 +1630,7 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s) {
     /* P released or fixed from the P inorganic labile pool is incremented with
     each call to pc_limit and stored in f->plittrelease */
     f->plittrelease = 0.0;
-    
-    //fprintf(stderr, "plittrelease should be zero %f\n", f->plittrelease);
-
+  
     s->structsurfp += (f->p_surf_struct_litter -
                       (f->p_surf_struct_to_slow +
                        f->p_surf_struct_to_active));
@@ -1654,14 +1652,10 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s) {
     
     /* pcmin & pcmax from Parton 1989 fig 2 */
     s->metabsoilp += (f->p_soil_metab_litter - f->p_soil_metab_to_active);
-    //fprintf(stderr, "metabsoilp %f, p_soil_metab_litter %f, p_soil_metab_to_active %f\n", 
-     //       s->metabsoilp, f->p_soil_metab_litter, f->p_soil_metab_to_active);
-    
+
     s->metabsoilp += pc_limit(f, s->metabsoil, s->metabsoilp,
                               1.0/p->metabcpmax, 1.0/p->metabcpmin);
     
-    //fprintf(stderr, "plittrelease 2 %f, metabsoil %f, metabsoilp %f\n", f->plittrelease, s->metabsoil, s->metabsoilp);
-
     /* When nothing is being added to the metabolic pools, there is the
     potential scenario with the way the model works for tiny bits to be
     removed with each timestep. Effectively with time this value which is
@@ -1719,14 +1713,9 @@ void calculate_ppools(control *c, fluxes *f, params *p, state *s) {
     /* Daily increment of soil inorganic available P pool (lab + sorb) */
     tot_avl_in = f->p_par_to_avl + f->pmineralisation + f->p_ssorb_to_avl;
     
-    if (s->inorgavlp > 0) {
-      tot_avl_out = f->puptake + f->ploss + f->p_avl_to_ssorb;
-    } else {
-      f->puptake = 0.0;
-      f->ploss = 0.0;
-      f->p_avl_to_ssorb = 0.0;
-      tot_avl_out = f->puptake + f->ploss + f->p_avl_to_ssorb;
-    }
+    tot_avl_out = f->puptake + f->ploss + f->p_avl_to_ssorb;
+    
+//    fprintf(stderr, "net inorgavlP = %f, tot_in %f\n", tot_avl_out - s->inorgavlp, tot_avl_in);
     
     s->inorgavlp += tot_avl_in - tot_avl_out;
     

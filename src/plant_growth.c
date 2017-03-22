@@ -253,14 +253,14 @@ void np_allocation(control *c, fluxes *f, params *p, state *s,
     arg = f->npstem;
     if (arg > ntot && c->fixleafnc == FALSE && c->ncycle) {
       fprintf(stderr, "in cut back n \n");
-      cut_back_production(c, f, p, s, ntot, ncwnew);
+      cut_back_production_n(c, f, p, s, ntot, ncwnew, pcwnew);
     }
     
     /* If we have allocated more P than we have avail, cut back C prodn */
     arg = f->ppstem;
     if (arg > ptot && c->fixleafpc == FALSE && c->pcycle) {
       fprintf(stderr, "in cut back p \n");
-      cut_back_production(c, f, p, s, ptot, pcwnew);
+      cut_back_production_p(c, f, p, s, ptot, ncwnew, pcwnew);
     }
     
     /* Nitrogen reallocation to flexible-ratio pools */
@@ -282,15 +282,13 @@ void np_allocation(control *c, fluxes *f, params *p, state *s,
     return;
 }
 
-void cut_back_production(control *c, fluxes *f, params *p, state *s,
-                        double tot, double xcwnew) {
+void cut_back_production_n(control *c, fluxes *f, params *p, state *s,
+                        double tot, double ncwnew, double pcwnew) {
 
     double lai_inc, conv;
-    double pcwnew;
     /* default is we don't need to recalculate the water balance,
        however if we cut back on NPP due to available N and P below then we do
        need to do this */
-    //int recalc_wb = FALSE;
 
     /* Need to readjust the LAI for the reduced growth as this will
        have already been increased. First we need to figure out how
@@ -305,11 +303,6 @@ void cut_back_production(control *c, fluxes *f, params *p, state *s,
     }
 
     f->npp *= tot / f->npstem;
-    
-    /* add diagnostic statement if needed */
-    if (c->diagnosis) {
-    }
-    
 
     /* need to adjust growth values accordingly as well */
     f->cpleaf = f->npp * f->alleaf;
@@ -318,13 +311,12 @@ void cut_back_production(control *c, fluxes *f, params *p, state *s,
 
 
     if (c->pcycle) {
-        f->ppstem = f->npp * f->alstem * xcwnew;
+        f->npstem = f->npp * f->alstem * ncwnew;
+        f->ppstem = f->npp * f->alstem * pcwnew;
     } else {
-        f->npstem = f->npp * f->alstem * xcwnew;
+        f->npstem = f->npp * f->alstem * ncwnew;
     }
 
-    /* Also need to recalculate GPP and thus Ra and return a flag
-       so that we know to recalculate the water balance. */
     f->gpp = f->npp / p->cue;
     conv = G_AS_TONNES / M2_AS_HA;
     f->gpp_gCm2 = f->gpp / conv;
@@ -345,6 +337,58 @@ void cut_back_production(control *c, fluxes *f, params *p, state *s,
     }
 
     return;
+}
+
+void cut_back_production_p(control *c, fluxes *f, params *p, state *s,
+                           double tot, double ncwnew, double pcwnew) {
+  
+  double lai_inc, conv;
+  /* default is we don't need to recalculate the water balance,
+  however if we cut back on NPP due to available N and P below then we do
+  need to do this */
+  
+  /* Need to readjust the LAI for the reduced growth as this will
+  have already been increased. First we need to figure out how
+  much we have increased LAI by, important it is done here
+  before cpleaf is reduced! */
+  if (float_eq(s->shoot, 0.0)) {
+    lai_inc = 0.0;
+  } else {
+    lai_inc = (f->cpleaf *
+      (p->sla * M2_AS_HA / (KG_AS_TONNES * p->cfracts)) -
+      f->deadleaves * s->lai / s->shoot);
+  }
+  
+  f->npp *= tot / f->ppstem;
+  
+  /* need to adjust growth values accordingly as well */
+  f->cpleaf = f->npp * f->alleaf;
+  f->cproot = f->npp * f->alroot;
+  f->cpstem = f->npp * f->alstem;
+  
+  f->npstem = f->npp * f->alstem * ncwnew;
+  f->ppstem = f->npp * f->alstem * pcwnew;
+  
+  f->gpp = f->npp / p->cue;
+  conv = G_AS_TONNES / M2_AS_HA;
+  f->gpp_gCm2 = f->gpp / conv;
+  
+  /* New respiration flux */
+  f->auto_resp =  f->gpp - f->npp;
+  
+  /* Now reduce LAI for down-regulated growth. */
+  /* update leaf area [m2 m-2] */
+  if (float_eq(s->shoot, 0.0)) {
+    s->lai = 0.0;
+  } else {
+    s->lai -= lai_inc;
+    s->lai += (f->cpleaf *
+      (p->sla * M2_AS_HA / \
+      (KG_AS_TONNES * p->cfracts)) -
+      f->deadleaves * s->lai / s->shoot);
+  }
+  
+  return;
 }
 
 void calc_carbon_allocation_fracs(control *c, fluxes *f, params *p, state *s) {
@@ -774,10 +818,13 @@ double calculate_puptake(control *c, params *p, state *s, fluxes *f) {
     if (c->puptake_model == 0) {
         /* Constant P uptake */
         //puptake = p->puptakez;
-        pleach = prateloss / (1.0 - prateloss);
-        pocc = (k3 / (k2 + k3)) * (k1 / (1.0 - k1));
-        puptake = (1.0 - pleach - pocc - 0.109) * s->inorgavlp; 
-
+        //pleach = prateloss / (1.0 - prateloss);
+        //pocc = (k3 / (k2 + k3)) * (k1 / (1.0 - k1));
+        //puptake = (1.0 - pleach - pocc - 0.109) * s->inorgavlp; 
+         pleach = ((prateloss) / (1.0 - prateloss));
+         pocc = (k3 / (k2 + k3)) * (k1 / (1.0 - k1));
+         puptake = (1.0 - prateloss - p->k1) * s->inorgavlp;
+        
     } else if (c->puptake_model == 1) {
         // evaluate puptake : proportional to lab P pool that is
         // available to plant uptake

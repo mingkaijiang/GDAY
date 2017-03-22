@@ -30,13 +30,15 @@ double calculate_nuptake(control *, params *, state *, fluxes *);
 
 double nitrogen_retrans(control *, fluxes *, params *, state *);
 
+void cut_back_production_n(control *, fluxes *, params *, state *, double,
+                           double, double);
 
 /* P stuff */
 double calculate_puptake(control *, params *, state *, fluxes *);
 double phosphorus_retrans(control *, fluxes *, params *, state *);
 
-void cut_back_production(control *, fluxes *, params *, state *, double,
-                        double);
+void cut_back_production_p(control *, fluxes *, params *, state *, double,
+                          double, double);
 
 /* Priming/Exudation stuff */
 void   calc_root_exudation(control *c, fluxes *, params *p, state *);
