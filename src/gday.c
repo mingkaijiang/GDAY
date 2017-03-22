@@ -241,7 +241,7 @@ void spin_up_annual(control *c, fluxes *f, met *m,
     */
     double tol_c = 1E-06;
     double tol_n = 1E-06;
-    double tol_p = 1E-04;
+    double tol_p = 1E-06;
     double prev_plantc = 99999.9;
     double prev_soilc = 99999.9;
     double prev_plantn = 99999.9;
@@ -265,7 +265,7 @@ void spin_up_annual(control *c, fluxes *f, met *m,
             fabs((prev_plantn) - (s->plantn)) < tol_n &&
             fabs((prev_soiln) - (s->soiln)) < tol_n &&
             fabs((prev_plantp) - (s->plantp)) < tol_p && 
-            fabs((prev_soilp) - (s->soilp)) < tol_p) {
+            fabs((prev_soilp) - (s->soilp-s->inorgoccp)) < tol_p) {
           break;
       } else {
             prev_plantc = s->plantc;
@@ -273,7 +273,7 @@ void spin_up_annual(control *c, fluxes *f, met *m,
             prev_plantn = s->plantn;
             prev_soiln = s->soiln;
             prev_plantp = s->plantp;
-            prev_soilp = s->soilp;
+            prev_soilp = s->soilp-s->inorgoccp;
             
             for(moy = 0; moy < 12; moy++) {
                 /* read in simple annual met data from parameter files */
