@@ -23,6 +23,11 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
     double lue_avg, conv1, conv2, shoot_biomass, leafn, resp;
     double a = 0.645;   /* Reich et al. 2008 Ecol. Let. Table 1, Leaves */
     double b = 1.66;    /* Reich et al. 2008 Ecol. Let. Table 1, Leaves */
+    double Csapwood, Rmsw, Rmf, Rmr, Rm, Rc;
+    double R0 = 27.0;
+    double Q10 = 2.0;
+    double Q10s = 1.98;
+    double stem = 3.5;  /* kg/m2 */
     
     /* Covert PAR units (umol PAR MJ-1) */
     conv1 = MJ_TO_J * J_2_UMOL;
@@ -67,29 +72,50 @@ void simple_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s) {
       fprintf(stderr, "Not implemented yet");
       exit(EXIT_FAILURE);
     } else if (c->respiration_model == LEAFN) {
-      /* obtain leaf biomass in g/m2 */
-      shoot_biomass = s->lai / (p->sla * M2_AS_HA / (KG_AS_TONNES * p->cfracts)) / G_AS_TONNES * M2_AS_HA; 
       
-      /* convert shootn from t/ha to mmol/m2 */
-      leafn = s->shootn / G_AS_TONNES * M2_AS_HA / MOL_N_TO_GRAMS_N * MOL_2_MMOL;
+//      /* obtain leaf biomass in g/m2 */
+//      shoot_biomass = s->lai / (p->sla * M2_AS_HA / (KG_AS_TONNES * p->cfracts)) / G_AS_TONNES * M2_AS_HA; 
+//      
+//      /* convert shootn from t/ha to mmol/m2 */
+//      leafn = s->shootn / G_AS_TONNES * M2_AS_HA / MOL_N_TO_GRAMS_N * MOL_2_MMOL;
+//      
+//      /* calculate leafn in mmol [N] g-1 [shoot biomass] */
+//      leafn = leafn / shoot_biomass;
+//      
+//      /* calculate leaf dark respiration in nmol g-1 s-1 */
+//      resp = a * pow(leafn, b);
+//      
+//      /* convert respiration rate from mmol g-1 s-1 to t/ha/m */
+//      /* 1: from nmol g-1 s-1 to g m-2 s-1 */
+//      resp = resp * NMOL_2_MOL * MOL_C_TO_GRAMS_C * shoot_biomass;
+//      
+//      /* 2: from g m-2 s-1 to t ha-2 month-1 */
+//      resp = resp * SECS_IN_HOUR * 24.0 * NDAYS_IN_YR / NMONTHS_IN_YR * G_AS_TONNES / M2_AS_HA;
+//      
+//      f->auto_resp = resp;
+//      f->npp = f->gpp - f->auto_resp;
+
+      /* calculate C content of sapwood kg m-2 */
+      Csapwood = 1.11 * pow(stem, 0.77);
       
-      /* calculate leafn in mmol [N] g-1 [shoot biomass] */
-      leafn = leafn / shoot_biomass;
+      /* calculate sapwood maintenance respiration */
+      Rmsw = 0.00876 * Csapwood * pow(Q10s, m->tsoil/10);
       
-      /* calculate leaf dark respiration in nmol g-1 s-1 */
-      resp = a * leafn * exp(b);
+      /* calculate leaf and root maintenance respiration */
+      Rmf = 0.5 * R0 * (s->shootn * 0.1) * pow(Q10, m->tsoil/10);
+      Rmr = R0 * (s->rootn * 0.1) * pow(Q10, m->tsoil/10);
       
-      /* convert respiration rate from mmol g-1 s-1 to t/ha/m */
-      /* 1: from nmol g-1 s-1 to g m-2 s-1 */
-      resp = resp * NMOL_2_MOL * MOL_C_TO_GRAMS_C * shoot_biomass;
+      /* total maintanence respiration */
+      Rm = (Rmf + Rmr + Rmsw) / 0.1;
       
-      /* 2: from g m-2 s-1 to t ha-2 month-1 */
-      resp = resp * SECS_IN_HOUR * 24.0 * NDAYS_IN_YR / NMONTHS_IN_YR * G_AS_TONNES / M2_AS_HA;
-      
-      f->auto_resp = resp;
-      f->npp = f->gpp - f->auto_resp;
+      /* calculate NPP and construction respiration */
+      Rc = (f->gpp - Rm) * 0.25;
+      f->npp = f->gpp - Rc - Rm;
+      f->auto_resp = Rc + Rm;
       
     }
+    
+    fprintf(stderr, "Csapwood %f, stem %f, Rmsw %f, Rmf %f, Rmr %f\n", Csapwood, s->stem, Rmsw, Rmf, Rmr);
     
     return;
   
