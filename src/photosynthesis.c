@@ -943,10 +943,10 @@ void calculate_jmax_and_vcmax_with_p(control *c, params *p, state *s, double Tk,
     *vcmax = p->vcmax;
   } else if (c->modeljm == 1) {
     /* the maximum rate of electron transport at 25 degC */
-    jmax25n = p->jmaxna * pow(N0, p->jmaxnb);
+    jmax25n = p->jmaxna * N0 + p->jmaxnb;
 
     /* P limitation on jmax */
-    jmax25p = p->jmaxpa * pow(P0, p->jmaxpb);
+    jmax25p = p->jmaxpa * P0 + p->jmaxpb;
 
     jmax25 = MIN(jmax25n, jmax25p);
 
@@ -955,10 +955,10 @@ void calculate_jmax_and_vcmax_with_p(control *c, params *p, state *s, double Tk,
                         p->delsj, p->edj);
 
     /* the maximum rate of electron transport at 25 degC */
-    vcmax25n = p->vcmaxna * pow(N0, p->vcmaxnb);
+    vcmax25n = p->vcmaxna * N0 + p->vcmaxnb;
 
     /* P limitation on jmax */
-    vcmax25p = p->vcmaxpa * pow(P0, p->vcmaxpb);
+    vcmax25p = p->vcmaxpa * P0 + p->vcmaxpb;
 
     vcmax25 = MIN(vcmax25n, vcmax25p);
 
@@ -995,11 +995,6 @@ void calculate_jmax_and_vcmax_with_p(control *c, params *p, state *s, double Tk,
   adj_for_low_temp(*(&jmax), Tk);
   adj_for_low_temp(*(&vcmax), Tk);
   
-  // fprintf(stderr, "jmax25n %f\n", jmax25n);
-  // fprintf(stderr, "jmax25p %f\n", jmax25p);
-  // fprintf(stderr, "vcmax25n %f\n", vcmax25n);
-  // fprintf(stderr, "vcmax25p %f\n", vcmax25p);
-
   return;
 
 }

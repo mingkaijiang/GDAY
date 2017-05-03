@@ -630,8 +630,8 @@ void spin_up_pools(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
             } else {
               /* Have we reached a steady state? */
               fprintf(stderr,
-                      "Spinup: Plant C - %f, Soil C - %f, LAI - %f, GPP - %f\n",
-                      s->plantc, s->soilc, s->lai, f->gpp);
+                      "Spinup: Plant C - %f, Leaf CN - %f, Soil C - %f, LAI - %f, GPP - %f\n",
+                      s->plantc, s->shoot/s->shootn, s->soilc, s->lai, f->gpp);
             }
         }
     }
@@ -959,9 +959,6 @@ void day_end_calculations(control *c, params *p, state *s, int days_in_year,
     } else {
         s->shootnc = s->shootn / s->shoot;
         s->shootpc = s->shootp / s->shoot;
-        //fprintf(stderr, "shootp %f\n", s->shootp*100000);
-        //fprintf(stderr, "shootc %f\n", s->shoot);
-        //fprintf(stderr, "shootpc %f\n", s->shootpc);
     }
 
     /* Explicitly set the shoot N:C */
