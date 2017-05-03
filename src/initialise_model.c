@@ -255,6 +255,7 @@ void initialise_params(params *p) {
     p->rateuptake = 2.7;
     p->rdecay = 0.33333;
     p->rdecaydry = 0.33333;
+    p->resp_coeff = 1.2;            /* Tissue respiration rate at 10 deg C; temperate broadleaf evergreen tree value from LPJ */
     p->retransmob = 0.0;
     p->rfmult = 1.0;
     p->root_exu_CUE = -999.9;

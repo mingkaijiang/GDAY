@@ -32,6 +32,9 @@ void    carbon_daily_production(control *, fluxes *, met *m, params *, state *,
                                 double);
 void    calculate_subdaily_production(control *, fluxes *, met *m, params *,
                                       state *, int, double);
+void   calc_autotrophic_respiration(control *, fluxes *, met *, params *,
+                                    state *);
+double lloyd_and_taylor(double);
 void    calculate_cnp_wood_ratios(control *c, params *, state *, double, double,
                                   double, double *, double *, double *,
                                   double *, double *,double *, double *,
