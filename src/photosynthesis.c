@@ -581,6 +581,8 @@ void mate_C3_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s,
                                  &vcmax_pm, mt);
     }
 
+    s->vcmax = (vcmax_am + vcmax_pm) / 2.0;
+
     ci_am = calculate_ci(c, p, s, m->vpd_am, m->Ca);
     ci_pm = calculate_ci(c, p, s, m->vpd_pm, m->Ca);
 

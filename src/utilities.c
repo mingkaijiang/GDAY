@@ -131,3 +131,68 @@ char *strncpy0(char* dest, char* src, size_t size)
 double round_to_value(double number, double roundto) {
     return (round(number / roundto) * roundto);
 }
+
+
+void calc_warmest_quarter_temp(control *c, params *p, met_arrays *ma, 
+                                 met *m, state *s, double yr) {
+    // calculate mean temperature of the warmest quarter
+    // Ref: Atkin et al. (2015) New Phytologist
+    // Table 6 best model for area-based broadleaved tree leaf respiration
+    //
+    // Parameters:
+    // ----------
+    // TWQ: float
+    //      mean temperature of the warmest quarter;
+    // q1 - q4: float
+    //      quarterly-based mean air temperature;
+    double TWQ, q1, q2, q3, q4;
+    double t1, t2, t3, t4;
+    int doy = 0;
+
+    if (is_leap_year(yr)) {
+        for (doy = 0; doy < 366; doy ++) {
+            if (doy >= 0 && doy <= 90) {
+                t1 += ma->tair[doy];
+            } else if (doy >= 91 && doy <= 181) {
+                t2 += ma->tair[doy];
+            } else if (doy >= 182 && doy <= 273) {
+                t3 += ma->tair[doy];
+            } else if (doy >= 274 && doy < 366) {
+                t4 += ma->tair[doy];
+            }
+        }
+    } else {
+        for (doy = 0; doy < 365; doy ++) {
+            if (doy >= 0 && doy <= 89) {
+                t1 += ma->tair[doy];
+            } else if (doy >= 90 && doy <= 180) {
+                t2 += ma->tair[doy];
+            } else if (doy >= 181 && doy <= 272) {
+                t3 += ma->tair[doy];
+            } else if (doy >= 273 && doy < 365) {
+                t4 += ma->tair[doy];
+            }
+        }
+    }
+
+    /* compute quarterly mean temperature */
+    if (is_leap_year(yr)) {
+       q1 = t1 / 91.0;
+    } else {
+       q1 = t1 / 90.0;
+    }
+
+    q2 = t2 / 91.0;
+    q3 = t3 / 92.0;
+    q4 = t4 / 92.0;
+
+    TWQ = MAX(q1, MAX(q2, MAX(q3, q4)));
+
+//    fprintf(stderr, "t1 %f, t2 %f, q1 %f, q2 %f, TWQ %f\n", 
+//                     t1, t2, q1, q2, TWQ);
+
+    s->twq = TWQ;
+
+    return;
+
+}

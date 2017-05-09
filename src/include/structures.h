@@ -188,6 +188,8 @@ typedef struct {
     double canopy_store;
     double psi_s_topsoil;
     double psi_s_root;
+    double vcmax;
+    double twq;                     /* temperature of warmest quarter */
 
     /* hydraulics */
     double *thickness;

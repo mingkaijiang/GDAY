@@ -634,6 +634,8 @@ void initialise_state(state *s) {
     s->structsurfn = 0.0473710799214;
     s->structsurfp = 0.01421132;        /* based on structural pool C/P ratio of 500 from Parton et al., 1989, Ecology of arable land. */
     s->canopy_store = 0.0;
+    s->vcmax = 0.0;
+    s->twq = 0.0;
 
     s->wtfac_root = 1.0;
 

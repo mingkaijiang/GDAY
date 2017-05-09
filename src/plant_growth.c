@@ -43,7 +43,7 @@ void calc_day_growth(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma,
         canopy(cw, c, f, ma, m, nr, p, s);
     } else {
         /* calculate daily GPP/NPP, respiration and update water balance */
-        carbon_daily_production(c, f, m, p, s, day_length);
+        carbon_daily_production(c, f, ma, m, p, s, day_length);
         calculate_water_balance(c, f, m, p, s, day_length, dummy, dummy, dummy);
         
         
@@ -192,7 +192,7 @@ void calc_root_exudation(control *c, fluxes *f, params *p, state *s) {
     return;
 }
 
-void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
+void carbon_daily_production(control *c, fluxes *f, met_arrays *ma, met *m, params *p, state *s,
                              double daylen) {
     /* Calculate GPP, NPP and plant respiration at the daily timestep
 
@@ -269,7 +269,7 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
         /* Plant respiration assuming carbon-use efficiency. */
         f->auto_resp = f->gpp * (1.0 - p->cue);
     } else if(c->respiration_model == VARY) {
-        calc_autotrophic_respiration(c, f, m, p, s); 
+        calc_autotrophic_respiration(c, f, ma,  m, p, s); 
     }
 
     f->npp = MAX(0.0, f->gpp - f->auto_resp);
@@ -279,14 +279,14 @@ void carbon_daily_production(control *c, fluxes *f, met *m, params *p, state *s,
     return;
 }
 
-void calc_autotrophic_respiration(control *c, fluxes *f, met *m, params *p,
+void calc_autotrophic_respiration(control *c, fluxes *f, met_arrays *ma, met *m, params *p,
                                   state *s) {
     // Autotrophic respiration is the sum of the growth component (Rg)
     // and the the temperature-dependent maintenance respiration (Rm) of
     // leaves (Rml), fine roots (Rmr) and wood (Rmw)
 
     double Rml, Rmw, Rmr, Rm, Rg, rk, k = 0.0548;
-    double shootn, rootn, stemn, cue;
+    double shootn, rootn, stemn, cue, shootp, rootp, stemp;
 
     // respiration rate (gC gN-1 d-1) on a 10degC base
     rk = p->resp_coeff * k;
@@ -301,9 +301,23 @@ void calc_autotrophic_respiration(control *c, fluxes *f, met *m, params *p,
         stemn = s->stemn * TONNES_HA_2_G_M2;
     }
 
+    if (c->pcycle == FALSE) {
+        shootp = (s->shoot * 0.003) * TONNES_HA_2_G_M2;
+        rootp = (s->root * 0.002) * TONNES_HA_2_G_M2;
+        stemp = (s->stem * 0.00003) * TONNES_HA_2_G_M2;
+    } else {
+        shootp = s->shootp * TONNES_HA_2_G_M2;
+        rootp = s->rootp * TONNES_HA_2_G_M2;
+        stemp = s->stemp * TONNES_HA_2_G_M2;
+    }
+
     // Maintenance respiration, the cost of metabolic processes in
     // living tissues, differs according to tissue N
-    Rml = rk * shootn * lloyd_and_taylor(m->tair);
+    //Rml = rk * shootn * lloyd_and_taylor(m->tair);
+    
+    /* leaf dark respiration ~ leaf P, N, vcmax, and TWQ 
+       where TWQ is the mean temperature of the warmest quarter */
+    Rml = 1.2636 + (0.0728 * shootn) + (0.015 * shootp) + (0.0095 * s->vcmax) - (0.0358 * s->twq);
     Rmw = rk * stemn * lloyd_and_taylor(m->tair); // should really be sapwood
     Rmr = rk * rootn * lloyd_and_taylor(m->tsoil);
     Rm = (Rml + Rmw + Rmr) * GRAM_C_2_TONNES_HA;
@@ -343,6 +357,7 @@ double lloyd_and_taylor(double temp) {
 
     return (exp(308.56 * ((1.0 / 56.02) - (1.0 / (temp + 46.02)))));
 }
+
 
 
 void calculate_cnp_wood_ratios(control *c, params *p, state *s,

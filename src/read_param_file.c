@@ -611,6 +611,10 @@ int handler(char *section, char *name, char *value, control *c,
         s->structsurfn = atof(value);
     } else if (MATCH("state", "structsurfp")) {
         s->structsurfp = atof(value);
+    } else if (MATCH("state", "vcmax")) {
+        s->vcmax = atof(value);
+    } else if (MATCH("state", "twq")) {
+        s->twq = atof(value);
     }
 
     /* Params */

@@ -28,11 +28,11 @@ void    precision_control(fluxes *, state *);
 void    calculate_cnp_store(control *, fluxes *, state *);
 void    calculate_average_alloc_fractions(fluxes *, state *, int );
 void    allocate_stored_cnp(fluxes *f, params *p, state *s);
-void    carbon_daily_production(control *, fluxes *, met *m, params *, state *,
+void    carbon_daily_production(control *, fluxes *, met_arrays *ma, met *m, params *, state *,
                                 double);
 void    calculate_subdaily_production(control *, fluxes *, met *m, params *,
                                       state *, int, double);
-void   calc_autotrophic_respiration(control *, fluxes *, met *, params *,
+void   calc_autotrophic_respiration(control *, fluxes *, met_arrays *, met *, params *,
                                     state *);
 double lloyd_and_taylor(double);
 void    calculate_cnp_wood_ratios(control *c, params *, state *, double, double,

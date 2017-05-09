@@ -386,6 +386,8 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
         else
             c->num_days = 365;
 
+        calc_warmest_quarter_temp(c, p, ma, m, s, year);
+
         calculate_daylength(s, c->num_days, p->latitude);
 
         if (c->deciduous_model) {
