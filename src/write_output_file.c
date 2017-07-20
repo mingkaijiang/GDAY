@@ -130,7 +130,8 @@ void write_output_header(control *c, FILE **fp) {
 
     /* Misc */
     fprintf(*fp, "leafretransn,");
-    fprintf(*fp, "leafretransp\n");
+    fprintf(*fp, "leafretransp,");
+    fprintf(*fp, "lue_avg\n");
     //fprintf(*fp, "predawn_swp,");
     //fprintf(*fp, "midday_lwp,");
     //fprintf(*fp, "leafretransn\n");
@@ -286,7 +287,8 @@ void write_daily_outputs_ascii(control *c, fluxes *f, state *s, int year,
 
     /* Misc */
     fprintf(c->ofp, "%.10f,", f->leafretransn);
-    fprintf(c->ofp, "%.10f\n", f->leafretransp);
+    fprintf(c->ofp, "%.10f,", f->leafretransp);
+    fprintf(c->ofp, "%.10f\n", f->lue_avg);
     //fprintf(c->ofp, "%.10f,", s->predawn_swp);
     //fprintf(c->ofp, "%.10f,", s->midday_lwp);
     //fprintf(c->ofp, "%.10f\n", f->leafretransn);

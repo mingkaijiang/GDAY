@@ -631,6 +631,7 @@ void mate_C3_photosynthesis(control *c, fluxes *f, met *m, params *p, state *s,
 
     /* use average to simulate canopy photosynthesis */
     lue_avg = (lue_am + lue_pm) / 2.0;
+    f->lue_avg = lue_avg;
 
     /* absorbed photosynthetically active radiation (umol m-2 s-1) */
     if (float_eq(s->lai, 0.0))

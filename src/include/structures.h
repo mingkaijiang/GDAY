@@ -563,6 +563,7 @@ typedef struct {
     double retrans;         /* plnat n retranslocation */
     double retransp;        /* plant p retranslocation */
     double apar;
+    double lue_avg;         /* daily LUE in umol C/umol PAR */
 
     /* n */
     double nuptake;         /* n plant uptake rate */

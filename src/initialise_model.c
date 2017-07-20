@@ -357,6 +357,7 @@ void initialise_fluxes(fluxes *f) {
     f->retrans = 0.0;
     f->retransp = 0.0;
     f->apar = 0.0;
+    f->lue_avg = 0.0;
 
     /* N fluxes */
     f->nuptake = 0.0;
