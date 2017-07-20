@@ -430,6 +430,17 @@ int handler(char *section, char *name, char *value, control *c,
              fprintf(stderr, "Unknown respiration model: %s\n", temp);
              exit(EXIT_FAILURE);
          }
+     } else if (MATCH("control", "aci_relationship")) {
+         if (strcmp(temp, "WALKER") == 0||
+             strcmp(temp, "walker") == 0)
+             c->aci_relationship = WALKER;
+         else if (strcmp(temp, "ELLSWORTH") == 0||
+                  strcmp(temp, "ellsworth") == 0)
+             c->aci_relationship = ELLSWORTH;
+         else {
+             fprintf(stderr, "Unknown aci relationship: %s\n", temp);
+             exit(EXIT_FAILURE);
+         }
     } else if (MATCH("control", "sub_daily")) {
         if (strcmp(temp, "False") == 0 ||
             strcmp(temp, "FALSE") == 0 ||
@@ -924,6 +935,8 @@ int handler(char *section, char *name, char *value, control *c,
       p->puptakez = atof(value);
     } else if (MATCH("params", "p_rate_par_weather")) {
         p->p_rate_par_weather = atof(value);
+    } else if (MATCH("params", "p_atm_deposition")) {
+        p->p_atm_deposition = atof(value);
     } else if (MATCH("params", "oi")) {
         p->oi = atof(value);
     } else if (MATCH("params", "passivesoilz")) {

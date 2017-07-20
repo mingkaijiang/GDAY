@@ -106,7 +106,7 @@ void write_output_header(control *c, FILE **fp) {
     fprintf(*fp, "nuptake,ngross,nmineralisation,nloss,");
 
     /* P stuff */
-    fprintf(*fp, "puptake,pgross,pmineralisation,ploss,");
+    fprintf(*fp, "puptake,pgross,pmineralisation,ploss,p_atm_dep,p_par_to_min,");
 
     /* traceability stuff */
     fprintf(*fp, "tfac_soil_decomp,c_into_active,c_into_slow,");
@@ -257,8 +257,8 @@ void write_daily_outputs_ascii(control *c, fluxes *f, state *s, int year,
                     f->nuptake,f->ngross,f->nmineralisation,f->nloss);
 
     /* P stuff */
-    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,",
-                    f->puptake,f->pgross,f->pmineralisation,f->ploss);
+    fprintf(c->ofp, "%.10f,%.10f,%.10f,%.10f,%.10f,%.10f,",
+                    f->puptake,f->pgross,f->pmineralisation,f->ploss,f->p_atm_dep,f->p_par_to_min);
 
 
     /* traceability stuff */

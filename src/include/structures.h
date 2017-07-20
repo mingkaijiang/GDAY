@@ -28,6 +28,7 @@ typedef struct {
     int   fixleafpc;
     int   grazing;
     int   gs_model;
+    int   aci_relationship;
     int   model_optroot;
     int   modeljm;
     int   ncycle;
@@ -348,6 +349,7 @@ typedef struct {
     double nuptakez;                        /* constant N uptake per year (1/yr) */
     double oi;                              /* intercellular concentration of O2 [umol mol-1] */
     double p_rate_par_weather;              /* parent P material weathering rate [yr-1] */
+    double p_atm_deposition;                /* User defined atm deposition rate for P */
     double passivesoilnz;
     double passivesoilpz;
     double passivesoilz;

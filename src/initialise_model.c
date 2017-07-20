@@ -32,6 +32,7 @@ void initialise_control(control *c) {
     c->gs_model = MEDLYN;           /* Stomatal conductance model, currently only this one is implemented */
     c->model_optroot = FALSE;       /* Ross's optimal root model...not sure if this works yet...0=off, 1=on */
     c->modeljm = 1;                 /* modeljm=0, Jmax and Vcmax parameters are read in, modeljm=1, parameters are calculated from leaf N & P content, modeljm=2, Vcmax is calculated from leaf N & P content but Jmax is related to Vcmax */
+    c->aci_relationship = WALKER;            /* choose from walker or Ellsworth */
     c->ncycle = TRUE;               /* Nitrogen cycle on or off? */
     c->pcycle = TRUE;               /* Phosphorus cycle on or off? */
     c->triose_p = TRUE;             /* Triose phosphates limitation on photosynthesis on or off? */
@@ -205,7 +206,7 @@ void initialise_params(params *p) {
     p->ntheta_topsoil = 5.0;
     p->nuptakez = 0.0;
     p->oi = 210000.0;                 /* oxygen partial pressure (umol mol-1) */
-    // p->p_atm_deposition = 0.001;    /* value according to Newman 1995 = 0.00055 */
+    p->p_atm_deposition = 0.001;    /* value according to Newman 1995 = 0.00055 */
     p->p_rate_par_weather = 0.001;
     p->passivesoilnz = 1.0;
     p->passivesoilpz = 1.0;

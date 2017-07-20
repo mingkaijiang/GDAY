@@ -415,7 +415,7 @@ void run_sim(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
 
 
             if (! c->sub_daily) {
-                unpack_met_data(c, f, ma, m, dummy, s->day_length[doy]);
+                unpack_met_data(c, f, ma, m, p, dummy, s->day_length[doy]);
             }
             calculate_litterfall(c, f, p, s, doy, &fdecay, &rdecay);
 
@@ -576,8 +576,8 @@ void spin_up_pools(canopy_wk *cw, control *c, fluxes *f, met_arrays *ma, met *m,
       185-205, specifically page 196.
     */
     double tol_c = 5E-03;
-    double tol_n = 5E-04;
-    double tol_p = 5E-05;
+    double tol_n = 5E-03;
+    double tol_p = 5E-03;
     double prev_plantc = 99999.9;
     double prev_soilc = 99999.9;
     double prev_plantn = 99999.9;
@@ -718,7 +718,7 @@ void correct_rate_constants(params *p, int output) {
         p->puptakez *= NDAYS_IN_YR;
         p->nmax *= NDAYS_IN_YR;
         p->pmax *= NDAYS_IN_YR;
-//        p->p_atm_deposition *= NDAYS_IN_YR;
+        p->p_atm_deposition *= NDAYS_IN_YR;
         p->p_rate_par_weather *= NDAYS_IN_YR;
         p->max_p_biochemical *= NDAYS_IN_YR;
         p->rate_sorb_ssorb *= NDAYS_IN_YR;
@@ -748,7 +748,7 @@ void correct_rate_constants(params *p, int output) {
         p->puptakez /= NDAYS_IN_YR;
         p->nmax /= NDAYS_IN_YR;
         p->pmax /= NDAYS_IN_YR;
-//        p->p_atm_deposition /= NDAYS_IN_YR;
+        p->p_atm_deposition /= NDAYS_IN_YR;
         p->p_rate_par_weather /= NDAYS_IN_YR;
         p->max_p_biochemical /= NDAYS_IN_YR;
         p->rate_sorb_ssorb /= NDAYS_IN_YR;
@@ -1017,7 +1017,7 @@ void day_end_calculations(control *c, params *p, state *s, int days_in_year,
     return;
 }
 
-void unpack_met_data(control *c, fluxes *f, met_arrays *ma, met *m, int hod,
+void unpack_met_data(control *c, fluxes *f, met_arrays *ma, met *m, params *p, int hod,
                      double day_length) {
 
     double c1, c2;
@@ -1083,7 +1083,7 @@ void unpack_met_data(control *c, fluxes *f, met_arrays *ma, met *m, int hod,
     
     /* P deposition to fluxes */
     f->p_atm_dep = m->pdep;
-    
+    //f->p_atm_dep = p->p_atm_deposition;
     return;
 }
 
