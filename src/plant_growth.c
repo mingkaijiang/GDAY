@@ -478,7 +478,7 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
             /* vary stem P:C based on reln with foliage,
             equation based on data from Attiwill 1978 - 1980 paper series. */
         } else {
-            *pcwimm = MAX(0.0, -0.0016 * s->shootpc + 0.000003);
+            *pcwimm = MAX(0.0, (-0.0016 * s->shootpc + 0.000003));
 
             // New stem ring P:C at critical leaf P:C (mobile),
             // equation based on data from Attiwill 1978 - 1980 paper series
@@ -502,7 +502,7 @@ void calculate_cnp_wood_ratios(control *c, params *p, state *s,
         /* vary stem P:C based on reln with foliage,
         equation based on data from Attiwill 1978 - 1980 paper series. */
         } else {
-            *pcwimm = MAX(0.0, -0.0016 * s->shootpc + 0.000003);
+            *pcwimm = MAX(0.0, (-0.0016 * s->shootpc + 0.000003));
 
             /* New stem ring P:C at critical leaf P:C (mobile),
             equation based on data from Attiwill 1978 - 1980 paper series */
