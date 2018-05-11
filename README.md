@@ -6,6 +6,8 @@ The model can be run at either a daily time step, or a 30-minute time step. When
 
 GDAY uses a modified version of the [CENTURY](https://www.nrel.colostate.edu/projects/century/) model to simulate soil carbon, nutrient and phosphorus dynamics (Parton et al. 1987; 1993). The treatment of P is taken from a combination of approaches following CENTURY, CABLE and CLM-P (Yang and Post, 2011; Walker et al. 2014; Wang et al. 2007; Yang et al. 2014; Ellsworth et al. 2015).
 
+This version of GDAY is established for testing temperature acclimation effect on photosynthesis. In addition to code files, it includes simulation files for selected Australia grids.  
+
 <p style="text-align:center"><img src="doc/outline.png" width="700"/></p>
 
 Fig. 1: Pools and fluxes of carbon (C), nitrogen (N) and phosphorus (P) in the GDAY model.
@@ -196,5 +198,6 @@ of photosynthesis from leaves to canopies without the errors of big-leaf models.
 17. Ellsworth, D.S., et al., 2015. Phosphorus recycling in photorespiration maintains high photosynthetic capacity in woody species. Plant, Cell and Environment, 38: 1142-1156.
 
 ## Contacts
+* [Mingkai Jiang](https://github.com/mingkaijiang).
 * [Martin De Kauwe](http://mdekauwe.github.io/).
 * [Belinda Medlyn](<http://bio.mq.edu.au/people/person.php?user=bmedlyn).
