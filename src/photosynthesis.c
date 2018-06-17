@@ -321,6 +321,40 @@ void calculate_jmaxt_vcmaxt(control *c, canopy_wk *cw, params *p, state *s,
         vcmax25 = p->vcmax * cscalar;
         *vcmax = arrhenius(vcmax25, p->eav, tleaf, tref);
         *jmax = peaked_arrhenius(jmax25, p->eaj, tleaf, tref, p->delsj, p->edj);
+    } else if (c->modeljm == 4) {
+        /* 
+         Temperature acclimation and adaptation
+        added global parameters:
+        thome: home temperature;
+        tgrow: growth temperature;
+        
+        added private parameters:
+        jvr: Jmax at 25 C / Vcmax at 25 C
+        eaj;
+        eav;
+        delsj;
+        
+        */
+        
+        //Calculate jvr - Jmax at 25 C / Vcmax at 25 C;
+        jvr = 2.195 - 0.0237 p->thome - 0.0219 * (p->thome - p->tgrow);
+        
+        // Calculate Jmax;
+        jmax25 = p->vcmax25 * jvr;
+        
+        // Calculate temperature dependent eav;
+        eav = 42.6 + 1.14 * p->tgrow;
+        
+        // Calculate temperature dependent eaj;
+        eaj = 34.44;   // global mean;
+        
+        // Calculate delta sj;
+        delsj = 652.36 - 0.73 * p->thome - 0.46 * (p->thome - p->tgrow);
+        
+        // update Jmax and Vcmax;
+        *vcmax = arrhenius(vcmax25, eav, tleaf, tref);
+        *jmax = peaked_arrhenius(jmax25, eaj, tleaf, tref, delsj, p->edj);
+        
     } else {
         fprintf(stderr, "You haven't set Jmax/Vcmax model: modeljm \n");
         exit(EXIT_FAILURE);
