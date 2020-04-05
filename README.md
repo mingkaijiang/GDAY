@@ -1,14 +1,14 @@
-# GDAY model
+# GDAY-CNP model
 
 GDAY (Generic Decomposition And Yield) is a simple ecosystem model that simulates carbon, nitrogen, phosphorus (CNP) and water dynamics at the stand scale (Comins and McMurtrie, 1993; Medlyn et al. 2000; Corbeels et al. 2005a,b).
 
 The model can be run at either a daily time step, or a 30-minute time step. When the model is run at the sub-daily timescale, photosynthesis is calculated using a two-leaf (sunlit/shade) approximation (de Pury and Farquhar, 1997; Wang and Leuning, 1998), otherwise photosynthesis is calculated following Sands (1995;1996). The sub-daily approach (photosynthesis & leaf energy balance) mirrors [MAESPA](http://maespa.github.io/manual.html), without the complexity of the radiation treatment. In the standard model the water balance is represented simply, with two (fixed) soil water "buckets", which represent a top soil (e.g. 5 cm) and a larger root-zone. If you are using the sub-daily version, there is now the option to use a [SPA](http://www.geos.ed.ac.uk/homes/mwilliam/spa.html)-style representation of hydraulics. GDAY-SPA resolves multiple soil layers, soil and leaf water potential and limits gas exchange following the Emax approach (see [MAESPA](http://maespa.github.io/manual.html) for more details).
 
-GDAY uses a modified version of the [CENTURY](https://www.nrel.colostate.edu/projects/century/) model to simulate soil carbon, nutrient and phosphorus dynamics (Parton et al. 1987; 1993). The treatment of P is taken from a combination of approaches following CENTURY, CABLE and CLM-P (Yang and Post, 2011; Walker et al. 2014; Wang et al. 2007; Yang et al. 2014; Ellsworth et al. 2015).
+GDAY-CNP uses a modified version of the [CENTURY](https://www.nrel.colostate.edu/projects/century/) model to simulate soil carbon, nutrient and phosphorus dynamics (Parton et al. 1987; 1993). The phosphorus cycle processes are simplified based on CENTURY. Phosphorus effect on photosynthesis is based on relationships from Ellsworth et al. (2015) and Walker et al. (2014). CABLE-based representation of biochemical phosphorus mineralization is also implemented. The soil phosphorus pools follow structure from Yang et al. (2014).
 
-<p style="text-align:center"><img src="doc/outline.png" width="700"/></p>
+<p style="text-align:center"><img src="GDAY/doc/outline.png" width="700"/></p>
 
-Fig. 1: Pools and fluxes of carbon (C), nitrogen (N) and phosphorus (P) in the GDAY model.
+Fig. 1: Pools and fluxes of carbon (C), nitrogen (N) and phosphorus (P) in the GDAY-CNP model.
 
 ## Installation
 To get the code your best route is probably to fork the repository, there is a nice [explanation on github](https://help.github.com/articles/fork-a-repo/).
@@ -153,7 +153,7 @@ BNF = 0.102 * (ET * mm_2_cm) + 0.524
 ```
 
 ## Phosphorus component
-Organic phosphorus (P) pools and fluxes follow the same modelling structure as the nitrogen. A total of five inorganic phosphorus pools are implemented: labile, sorbed, strongly sorbed, occluded and parent pools. Inorganic phosphorus enters into the system via a constant input rate (this will be change very soon) from the parent material pool. Labile and sorbed pools are in dynamic equilibration, and P gradually enters into the strongly sorbed pool and is eventually locked up in the occluded pool. Biochemical mineralisation occurs as a function of nitrogen availability. Phosphorus in the plant limits photosynthesis through its explicit effect on Jmax and a potential effect on Triose-phosphates.
+Organic phosphorus (P) pools and fluxes follow the same modelling structure as the nitrogen. A total of five inorganic phosphorus pools are implemented: labile, sorbed, strongly sorbed, occluded and parent pools (Yang et al., 2014). Inorganic phosphorus enters into the system via a constant input rate (this will be change very soon) from the parent material pool. Labile and sorbed pools are in dynamic equilibration, and P gradually enters into the strongly sorbed pool and is eventually locked up in the occluded pool. Biochemical mineralisation occurs as a function of nitrogen availability (Wang et al., 2007). Phosphorus in the plant limits photosynthesis through its explicit effect on Jmax and a potential effect on Triose-phosphates (Ellsworth et al., 2015).
 
 
 ## Hydraulics
@@ -196,5 +196,6 @@ of photosynthesis from leaves to canopies without the errors of big-leaf models.
 17. Ellsworth, D.S., et al., 2015. Phosphorus recycling in photorespiration maintains high photosynthetic capacity in woody species. Plant, Cell and Environment, 38: 1142-1156.
 
 ## Contacts
-* [Martin De Kauwe](http://mdekauwe.github.io/).
-* [Belinda Medlyn](<http://bio.mq.edu.au/people/person.php?user=bmedlyn).
+* GDAY-CNP: [Mingkai Jiang](https://www.westernsydney.edu.au/hie/people/postdoctoral_fellows/doctor_mingkai_jiang)
+
+* Previous versions of GDAY: [Martin De Kauwe](http://mdekauwe.github.io/) & [Belinda Medlyn](<http://bio.mq.edu.au/people/person.php?user=bmedlyn).
